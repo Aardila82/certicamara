@@ -152,7 +152,6 @@ class AlfaController extends Controller
             // Insertar en la tabla log_facial_envivo_uno_a_uno
             LogFacialEnvivoUnoAUno::create($logData);
         }
-        var_dump($registros);
 
         // Devolver una vista, redirigir o devolver una respuesta JSON
         return response()->json(['message' => 'Inserción completada'], 200);

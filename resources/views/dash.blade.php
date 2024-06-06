@@ -30,12 +30,12 @@
             <div class="card-box bg-blue">
                 <div class="inner">
                     <h3></h3>
-                    <p><b>Gestion Roles</b></p>
+                    <p><b>Carga Masiva</b></p>
                 </div>
                 <div class="icon">
                     <i class="fa fa-graduation-cap" aria-hidden="true"></i>
                 </div>
-                <a href="#" class="card-box-footer">
+                <a href="/masiva" class="card-box-footer">
                     Ver Mas
                     <i class="fa fa-arrow-circle-right"></i>
                 </a>

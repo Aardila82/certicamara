@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Table con Decoración</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- DataTables CSS -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
-</head>
-<body>
+@extends('layouts.plantilla')
+
+@section('contenido')
+
 
 <div class="container-fluid mt-5" >
     <h2 class="text-center mb-4">Lista de Usuarios</h2>
@@ -130,5 +122,4 @@
     });
 </script>
 
-</body>
-</html>
+@endsection
