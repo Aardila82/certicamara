@@ -10,14 +10,16 @@ class LogFacialEnvivoUnoAUno extends Model
     use HasFactory;
 
     protected $table = 'log_facial_envivo_uno_a_uno';
+    protected $primaryKey = 'id';
 
     protected $fillable= [
-        'NUT',
-        'NUIP',
+        'id',
+        'nut',
+        'nuip',
         'resultado',
-        'fechaFin',
-        'idUsuario',
-        'hashAlgo',
+        'fechafin',
+        'idusuario',
+        'hashalgo',
 
     ];
 }

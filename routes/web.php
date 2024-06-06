@@ -47,6 +47,7 @@ Route::get('logout',[LoginController::class,'logout']);
    Route::get('log/fotografia',[LogFotografiaController::class,'lista']);
 
    Route::get('/importaralfa',[AlfaController::class,'importaralfa']);
+   Route::get('/masiva', [AlfaController::class, 'masiva']);
 
    Route::post('/loginApi',[LoginController::class,'loginApi']);
 

@@ -2,8 +2,6 @@
 
 @section('contenido')
 
-
-
 <div class="container text-center d-block mx-auto">
     <div class="row">
         <div class="col-12">
@@ -11,16 +9,12 @@
         </div>
     </div>
 
-
-
-
     <div class="row">
-
         <div class="col-lg-3 col-sm-6">
             <div class="card-box bg-green">
                 <div class="inner">
                     <h3></h3>
-                    <p> <b>Gestion Usuarios</b></p>
+                    <p><b>Gestion Usuarios</b></p>
                 </div>
                 <div class="icon">
                     <i class="fa fa-graduation-cap" aria-hidden="true"></i>
@@ -36,7 +30,7 @@
             <div class="card-box bg-blue">
                 <div class="inner">
                     <h3></h3>
-                    <p> <b>Gestion Roles</b></p>
+                    <p><b>Gestion Roles</b></p>
                 </div>
                 <div class="icon">
                     <i class="fa fa-graduation-cap" aria-hidden="true"></i>
@@ -48,12 +42,11 @@
             </div>
         </div>
 
-
         <div class="col-lg-3 col-sm-6">
             <div class="card-box bg-orange">
                 <div class="inner">
                     <h3></h3>
-                    <p> <b>Reporte Logs</b></p>
+                    <p><b>Reporte Logs</b></p>
                 </div>
                 <div class="icon">
                     <i class="fa fa-graduation-cap" aria-hidden="true"></i>
@@ -65,12 +58,11 @@
             </div>
         </div>
 
-
         <div class="col-lg-3 col-sm-6">
             <div class="card-box bg-red">
                 <div class="inner">
                     <h3></h3>
-                    <p> <b>Validar Identidad</b></p>
+                    <p><b>Validar Identidad</b></p>
                 </div>
                 <div class="icon">
                     <i class="fa fa-graduation-cap" aria-hidden="true"></i>
@@ -82,26 +74,25 @@
             </div>
         </div>
 
-
         <div class="col-lg-3 col-sm-6">
             <div class="card-box bg-green">
                 <div class="inner">
                     <h3></h3>
-                    <p> <b>Carga Archivo Alfa</b></p>
+                    <p><b>Carga Archivo Alfa</b></p>
                 </div>
                 <div class="icon">
                     <i class="fa fa-graduation-cap" aria-hidden="true"></i>
                 </div>
-                <a href="importaralfa" class="card-box-footer">
+                <a href="importaralfa" class="card-box-footer" id="miBoton">
                     Ver Mas
                     <i class="fa fa-arrow-circle-right"></i>
                 </a>
             </div>
         </div>
-
     </div>
-
 </div>
+
+<div id="avisoCargando">Cargando...</div>
 
 <style>
     body {
@@ -184,8 +175,59 @@
     .bg-red {
         background-color: #d9534f !important;
     }
-    </style>
+
+    #avisoCargando {
+        background-color: #f9f9f9;
+        color: #333;
+        padding: 10px;
+        border: 1px solid #ccc;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: none; /* Ocultarlo inicialmente */
+        z-index: 10000;
+    }
+
+    #miBoton:hover {
+        background-color: #3e8e41;
+    }
+
+    #miBoton:active {
+        background-color: #2c6934;
+    }
+</style>
+
+<script>
+    // JavaScript para mostrar el aviso de "Cargando..."
+    const boton = document.getElementById('miBoton');
+    const aviso = document.getElementById('avisoCargando');
+    let isNavigating = false;
+
+    boton.addEventListener('click', (event) => {
+        event.preventDefault();
+        isNavigating = true;
+        aviso.style.display = 'block';
+        window.location.href = boton.href;
+    });
+
+    window.addEventListener('beforeunload', function (event) {
+        if (isNavigating) {
+            aviso.style.display = 'block';
+        } else {
+            aviso.style.display = 'none';
+        }
+    });
+
+    window.addEventListener('popstate', function (event) {
+        aviso.style.display = 'none';
+        isNavigating = false;
+    });
+
+    window.addEventListener('pageshow', function (event) {
+        aviso.style.display = 'none';
+        isNavigating = false;
+    });
+</script>
 
 @endsection
-
-

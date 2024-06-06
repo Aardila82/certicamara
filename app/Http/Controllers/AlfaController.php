@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alfa;
+use App\Models\LogFacialEnvivoUnoAUno;
 use App\Http\Requests\StoreAlfaRequest;
 use App\Http\Requests\UpdateAlfaRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 
 class AlfaController extends Controller
@@ -42,7 +44,7 @@ class AlfaController extends Controller
         $i = 0;
 
         $validations = [
-            'pin' => ['msj' => 'debe ser un número y debe tener entre 7 y 10 digitos.', 'expreg' => '/^\d{7,10}$/'],
+            'pin' => ['msj' => 'debe ser un número y debe tener entre 7 y 10 digitos.', 'expreg' => '/^\d{1,14}$/'],
             'nombre1' => ['msj' => 'debe tener menos de 200 caracteres', 'expreg' => '/^.{0,200}$/'],
             'nombre2' => ['msj' => 'debe tener menos de 200 caracteres', 'expreg' => '/^.{0,200}$/'],
             'partícula' => ['msj' => 'debe tener menos de 200 caracteres', 'expreg' => '/^.{0,200}$/'],
@@ -81,8 +83,8 @@ class AlfaController extends Controller
             ];
 
             $errors = [];
-         
-            
+
+
             foreach ($dataInsert as $key => $value) {
                 if (isset($validations[$key]['expreg']) && !preg_match($validations[$key]['expreg'], $value)) {
                     $errors[$key] = "El campo ".$key." ".$validations[$key]['msj'];
@@ -91,7 +93,7 @@ class AlfaController extends Controller
 
 
             $dataTmp = $dataInsert;
-            
+
 
             if( empty($errors) ){
                 if (!Alfa::where('pin', $row['PIN'])->exists()) {
@@ -103,7 +105,7 @@ class AlfaController extends Controller
                 }
                 else{
                     $dataTmp['error']  = "PIN ya existente";
-                }                
+                }
             }
             else{
                 $dataTmp['error']  = implode("\r", $errors);
@@ -125,6 +127,36 @@ class AlfaController extends Controller
             "tiempoTotal" => $tiempoTotal
         ]);
 
+    }
+
+
+
+    public function masiva()
+    {
+        // Obtener todos los registros de la tabla Alfa
+        $registros = Alfa::all();
+
+        // Iterar sobre los registros
+        foreach ($registros as $registro) {
+            // Realizar cualquier transformación o procesamiento necesario
+            // Por ejemplo, transformar los datos para la tabla log_facial_envivo_uno_a_uno
+            $logData = [
+                'nut' => $registro->pin, // Ejemplo de asignación, ajusta según sea necesario
+                'nuip' => $registro->partícula, // Ejemplo de asignación, ajusta según sea necesario
+                'resultado' => 'exitoso', // Ejemplo de valor estático, ajusta según sea necesario
+                'fechafin' => now(), // Usar la fecha actual
+                'idusuario' => 1, // ID del usuario actual o cualquier otro valor
+                'hashalgo' => '123hashito', // Ejemplo de cálculo hash
+            ];
+
+            // Insertar en la tabla log_facial_envivo_uno_a_uno
+            LogFacialEnvivoUnoAUno::create($logData);
+        }
+        var_dump($registros);
+
+        // Devolver una vista, redirigir o devolver una respuesta JSON
+        return response()->json(['message' => 'Inserción completada'], 200);
+       // return view('masiva', compact('resultados'));
     }
 
 

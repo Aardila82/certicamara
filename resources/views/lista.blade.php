@@ -48,10 +48,10 @@
                       <td>{{$usuario->municipio_nombre}}</td>
                       <td>{{$usuario->estado ? 'Activo' : 'Inactivo' }}</td>
                       <td>
-                        <a href="{{ route('usuario.edit', $usuario->id) }}" class="btn btn-primary btn-sm me-2 " style="font-size: 0.7rem;">
+                        <a href="{{ route('usuario.edit', $usuario->id) }}" class="btn btn-primary btn-sm me-2" style="font-size: 0.7rem; color:white;">
                             Editar
                         </a>
-                        <button type="button" class="btn btn-sm estado-usuario" data-id="{{$usuario->id}}" style="font-size: 0.7rem; background-color: {{$usuario->estado ? 'red' : 'green'}};">
+                        <button type="button" class="btn btn-sm estado-usuario" data-id="{{$usuario->id}}" style="font-size: 0.7rem; background-color: {{$usuario->estado ? 'red' : 'green'}}; color:white;">
                             {{$usuario->estado ? 'Desactivar' : 'Activar'}}
                         </button>
                       </td>
