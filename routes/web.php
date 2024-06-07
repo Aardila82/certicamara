@@ -44,6 +44,7 @@ Route::middleware('auth')->group(function () {
    Route::get('usuario/reporte',[UsuarioController::class,'reporte']);
 
    Route::get('log/facial',[LogFacialEnvivoUnoAUnoController::class,'lista']);
+   Route::get('/log-facial/export', [LogFacialEnvivoUnoAUnoController::class, 'exportCsv']);
    Route::get('log/fotografia',[LogFotografiaController::class,'lista']);
 
    Route::get('/importaralfa',[AlfaController::class,'importaralfa']);
