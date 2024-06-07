@@ -142,10 +142,10 @@ class AlfaController extends Controller
             // Por ejemplo, transformar los datos para la tabla log_facial_envivo_uno_a_uno
             $logData = [
                 'nut' => $registro->pin, // Ejemplo de asignación, ajusta según sea necesario
-                'nuip' => $registro->partícula, // Ejemplo de asignación, ajusta según sea necesario
+                'nuip' => '1', // Ejemplo de asignación, ajusta según sea necesario
                 'resultado' => 'exitoso', // Ejemplo de valor estático, ajusta según sea necesario
                 'fechafin' => now(), // Usar la fecha actual
-                'idusuario' => 1, // ID del usuario actual o cualquier otro valor
+                'idusuario' => '1', // ID del usuario actual o cualquier otro valor
                 'hashalgo' => '123hashito', // Ejemplo de cálculo hash
             ];
 

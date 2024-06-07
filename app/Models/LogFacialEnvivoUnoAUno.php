@@ -22,4 +22,9 @@ class LogFacialEnvivoUnoAUno extends Model
         'hashalgo',
 
     ];
+
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class, 'idusuario');
+    }
 }

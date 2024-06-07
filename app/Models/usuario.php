@@ -36,4 +36,9 @@ class usuario extends Model
     {
         return $this->belongsTo(Municipio::class, 'municipio');
     }
+
+    public function logFacialEnvivoUnoAUno()
+    {
+        return $this->hasMany(LogFacialEnvivoUnoAUno::class, 'idusuario');
+    }
 }

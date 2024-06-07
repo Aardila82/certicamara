@@ -15,18 +15,20 @@
                       <th>NUIP</th>
                       <th>Resultado</th>
                       <th>Fecha Fin</th>
-                      <th>ID Usuario</th>
+                      <th>Nombres</th>
+                      <th>Apellidos</th>
                   </tr>
               </thead>
               <tbody>
                   @foreach ($logs as $log)
                   <tr>
                       <td>{{$log->id}}</td>
-                      <td>{{$log->NUT}}</td>
-                      <td>{{$log->NUIP}}</td>
+                      <td>{{$log->nut}}</td>
+                      <td>{{$log->usuario->numerodedocumento}}</td>
                       <td>{{$log->resultado}}</td>
-                      <td>{{$log->fechaFin}}</td>
-                      <td>{{$log->idUsuuario}}</td>
+                      <td>{{$log->fechafin}}</td>
+                      <td>{{ $log->usuario->nombre1 }} {{ $log->usuario->nombre2 }}</td>
+                      <td>{{ $log->usuario->apellido1 }} {{ $log->usuario->apellido2 }}</td>
                   </tr>
                   @endforeach
                   <!-- Agrega más filas según sea necesario -->
