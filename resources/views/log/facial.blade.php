@@ -41,6 +41,10 @@
         <div class="col-md-12 text-center">
           <a type="button" class="btn btn-secondary" href="../usuario/reporte">Atras</a>
         </div>
+        <!-- Botón para descargar el CSV -->
+    <form action="{{ url('/log-facial/export') }}" method="GET">
+        <button type="submit">Descargar CSV</button>
+    </form>
     </div>
 </div>
 <!-- Pop-up de Editar -->

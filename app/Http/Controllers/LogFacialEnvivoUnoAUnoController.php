@@ -60,6 +60,65 @@ class LogFacialEnvivoUnoAUnoController extends Controller
         }
     }
 
+    public function exportCsv()
+    {
+        $results = DB::table('log_facial_envivo_uno_a_uno')
+            ->join('usuarios', 'log_facial_envivo_uno_a_uno.idusuario', '=', 'usuarios.id')
+            ->select(
+                'log_facial_envivo_uno_a_uno.id',
+                'log_facial_envivo_uno_a_uno.nut',
+                'log_facial_envivo_uno_a_uno.nuip',
+                'log_facial_envivo_uno_a_uno.resultado',
+                'log_facial_envivo_uno_a_uno.fechafin',
+                'usuarios.nombre1',
+                'usuarios.nombre2',
+                'usuarios.apellido1',
+                'usuarios.apellido2',
+                'usuarios.numerodedocumento'
+            )
+            ->get();
+
+        $filename = "logs_facial.csv";
+
+        return response()->streamDownload(function() use ($results) {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, [
+                'ID',
+                'NUT',
+                'NUIP',
+                'Resultado',
+                'Fecha Fin',
+                'Nombre1',
+                'Nombre2',
+                'Apellido1',
+                'Apellido2',
+                'Numero de Documento'
+            ]);
+
+            foreach ($results as $row) {
+                fputcsv($handle, [
+                    $row->id,
+                    $row->nut,
+                    $row->nuip,
+                    $row->resultado,
+                    $row->fechafin,
+                    $row->nombre1,
+                    $row->nombre2,
+                    $row->apellido1,
+                    $row->apellido2,
+                    $row->numerodedocumento
+                ]);
+            }
+
+            fclose($handle);
+        }, $filename, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$filename\""
+        ]);
+    }
+
+
+
     /**
      * Show the form for creating a new resource.
      */
