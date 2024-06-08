@@ -13,6 +13,7 @@
                       <th>ID</th>
                       <th>NUT</th>
                       <th>NUIP</th>
+                      <th>Ciudadano</th>
                       <th>Resultado</th>
                       <th>Fecha Fin</th>
                       <th>Nombres</th>
@@ -24,11 +25,13 @@
                   <tr>
                       <td>{{$log->id}}</td>
                       <td>{{$log->nut}}</td>
-                      <td>{{$log->usuario->numerodedocumento}}</td>
+                      <td> {{$log->ciudadano}}</td>
+
+                      <td>{{$log->numerodedocumento}}</td>
                       <td>{{$log->resultado}}</td>
                       <td>{{$log->fechafin}}</td>
-                      <td>{{ $log->usuario->nombre1 }} {{ $log->usuario->nombre2 }}</td>
-                      <td>{{ $log->usuario->apellido1 }} {{ $log->usuario->apellido2 }}</td>
+                      <td>{{ $log->nombre1 }} {{ $log->nombre2 }}</td>
+                      <td>{{ $log->apellido1 }} {{ $log->apellido2 }}</td>
                   </tr>
                   @endforeach
                   <!-- Agrega más filas según sea necesario -->
@@ -181,7 +184,7 @@
                     "previous": "Anterior"
                 }
             },
-            "lengthMenu":[[5,10,25,50],[5,10,25,50, "All"]]
+            "lengthMenu":[[25,50, 100, 200],[25,50,100,200, "All"]]
         });
     });
 </script>

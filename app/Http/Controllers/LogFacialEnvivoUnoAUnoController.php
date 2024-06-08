@@ -12,10 +12,24 @@ class LogFacialEnvivoUnoAUnoController extends Controller
     public function lista()
     {
         // Cargamos los registros junto con la relación usuario
-        $logs = LogFacialEnvivoUnoAUno::with('usuario')->get();
+        //$logs = LogFacialEnvivoUnoAUno::with('usuario')->get();
+
+        $results = DB::table('log_facial_envivo_uno_a_uno')
+        ->join('usuarios', 'log_facial_envivo_uno_a_uno.idusuario', '=', 'usuarios.id')
+        ->leftJoin('alfas', 'log_facial_envivo_uno_a_uno.nuip', '=', 'alfas.pin')
+        ->select(
+            'log_facial_envivo_uno_a_uno.*',
+            'usuarios.nombre1',
+            'usuarios.nombre2',
+            'usuarios.apellido1',
+            'usuarios.apellido2',
+            'usuarios.numerodedocumento',
+            DB::raw("CONCAT(alfas.nombre1, ' ', alfas.nombre2, '', alfas.apellido1, ' ', alfas.apellido2) as ciudadano"),
+            )
+        ->get();
 
         // Pasamos los registros a la vista
-        return view('log.facial', compact('logs'));
+        return view('log.facial', ['logs' => $results]);
     }
     /**
      * Display a listing of the resource.
@@ -24,15 +38,22 @@ class LogFacialEnvivoUnoAUnoController extends Controller
     {
         $results = DB::table('log_facial_envivo_uno_a_uno')
             ->join('usuario', 'log_facial_envivo_uno_a_uno.idusuario', '=', 'usuario.id')
+            ->join('alfas', 'log_facial_envivo_uno_a_uno.nuip', '=', 'alfas.pin')
             ->select(
                 'log_facial_envivo_uno_a_uno.*',
                 'usuario.nombre1',
                 'usuario.nombre2',
                 'usuario.apellido1',
                 'usuario.apellido2',
-                'usuario.numerodedocumento'
-            )
+                'usuario.numerodedocumento',
+                'alfas.nombre1',
+                'alfas.nombre2',
+                'alfas.apellido1',
+                'alfas.apellido2',
+
+                )
             ->get();
+
 
         foreach ($results as $result) {
             echo $result->nombre1 . ' ' . $result->nombre2 . ' ' . $result->apellido1 . ' ' . $result->apellido2 . PHP_EOL;
