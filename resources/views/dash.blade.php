@@ -17,7 +17,7 @@
                     <p><b>Gestion Usuarios</b></p>
                 </div>
                 <div class="icon">
-                    <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                    <i class=" fa fa-solid fa-user" aria-hidden="true"></i>
                 </div>
                 <a href="usuario/menu" class="card-box-footer">
                     Ver Mas
@@ -33,7 +33,7 @@
                     <p><b>Carga Masiva</b></p>
                 </div>
                 <div class="icon">
-                    <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                    <i class="fa fa-solid fa-share" aria-hidden="true"></i>
                 </div>
                 <a href="/masiva" class="card-box-footer" id="masiva">
                     Ver Mas
@@ -49,7 +49,7 @@
                     <p><b>Reporte Logs</b></p>
                 </div>
                 <div class="icon">
-                    <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                    <i class="fa fa-solid fa-check" aria-hidden="true"></i>
                 </div>
                 <a href="usuario/reporte" class="card-box-footer">
                     Ver Mas
@@ -65,7 +65,7 @@
                     <p><b>Validar Identidad</b></p>
                 </div>
                 <div class="icon">
-                    <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                    <i class="fa fa-solid fa-eye" aria-hidden="true"></i>
                 </div>
                 <a href="#" class="card-box-footer">
                     Ver Mas
@@ -81,7 +81,7 @@
                     <p><b>Carga Archivo Alfa</b></p>
                 </div>
                 <div class="icon">
-                    <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                    <i class="fa fa-solid fa-download" aria-hidden="true"></i>
                 </div>
                 <a href="importaralfa" class="card-box-footer" id="miBoton">
                     Ver Mas
@@ -259,7 +259,7 @@
     window.addEventListener('pageshow', function (event) {
         aviso.style.display = 'none';
         isNavigating = false;
-    });    
+    });
 </script>
 
 @endsection

@@ -17,7 +17,7 @@
 
     <style>
         .navbar-custom {
-            background-color: #f85130; /* Un tono gris oscuro */
+            background-color: #9FA2A3; /* Un tono gris oscuro */
         }
     </style>
 </head>
