@@ -6,6 +6,7 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\AlfaController;
 use App\Http\Controllers\LogFacialEnvivoUnoAUnoController;
 use App\Http\Controllers\LogFotografiaController;
+use App\Http\Controllers\LogMasivaController;
 
 Route::get('',[LoginController::class,'index']);
 
@@ -43,15 +44,16 @@ Route::middleware('auth')->group(function () {
    Route::get('usuario/menu',[UsuarioController::class,'menu'])->name('usuario.menu');
    Route::get('usuario/reporte',[UsuarioController::class,'reporte']);
 
-   Route::get('log/facial',[LogFacialEnvivoUnoAUnoController::class,'lista']);
-   Route::get('/log-facial/export', [LogFacialEnvivoUnoAUnoController::class, 'exportCsv']);
+   Route::get('log/facial/{id}',[LogFacialEnvivoUnoAUnoController::class,'lista']);
+   Route::get('log-facial/export', [LogFacialEnvivoUnoAUnoController::class, 'exportCsv']);
    Route::get('log/fotografia',[LogFotografiaController::class,'lista']);
+   Route::get('log/masiva',[LogMasivaController::class,'lista']);
 
    Route::get('/importaralfa',[AlfaController::class,'importaralfa']);
    Route::get('/masiva', [AlfaController::class, 'masiva']);
 
    Route::post('/loginApi',[LoginController::class,'loginApi']);
-
+ 
 });
 
 

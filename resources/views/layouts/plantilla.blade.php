@@ -15,7 +15,6 @@
   </head>
   <body>
 
-    @yield('navegacion')
     <style>
         .navbar-custom {
             background-color: #f85130; /* Un tono gris oscuro */
@@ -23,7 +22,7 @@
     </style>
 </head>
 <body>
-    <div class="container mt-2">
+    <div class="container container-xxl">
 
         <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
             <div class="container-fluid">
@@ -33,9 +32,10 @@
                 @endauth
             </div>
         </nav>
+        
+        @yield('contenido')
     </div>
 
-         @yield('contenido')
 
   </body>
 

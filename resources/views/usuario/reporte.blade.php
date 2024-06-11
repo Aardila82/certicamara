@@ -27,8 +27,23 @@
                 </div>
             </div>
 
-
             <div class="col-lg-3 col-sm-6">
+                <div class="card-box bg-green">
+                    <div class="inner">
+                        <h3></h3>
+                        <p> <b>Log Masiva</b></p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                    </div>
+                    <a href="../log/masiva" class="card-box-footer">
+                        Ver Mas
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!--<div class="col-lg-3 col-sm-6">
                 <div class="card-box bg-green">
                     <div class="inner">
                         <h3></h3>
@@ -42,7 +57,7 @@
                         <i class="fa fa-arrow-circle-right"></i>
                     </a>
                 </div>
-            </div>
+            </div>-->
 
             <div class="col-lg-3 col-sm-6">
                 <div class="card-box bg-blue">

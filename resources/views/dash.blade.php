@@ -35,7 +35,7 @@
                 <div class="icon">
                     <i class="fa fa-graduation-cap" aria-hidden="true"></i>
                 </div>
-                <a href="/masiva" class="card-box-footer">
+                <a href="/masiva" class="card-box-footer" id="masiva">
                     Ver Mas
                     <i class="fa fa-arrow-circle-right"></i>
                 </a>
@@ -92,7 +92,8 @@
     </div>
 </div>
 
-<div id="avisoCargando">Cargando...</div>
+<div class="avisoCargando" id="avisoCargando">Cargando...</div>
+<div class="avisoCargando" id="avisoCargandoMasiva">Cargando...</div>
 
 <style>
     body {
@@ -176,7 +177,7 @@
         background-color: #d9534f !important;
     }
 
-    #avisoCargando {
+    .avisoCargando {
         background-color: #f9f9f9;
         color: #333;
         padding: 10px;
@@ -199,7 +200,7 @@
 </style>
 
 <script>
-    // JavaScript para mostrar el aviso de "Cargando..."
+    // JavaScript para mostrar el aviso de "Cargando..." en carga Alfa
     const boton = document.getElementById('miBoton');
     const aviso = document.getElementById('avisoCargando');
     let isNavigating = false;
@@ -228,6 +229,37 @@
         aviso.style.display = 'none';
         isNavigating = false;
     });
+
+
+    // JavaScript para mostrar el aviso de "Cargando..." en carga Masiva
+    const botonMasiva = document.getElementById('masiva');
+    const avisoMasiva = document.getElementById('avisoCargandoMasiva');
+    let isNavigatingMasiva = false;
+
+    botonMasiva.addEventListener('click', (event) => {
+        event.preventDefault();
+        isNavigatingMasiva = true;
+        avisoMasiva.style.display = 'block';
+        window.location.href = botonMasiva.href;
+    });
+
+    window.addEventListener('beforeunload', function (event) {
+        if (isNavigating) {
+            aviso.style.display = 'block';
+        } else {
+            aviso.style.display = 'none';
+        }
+    });
+
+    window.addEventListener('popstate', function (event) {
+        aviso.style.display = 'none';
+        isNavigating = false;
+    });
+
+    window.addEventListener('pageshow', function (event) {
+        aviso.style.display = 'none';
+        isNavigating = false;
+    });    
 </script>
 
 @endsection

@@ -1,9 +1,8 @@
 @extends('layouts.plantilla')
 
 @section('contenido')
-
 <div class="container-fluid mt-5" >
-    <h2 class="text-center mb-4">Log Facial</h2>
+    <h2 class="text-center mb-4">Log Masivas</h2>
 
     <div class="row">
         <div class="col-md-12">
@@ -11,41 +10,44 @@
               <thead class="bg-primary text-white">
                   <tr>
                       <th>ID</th>
-                      <th>Cedula</th>
-                      <th>Ciudadano</th>
+                      <th>Fecha Inicio</th>
                       <th>Fecha Fin</th>
-                      <th>Usuario Carga</th>
-                      <th>Resultado</th>
+                      <th>Usuario</th>
+                      <th>Total Registros</th>
+                      <th>Total Errores</th>
+                      <th>Tiempo Total</th>
+                      <th>Ver Detalle</th>
 
-                  </tr>
+                    </tr>
               </thead>
               <tbody>
                   @foreach ($logs as $log)
                   <tr>
                       <td>{{$log->id}}</td>
-                      <td>{{$log->nut}}</td>
-                      <td> {{$log->ciudadano}}</td>
-
+                      <td>{{$log->fechainicio}}</td>
                       <td>{{$log->fechafin}}</td>
-                      <td>{{ $log->apellido1 }} {{ $log->apellido2 }}  {{ $log->nombre1 }} {{ $log->nombre2 }}</td>
-                      <td>{{$log->resultado}}</td>
-
+                      <td>{{$log->usuario_carga}}</td>
+                      <td>{{$log->totalregistros}}</td>
+                      <td>{{$log->errortotalregistros}}</td>
+                      <td>{{$log->diferencia_segundos}}</td>
+                      <td><a href="../log/facial/{{$log->id}}">Ver</a></td>
                   </tr>
                   @endforeach
-                  <!-- Agrega más filas según sea necesario -->
+                  
               </tbody>
           </table>
         </div>
         <div class="col-md-12 text-center">
-          <a type="button" class="btn btn-secondary" href="../masiva">Atras</a>
+          <a type="button" class="btn btn-secondary" href="../usuario/reporte">Atras</a>
         </div>
-        <!-- Botón para descargar el CSV -->
-    <form action="{{ url('/log-facial/export') }}" method="GET">
-        <button type="submit">Descargar CSV</button>
-    </form>
     </div>
 </div>
+<!-- Pop-up de Editar -->
 
+
+
+  <!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- DataTables JS -->
@@ -70,10 +72,13 @@
                     "previous": "Anterior"
                 }
             },
-            "lengthMenu":[[25,50, 100, 200],[25,50,100,200, "All"]]
+            "lengthMenu":[[25,50,100],[25,50,100, "All"]]
         });
     });
 </script>
+
+
+
 
 @endsection
 

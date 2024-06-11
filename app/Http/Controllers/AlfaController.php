@@ -6,8 +6,11 @@ use App\Models\Alfa;
 use App\Models\LogFacialEnvivoUnoAUno;
 use App\Http\Requests\StoreAlfaRequest;
 use App\Http\Requests\UpdateAlfaRequest;
+use App\Models\LogMasiva;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 
 class AlfaController extends Controller
@@ -135,27 +138,58 @@ class AlfaController extends Controller
     {
         // Obtener todos los registros de la tabla Alfa
         $registros = Alfa::all();
-
+        
         // Iterar sobre los registros
+
+        $logMasivaData = [
+            'fechainicio' => Carbon::now(),
+            'fechafin' => Carbon::now(),
+            'usuariocarga_id' => 1,
+            'totalregistros' => 0,
+            'errortotalregistros' => 0,
+        ];
+        
+        // Insertar los datos usando Eloquent
+        $logMasiva = LogMasiva::create($logMasivaData);
+        
+        $index = 0;
+        $usuario = Auth::user();
+        $resultados = [];
+        //var_dump($usuario);
         foreach ($registros as $registro) {
             // Realizar cualquier transformación o procesamiento necesario
             // Por ejemplo, transformar los datos para la tabla log_facial_envivo_uno_a_uno
             $logData = [
                 'nut' => $registro->pin, // Ejemplo de asignación, ajusta según sea necesario
-                'nuip' => '1', // Ejemplo de asignación, ajusta según sea necesario
+                'nuip' => $registro->pin, // Ejemplo de asignación, ajusta según sea necesario
                 'resultado' => 'exitoso', // Ejemplo de valor estático, ajusta según sea necesario
-                'fechafin' => now(), // Usar la fecha actual
-                'idusuario' => '1', // ID del usuario actual o cualquier otro valor
+                'fechafin' => Carbon::now(), // Usar la fecha actual
+                'idusuario' => $usuario->id, // ID del usuario actual o cualquier otro valor
                 'hashalgo' => '123hashito', // Ejemplo de cálculo hash
+                'idmasiva' => $logMasiva->id,
             ];
-
+            
             // Insertar en la tabla log_facial_envivo_uno_a_uno
             LogFacialEnvivoUnoAUno::create($logData);
+            $logData['usuarioNombre'] = $usuario->name;
+            $resultados[$index] = (object)$logData;
+            $index++;
         }
+//echo "<pre>".print_r($resultados , true)."</pre>";
+//die();
+        $logMasivaData['fechafin'] = Carbon::now();
+        $logMasivaData['totalregistros'] = $index;
+
+
+        $logMasiva->update($logMasivaData);
+
 
         // Devolver una vista, redirigir o devolver una respuesta JSON
-        return response()->json(['message' => 'Inserción completada'], 200);
-       // return view('masiva', compact('resultados'));
+        //return response()->json(['message' => 'Inserción completada'], 200);
+        return view('alfa.masiva', [
+            "resultados" => $resultados,
+            "logMasiva" => $logMasivaData
+        ]);
     }
 
 

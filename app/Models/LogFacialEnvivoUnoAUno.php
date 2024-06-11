@@ -20,7 +20,7 @@ class LogFacialEnvivoUnoAUno extends Model
         'fechafin',
         'idusuario',
         'hashalgo',
-
+        'idmasiva',
     ];
 
     public function usuario()

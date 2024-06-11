@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('log_facial_envivo_uno_a_uno', function (Blueprint $table) {
+        Schema::create('log_masivas', function (Blueprint $table) {
             $table->id();
-            $table->string('nut');
-            $table->string('nuip');
-            $table->string('resultado');
+            $table->date('fechainicio');
             $table->date('fechafin');
-            $table->unsignedBigInteger('idusuario'); // Cambiar a unsignedBigInteger
-            $table->string('hashalgo');
-            $table->number('idmasiva');
+            $table->unsignedBigInteger('usuariocarga_id');
+            $table->integer('totalregistros');
+            $table->integer('errortotalregistros');
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('log_facial_envivo_uno_a_uno');
+        Schema::dropIfExists('masivas');
     }
 };
