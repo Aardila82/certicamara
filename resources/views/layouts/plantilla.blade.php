@@ -22,7 +22,7 @@
     </style>
 </head>
 <body>
-    <div class="container container-xxl">
+    {{-- <div class="container container-xxl"> --}}
 
         <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
             <div class="container-fluid">
@@ -32,7 +32,7 @@
                 @endauth
             </div>
         </nav>
-        
+
         @yield('contenido')
     </div>
 
