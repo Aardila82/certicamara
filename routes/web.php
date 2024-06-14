@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
    Route::get('log/masiva',[LogMasivaController::class,'lista']);
 
    Route::get('/importaralfa',[AlfaController::class,'importaralfa']);
-   Route::get('/masiva', [AlfaController::class, 'masiva']);
+   Route::get('/masiva', [AlfaController::class, 'masivaTest']);
 
    Route::post('/loginApi',[LoginController::class,'loginApi']);
  

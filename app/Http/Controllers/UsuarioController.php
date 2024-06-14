@@ -81,7 +81,7 @@ class UsuarioController extends Controller
     {
         $campos = $request->all();
 
-        var_dump($campos );
+        //var_dump($campos );
         //die();
 
         $request->validate([
