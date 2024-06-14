@@ -17,12 +17,12 @@
 
     <style>
         .navbar-custom {
-            background-color: #f85130; /* Un tono gris oscuro */
+            background-color: #9FA2A3; /* Un tono gris oscuro */
         }
     </style>
 </head>
 <body>
-    <div class="container container-xxl">
+    {{-- <div class="container container-xxl"> --}}
 
         <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
             <div class="container-fluid">
@@ -32,7 +32,7 @@
                 @endauth
             </div>
         </nav>
-        
+
         @yield('contenido')
     </div>
 
