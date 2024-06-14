@@ -140,7 +140,7 @@ class AlfaController extends Controller
     {
         // Obtener todos los registros de la tabla Alfa
         $registros = Alfa::all();
-        
+
         // Iterar sobre los registros
 
         $logMasivaData = [
@@ -150,10 +150,10 @@ class AlfaController extends Controller
             'totalregistros' => 0,
             'errortotalregistros' => 0,
         ];
-        
+
         // Insertar los datos usando Eloquent
         $logMasiva = LogMasiva::create($logMasivaData);
-        
+
         $index = 0;
         $usuario = Auth::user();
         $resultados = [];
@@ -170,7 +170,7 @@ class AlfaController extends Controller
                 'hashalgo' => '123hashito', // Ejemplo de cálculo hash
                 'idmasiva' => $logMasiva->id,
             ];
-            
+
             // Insertar en la tabla log_facial_envivo_uno_a_uno
             LogFacialEnvivoUnoAUno::create($logData);
             $logData['usuarioNombre'] = $usuario->name;
@@ -239,10 +239,10 @@ class AlfaController extends Controller
             $cedula = str_replace(".txt", "", $cedula);
             $foto = $directoryFotosPath . "/" . $cedula . ".jpg";
             $sha256 = hash('SHA256' , $foto);
-                    
+
             // Llamar al método `ProcessTransaction`
             try {
- 
+
                 // Crear la solicitud
                 $request =  [
                     'nut2' => '12345',
@@ -266,7 +266,7 @@ class AlfaController extends Controller
                     'totalregistros' => 0,
                     'errortotalregistros' => 0,
                 ];
-                
+
                 // Insertar los datos usando Eloquent
                 // Insertar en la tabla log_facial_envivo_uno_a_uno
                 $logData = [

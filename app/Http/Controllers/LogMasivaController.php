@@ -9,24 +9,20 @@ use Illuminate\Support\Facades\DB;
 
 class LogMasivaController extends Controller
 {
-
     public function lista()
     {
-        //$logs = LogMasiva::get();
-
         $logs = DB::table('log_masivas')
-        ->join('usuarios', 'log_masivas.usuariocarga_id', '=', 'usuarios.id')
-        ->select(
-            'log_masivas.*',
-            DB::raw("CONCAT(usuarios.nombre1, ' ', usuarios.nombre2, ' ', usuarios.apellido1, ' ', usuarios.apellido2) as usuario_carga"),
-            DB::raw("ROUND(EXTRACT(EPOCH FROM (fechafin - fechainicio))::NUMERIC, 2) AS diferencia_segundos"),
-
+            ->join('usuarios', 'log_masivas.usuariocarga_id', '=', 'usuarios.id')
+            ->select(
+                'log_masivas.*',
+                DB::raw("CONCAT(usuarios.nombre1, ' ', usuarios.nombre2, ' ', usuarios.apellido1, ' ', usuarios.apellido2) as usuario_carga"),
+                DB::raw("ROUND(EXTRACT(EPOCH FROM (CAST(fechafin AS timestamp) - CAST(fechainicio AS timestamp)))::NUMERIC, 2) AS diferencia_segundos")
             )
-        ->get();
-        
-           
-        return view('log/masiva' , ['logs' => $logs]);
+            ->get();
+
+        return view('log/masiva', ['logs' => $logs]);
     }
+
     /**
      * Display a listing of the resource.
      */
