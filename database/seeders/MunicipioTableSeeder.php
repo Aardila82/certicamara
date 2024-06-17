@@ -14,7 +14,7 @@ class MunicipioTableSeeder extends Seeder
     public function run(): void
     {
         // Ruta al archivo CSV
-        $filePath = storage_path('app/municipios.csv');
+        $filePath = public_path('migrations/municipios.csv');
 
         // Abrir el archivo CSV
         $file = fopen($filePath, 'r');

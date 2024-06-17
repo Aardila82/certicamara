@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('fechafin');
             $table->unsignedBigInteger('idusuario'); // Cambiar a unsignedBigInteger
             $table->string('hashalgo');
-            $table->enum('idmasiva');
+            $table->integer('idmasiva');
             $table->timestamps();
         });
     }
