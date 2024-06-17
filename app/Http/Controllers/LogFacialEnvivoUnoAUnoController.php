@@ -26,7 +26,7 @@ class LogFacialEnvivoUnoAUnoController extends Controller
             'usuarios.numerodedocumento',
             DB::raw("CONCAT(alfas.nombre1, ' ', alfas.nombre2, '', alfas.apellido1, ' ', alfas.apellido2) as ciudadano"),
             )
-            ->where('idmasiva', $id)
+            ->where('idusuario', $id)
 
         ->get();
 
