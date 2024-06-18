@@ -217,9 +217,6 @@ class AlfaController extends Controller
 
         $resultados = [];
 
-
-
-<<<<<<< HEAD
         $directoryMuniciasPath = 'minucias';
         if (!Storage::exists($directoryMuniciasPath)) {
             Storage::makeDirectory($directoryMuniciasPath);
@@ -233,9 +230,6 @@ class AlfaController extends Controller
         }
         $directoryFotosPath = storage_path("app/".$directoryFotosPath);
 
-=======
-        $directoryMuniciasPath = storage_path('app/municias');
->>>>>>> 1b7df2a2c74ffd5331ccfc266cec766e99234edf
 
         $files = File::allFiles($directoryMuniciasPath);
 
