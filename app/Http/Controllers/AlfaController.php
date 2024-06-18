@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 
 use SoapClient;
 use SoapFault;
+use App\Jobs\ConsumeMatcher;
 
 class AlfaController extends Controller
 {
@@ -198,36 +199,27 @@ class AlfaController extends Controller
 
     public function masivaTest()
     {
-        //Recorrer carpeta de imagenes
-        //$directoryPath = storage_path('app/fotos');
-
-        //Leer el contenido de la directoryMuniciasPath y enviar el nombre de los archivos en un array
-
-
-        // Crear el cliente SOAP usando WSDL
-
+        $usuario = Auth::user();
         // Insertar los datos usando Eloquent
         $logMasivaData = [
             'fechainicio' => Carbon::now(),
             'fechafin' => Carbon::now(),
-            'usuariocarga_id' => 1,
+            'usuariocarga_id' => $usuario->id,
             'totalregistros' => 0,
             'errortotalregistros' => 0,
         ];
 
         $logMasiva = LogMasiva::create($logMasivaData);
+        $idLogMasiva = $logMasiva->id;
+
 
         $index = 0;
-        $usuario = Auth::user();
+
         $resultados = [];
 
 
-        $options = [
-            'trace' => 4,
-            'exceptions' => true
-        ];
-        $client = new SoapClient('http://localhost/mock_wsdl.wsdl', $options);
 
+<<<<<<< HEAD
         $directoryMuniciasPath = 'minucias';
         if (!Storage::exists($directoryMuniciasPath)) {
             Storage::makeDirectory($directoryMuniciasPath);
@@ -241,79 +233,31 @@ class AlfaController extends Controller
         }
         $directoryFotosPath = storage_path("app/".$directoryFotosPath);
 
+=======
+        $directoryMuniciasPath = storage_path('app/municias');
+>>>>>>> 1b7df2a2c74ffd5331ccfc266cec766e99234edf
 
         $files = File::allFiles($directoryMuniciasPath);
 
         // Mostrar los nombres de los archivos
         $iFile = 0;
+        
         foreach ($files as $file) {
-            //echo $file->getFilename() . '<br>';
-            $cedula = $file->getFilename();
-            $cedula = str_replace(".txt", "", $cedula);
-            $foto = $directoryFotosPath . "/" . $cedula . ".jpg";
-            $sha256 = hash('SHA256' , $foto);
-
-            // Llamar al método `ProcessTransaction`
-            try {
-
-                // Crear la solicitud
-                $request =  [
-                    'nut2' => '12345',
-                    'oaid_id' => 'OAID123',
-                    'cliente_id' => 'CLT678',
-                    'nuip_aplicante' => $cedula,
-                    'dispositivo_id' => 'DISP789',
-                    'coordenadas' => ['latitud' => '12.345678', 'longitud' => '98.765432'],
-                    'rostro2' => 'encoded_face_data',
-                    'file_foto_sha256' => 'sha256hash'
-                ];
-
-
-                // Llamar al método SOAP
-                $response = $client->validate_client_data(['validate_client_data' => $request]);
-
-                $logMasivaData = [
-                    'fechainicio' => Carbon::now(),
-                    'fechafin' => Carbon::now(),
-                    'usuariocarga_id' => 1,
-                    'totalregistros' => 0,
-                    'errortotalregistros' => 0,
-                ];
-
-                // Insertar los datos usando Eloquent
-                // Insertar en la tabla log_facial_envivo_uno_a_uno
-                $logData = [
-                    'nut' => $cedula, // Ejemplo de asignación, ajusta según sea necesario
-                    'nuip' => $cedula, // Ejemplo de asignación, ajusta según sea necesario
-                    'resultado' => $response->resultado_cotejo, // Ejemplo de valor estático, ajusta según sea necesario
-                    'fechafin' => Carbon::now(), // Usar la fecha actual
-                    'idusuario' => $usuario->id, // ID del usuario actual o cualquier otro valor
-                    'hashalgo' => $sha256, // Ejemplo de cálculo hash
-                    'idmasiva' => $logMasiva->id,
-                ];
-
-                LogFacialEnvivoUnoAUno::create($logData);
-                $logData['usuarioNombre'] = $usuario->name;
-                $resultados[$index] = (object)$logData;
-                $index++;
-
-
-
-            } catch (SoapFault $e) {
-                //var_dump($e);
-                echo "Error: {$e->getMessage()}\n";
-            }
+            $fileName = $file->getFilename();
+            $msn = ConsumeMatcher::dispatch(
+                $fileName,
+                $usuario,
+                $idLogMasiva
+            )->onQueue('photos');
             $iFile++;
-            /*if($iFile > 2){
-                die("muerto");
+            /*if($iFile > 5){
+                die("Muerto");
             }*/
         }
         $logMasivaData['fechafin'] = Carbon::now();
         $logMasivaData['totalregistros'] = $index;
 
-
         $logMasiva->update($logMasivaData);
-        //die("muerto");
         return view('alfa.masiva', [
             "resultados" => $resultados,
             "logMasiva" => $logMasivaData
