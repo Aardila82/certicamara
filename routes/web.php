@@ -15,7 +15,7 @@ Route::post('login',[LoginController::class,'login']);
 Route::get('logout',[LoginController::class,'logout']);
 
 
-Route::middleware('auth')->group(function () {
+//Route::middleware('auth')->group(function () {
 
    Route::get('dash', function () {
       return view('dash');
@@ -54,7 +54,7 @@ Route::middleware('auth')->group(function () {
 
    Route::post('/loginApi',[LoginController::class,'loginApi']);
  
-});
+//});
 
 
 //require __DIR__.'/auth.php';

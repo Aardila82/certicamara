@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+
+
 use SoapClient;
 use SoapFault;
 
@@ -225,8 +228,18 @@ class AlfaController extends Controller
         ];
         $client = new SoapClient('http://localhost/mock_wsdl.wsdl', $options);
 
-        $directoryMuniciasPath = storage_path('app/municias');
-        $directoryFotosPath = storage_path('app/fotos');
+        $directoryMuniciasPath = 'minucias';
+        if (!Storage::exists($directoryMuniciasPath)) {
+            Storage::makeDirectory($directoryMuniciasPath);
+        }
+        $directoryMuniciasPath = storage_path("app/".$directoryMuniciasPath);
+
+
+        $directoryFotosPath = storage_path('fotos');
+        if (!Storage::exists($directoryFotosPath)) {
+            Storage::makeDirectory($directoryFotosPath);
+        }
+        $directoryFotosPath = storage_path("app/".$directoryFotosPath);
 
 
         $files = File::allFiles($directoryMuniciasPath);
