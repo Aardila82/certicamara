@@ -15,7 +15,7 @@ class LogFacialEnvivoUnoAUnoController extends Controller
         //$logs = LogFacialEnvivoUnoAUno::with('usuario')->get();
 
         $results = DB::table('log_facial_envivo_uno_a_uno')
-        ->join('usuarios', 'log_facial_envivo_uno_a_uno.idusuario', '=', 'usuarios.id')
+        ->leftJoin('usuarios', 'log_facial_envivo_uno_a_uno.idusuario', '=', 'usuarios.id')
         ->leftJoin('alfas', 'log_facial_envivo_uno_a_uno.nuip', '=', 'alfas.pin')
         ->select(
             'log_facial_envivo_uno_a_uno.*',
@@ -26,7 +26,7 @@ class LogFacialEnvivoUnoAUnoController extends Controller
             'usuarios.numerodedocumento',
             DB::raw("CONCAT(alfas.nombre1, ' ', alfas.nombre2, '', alfas.apellido1, ' ', alfas.apellido2) as ciudadano"),
             )
-            ->where('idusuario', $id)
+            ->where('idmasiva', $id)
 
         ->get();
 
