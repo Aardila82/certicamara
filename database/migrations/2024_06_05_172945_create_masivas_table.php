@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('masivas', function (Blueprint $table) {
             $table->id();
-            $table->date('fechainicio');
-            $table->date('fechafin');
+            $table->dateTime('fechainicio');
+            $table->dateTime('fechafin');
             $table->unsignedBigInteger('usuariocarga_id');
             $table->integer('totalregistros');
             $table->integer('errortotalregistros');
