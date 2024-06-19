@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function () {
 
    Route::get('log/facial/{id}',[LogFacialEnvivoUnoAUnoController::class,'lista']);
    Route::get('log-facial/export/{id}', [LogFacialEnvivoUnoAUnoController::class, 'exportCsv']);
+   Route::get('log/unoauno',[LogFacialEnvivoUnoAUnoController::class,'listaunoauno']);
    Route::get('log/fotografia',[LogFotografiaController::class,'lista']);
    Route::get('log/masiva',[LogMasivaController::class,'lista']);
 
@@ -59,7 +60,7 @@ Route::middleware('auth')->group(function () {
 
    Route::post('/loginApi',[LoginController::class,'loginApi']);
 
-
+   Route::get('/posts/export', [LogFacialEnvivoUnoAUnoController::class, 'exportCsv2'])->name('posts.export');
 
 });
 

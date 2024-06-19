@@ -6,7 +6,7 @@
     <div class="container text-center d-block mx-auto">
         <div class="row">
             <div class="col-12">
-                <h1 class="mt-5">Gestión Usuarios</h1>
+                <h1 class="mt-5">Log Sistemas</h1>
             </div>
         </div>
 
@@ -59,7 +59,7 @@
                 </div>
             </div>-->
 
-            <div class="col-lg-3 col-sm-6">
+            {{-- <div class="col-lg-3 col-sm-6">
                 <div class="card-box bg-blue">
                     <div class="inner">
                         <h3></h3>
@@ -73,9 +73,9 @@
                         <i class="fa fa-arrow-circle-right"></i>
                     </a>
                 </div>
-            </div>
+            </div> --}}
 
-            <div class="col-lg-3 col-sm-6">
+            {{-- <div class="col-lg-3 col-sm-6">
                 <div class="card-box bg-blue">
                     <div class="inner">
                         <h3></h3>
@@ -85,6 +85,22 @@
                         <i class="fa fa-graduation-cap" aria-hidden="true"></i>
                     </div>
                     <a href="listado" class="card-box-footer">
+                        Ver Mas
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div> --}}
+
+            <div class="col-lg-3 col-sm-6">
+                <div class="card-box bg-blue">
+                    <div class="inner">
+                        <h3></h3>
+                        <p> <b>Log Uno a Uno</b></p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                    </div>
+                    <a href="../log/unoauno" class="card-box-footer">
                         Ver Mas
                         <i class="fa fa-arrow-circle-right"></i>
                     </a>

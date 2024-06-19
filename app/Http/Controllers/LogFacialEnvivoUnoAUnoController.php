@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\LogFacialEnvivoUnoAUno;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 
 class LogFacialEnvivoUnoAUnoController extends Controller
 {
@@ -123,6 +124,39 @@ class LogFacialEnvivoUnoAUnoController extends Controller
         ]);
     }
 
+
+    public function listaunoauno()
+{
+    $posts = DB::table('log_facial_envivo_uno_a_uno')
+                ->select('id', 'nut', 'nuip', 'resultado', 'fechafin', 'idusuario', 'hashalgo', 'idmasiva', 'created_at', 'updated_at')
+                ->whereNotNull('idmasiva')
+                ->where('idmasiva', '>', 0)
+                ->get();
+
+    return view('log.unoauno', compact('posts'));
+}
+
+public function exportCsv2()
+{
+    $posts = DB::table('log_facial_envivo_uno_a_uno')
+                ->select('id', 'nut', 'nuip', 'resultado', 'fechafin', 'idusuario', 'hashalgo', 'idmasiva', 'created_at', 'updated_at')
+                ->where('idmasiva', '>', 0)
+                ->get();
+
+    $csvExporter = \League\Csv\Writer::createFromFileObject(new \SplTempFileObject());
+    $csvExporter->insertOne(['ID', 'NUT', 'NUIP', 'Resultado', 'Fecha Fin', 'ID Usuario', 'Hash Algo', 'ID Masiva', 'Creado', 'Actualizado']);
+
+    foreach ($posts as $post) {
+        $csvExporter->insertOne(get_object_vars($post));
+    }
+
+    $csvContent = $csvExporter->getContent();
+
+    return Response::make($csvContent, 200, [
+        'Content-Type' => 'text/csv',
+        'Content-Disposition' => 'attachment; filename="posts.csv"',
+    ]);
+}
 
 
     /**
