@@ -40,7 +40,7 @@
           <a type="button" class="btn btn-secondary" href="../masiva">Atras</a>
         </div>
         <!-- Botón para descargar el CSV -->
-    <form action="{{ url('/log-facial/export') }}" method="GET">
+    <form action="{{ url('/log-facial/export') }}/{{$id}}" method="GET">
         <button type="submit">Descargar CSV</button>
     </form>
     </div>

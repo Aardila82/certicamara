@@ -45,7 +45,7 @@ Route::get('logout',[LoginController::class,'logout']);
    Route::get('usuario/reporte',[UsuarioController::class,'reporte']);
 
    Route::get('log/facial/{id}',[LogFacialEnvivoUnoAUnoController::class,'lista']);
-   Route::get('log-facial/export', [LogFacialEnvivoUnoAUnoController::class, 'exportCsv']);
+   Route::get('log-facial/export/{id}', [LogFacialEnvivoUnoAUnoController::class, 'exportCsv']);
    Route::get('log/fotografia',[LogFotografiaController::class,'lista']);
    Route::get('log/masiva',[LogMasivaController::class,'lista']);
 

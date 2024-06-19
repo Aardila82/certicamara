@@ -31,7 +31,10 @@ class LogFacialEnvivoUnoAUnoController extends Controller
         ->get();
 
         // Pasamos los registros a la vista
-        return view('log.facial', ['logs' => $results]);
+        return view('log.facial', [
+            'logs' => $results,
+            'id' => $id
+        ]);
     }
     /**
      * Display a listing of the resource.
@@ -62,7 +65,7 @@ class LogFacialEnvivoUnoAUnoController extends Controller
         }
     }
 
-    public function exportCsv()
+    public function exportCsv($id)
     {
         $results = DB::table('log_facial_envivo_uno_a_uno')
             ->join('usuarios', 'log_facial_envivo_uno_a_uno.idusuario', '=', 'usuarios.id')
@@ -78,6 +81,7 @@ class LogFacialEnvivoUnoAUnoController extends Controller
                 'usuarios.apellido2',
                 'usuarios.numerodedocumento'
             )
+            ->where('idmasiva', $id)
             ->get();
 
         $filename = "logs_facial.csv";
