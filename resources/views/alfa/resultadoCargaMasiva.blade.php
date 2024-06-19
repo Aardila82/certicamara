@@ -39,7 +39,7 @@
         </div>
       </div>
       <div class="row mt-5">
-        <h2 class="text-success">Iniciando Proceso 1 de {{ $logData['totalregistros'] }}</h2>
+        <h2 class="text-success text-center">Iniciando Proceso 1 de {{ $logData['totalregistros'] }}</h2>
       </div>
 
 </div>
