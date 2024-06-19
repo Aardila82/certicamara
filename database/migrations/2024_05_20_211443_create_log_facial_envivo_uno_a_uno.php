@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nut');
             $table->string('nuip');
             $table->string('resultado');
-            $table->date('fechafin');
+            $table->dateTime('fechafin');
             $table->unsignedBigInteger('idusuario'); // Cambiar a unsignedBigInteger
             $table->string('hashalgo');
             $table->integer('idmasiva');

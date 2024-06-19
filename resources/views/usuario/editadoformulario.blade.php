@@ -14,7 +14,7 @@
         Editado Exitoso!!!
     </div>
     <a href="usuario/creacion" class="btn btn-primary mt-3">Crear otro usuario</a>
-    <a href="usuario/listado" class="btn btn-primary mt-3">Listad de usuarios</a>
+    <a href="usuario/listado" class="btn btn-primary mt-3">Listado de usuarios</a>
 
 </div>
 
