@@ -235,7 +235,7 @@ class AlfaController extends Controller
 
         // Mostrar los nombres de los archivos
         $iFile = 0;
-        
+
         foreach ($files as $file) {
             $fileName = $file->getFilename();
             $msn = ConsumeMatcher::dispatch(
@@ -262,7 +262,17 @@ class AlfaController extends Controller
      */
     public function index()
     {
-        //
+        $datos = Alfa::all();
+
+        $logData = [
+            'fechainicio' => Carbon::now(),
+            'fechafin' => Carbon::now(),
+            'usuariocarga_id' => 1,
+            'totalregistros' => 0,
+            'errortotalregistros' => 0,
+        ];
+
+        return view('alfa/resultadoCargaMasiva', compact('datos', 'logData'));
     }
 
     /**

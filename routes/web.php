@@ -21,9 +21,13 @@ Route::middleware('auth')->group(function () {
       return view('dash');
    });
 
+
+
    Route::get('guardadoFormulario', function () {
       return view('guardadoFormulario');
    });
+
+
 
    Route::get('editadoFormulario', function () {
     return view('usuario/editadoformulario');
@@ -51,6 +55,7 @@ Route::middleware('auth')->group(function () {
 
    Route::get('/importaralfa',[AlfaController::class,'importaralfa']);
    Route::get('/masiva', [AlfaController::class, 'masivaTest']);
+   Route::get('resultadoCargaMasiva', [AlfaController::class, 'index']);
 
    Route::post('/loginApi',[LoginController::class,'loginApi']);
 
