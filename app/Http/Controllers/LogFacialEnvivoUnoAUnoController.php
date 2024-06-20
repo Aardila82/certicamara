@@ -130,7 +130,7 @@ class LogFacialEnvivoUnoAUnoController extends Controller
     $posts = DB::table('log_facial_envivo_uno_a_uno')
                 ->select('id', 'nut', 'nuip', 'resultado', 'fechafin', 'idusuario', 'hashalgo', 'idmasiva', 'created_at', 'updated_at')
                 ->whereNotNull('idmasiva')
-                ->where('idmasiva', '>', 0)
+                ->where('idmasiva', '=', 0)
                 ->get();
 
     return view('log.unoauno', compact('posts'));
@@ -144,7 +144,7 @@ public function exportCsv2()
                 ->get();
 
     $csvExporter = \League\Csv\Writer::createFromFileObject(new \SplTempFileObject());
-    $csvExporter->insertOne(['ID', 'NUT', 'NUIP', 'Resultado', 'Fecha Fin', 'ID Usuario', 'Hash Algo', 'ID Masiva', 'Creado', 'Actualizado']);
+    $csvExporter->insertOne(['ID', 'NUT', 'NUIP', 'Resultado', 'Fecha Fin', 'ID Usuario', 'Hash', 'ID Masiva', 'Creado', 'Actualizado']);
 
     foreach ($posts as $post) {
         $csvExporter->insertOne(get_object_vars($post));

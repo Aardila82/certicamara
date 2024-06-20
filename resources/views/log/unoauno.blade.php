@@ -3,7 +3,7 @@
 @section('contenido')
 
 <div class="container-fluid mt-5">
-    <h2 class="text-center mb-4">Log Masivas</h2>
+    <h2 class="text-center mb-4">Log uno a uno</h2>
 
     <div class="row mb-3">
         <div class="col-md-12 text-end">
@@ -21,11 +21,11 @@
                       <th>NUIP</th>
                       <th>Resultado</th>
                       <th>Fecha Fin</th>
-                      <th>ID Usuario</th>
-                      <th>Hash Algo</th>
+                      <th>Hash</th>
                       <th>ID Masiva</th>
-                      <th>Creado</th>
-                      <th>Actualizado</th>
+                      <th>Codigo Usuario</th>
+                      <th>Resultado Cotejo</th>
+
                   </tr>
               </thead>
               <tbody>
@@ -36,11 +36,9 @@
                       <td>{{ $post->nuip }}</td>
                       <td>{{ $post->resultado }}</td>
                       <td>{{ $post->fechafin }}</td>
-                      <td>{{ $post->idusuario }}</td>
                       <td>{{ $post->hashalgo }}</td>
                       <td>{{ $post->idmasiva }}</td>
-                      <td>{{ $post->created_at }}</td>
-                      <td>{{ $post->updated_at }}</td>
+
                   </tr>
                   @endforeach
               </tbody>

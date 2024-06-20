@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\AlfaController;
-use App\Http\Controllers\LogFacialEnvivoUnoAUnoController;
-use App\Http\Controllers\LogFotografiaController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\LogMasivaController;
+use App\Http\Controllers\LogFotografiaController;
+use App\Http\Controllers\LogCotejoIndividualController;
+use App\Http\Controllers\LogFacialEnvivoUnoAUnoController;
 
 Route::get('',[LoginController::class,'index']);
 
@@ -61,6 +62,10 @@ Route::middleware('auth')->group(function () {
    Route::post('/loginApi',[LoginController::class,'loginApi']);
 
    Route::get('/posts/export', [LogFacialEnvivoUnoAUnoController::class, 'exportCsv2'])->name('posts.export');
+
+   Route::post('log/logs', [LogCotejoIndividualController::class, 'store']);
+   Route::get('log/logs', [LogCotejoIndividualController::class, 'index']);
+   Route::get('log/logs/view', [LogCotejoIndividualController::class, 'showLogs']);
 
 });
 
