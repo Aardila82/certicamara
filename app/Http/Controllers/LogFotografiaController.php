@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LogFotografia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class LogFotografiaController extends Controller
 {
@@ -16,6 +17,36 @@ class LogFotografiaController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function exportCsv()
+    {
+        $logs = LogFotografia::all();
+        $csvData = [];
+        $csvData[] = ['ID', 'FNUT', 'NUIP', 'Peso Real', 'Hash', 'Fotografia']; // Header row
+
+        foreach ($logs as $log) {
+            $csvData[] = [
+                $log->id,
+                $log->fnut,
+                $log->nuip,
+                $log->peso_real,
+                $log->hash,
+                $log->fotografia,
+            ];
+        }
+
+        $filename = "log_fotografia_" . date('Y-m-d_H-i-s') . ".csv";
+        $handle = fopen($filename, 'w+');
+        foreach ($csvData as $row) {
+            fputcsv($handle, $row);
+        }
+        fclose($handle);
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+        ];
+
+        return Response::download($filename, $filename, $headers)->deleteFileAfterSend(true);
+    }
     public function index()
     {
         //

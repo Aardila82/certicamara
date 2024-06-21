@@ -62,7 +62,7 @@
             <div class="card-box bg-red">
                 <div class="inner">
                     <h3></h3>
-                    <p><b>Validar Identidad</b></p>
+                    <p><b>Cotejo Uno a Uno</b></p>
                 </div>
                 <div class="icon">
                     <i class="fa fa-solid fa-eye" aria-hidden="true"></i>

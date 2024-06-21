@@ -5,16 +5,19 @@
     <h2 class="text-center mb-4">Log Fotografia</h2>
 
     <div class="row">
+
         <div class="col-md-12">
+
           <table id="dataTable" class="table table-striped table-bordered shadow-lg" style="width: 100%">
               <thead class="bg-primary text-white">
                   <tr>
                       <th>ID</th>
                       <th>NUT</th>
                       <th>NUIP</th>
-                      <th>Resultado</th>
-                      <th>Fecha Fin</th>
-                      <th>ID Usuario</th>
+                      <th>Peso Fotografia</th>
+                      <th>Hash</th>
+                      <th>Fotografia</th>
+
                   </tr>
               </thead>
               <tbody>
@@ -29,11 +32,15 @@
                   </tr>
                   @endforeach
                   <!-- Agrega más filas según sea necesario -->
-              </tbody>
+              </tbody>php artisan serve
+
           </table>
         </div>
         <div class="col-md-12 text-center">
           <a type="button" class="btn btn-secondary" href="../usuario/reporte">Atras</a>
+        </div>
+        <div class="col-4">
+            <a href="{{ url('/log-fotografia/csv') }}" class="btn btn-primary text-right mb-3">Exportar a CSV</a>
         </div>
     </div>
 </div>

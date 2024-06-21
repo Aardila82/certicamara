@@ -59,7 +59,7 @@
                 </div>
             </div>-->
 
-            {{-- <div class="col-lg-3 col-sm-6">
+             <div class="col-lg-3 col-sm-6">
                 <div class="card-box bg-blue">
                     <div class="inner">
                         <h3></h3>
@@ -73,7 +73,7 @@
                         <i class="fa fa-arrow-circle-right"></i>
                     </a>
                 </div>
-            </div> --}}
+            </div>
 
             {{-- <div class="col-lg-3 col-sm-6">
                 <div class="card-box bg-blue">
@@ -92,7 +92,7 @@
             </div> --}}
 
             <div class="col-lg-3 col-sm-6">
-                <div class="card-box bg-blue">
+                <div class="card-box bg-red">
                     <div class="inner">
                         <h3></h3>
                         <p> <b>Log Uno a Uno</b></p>

@@ -66,6 +66,10 @@ Route::middleware('auth')->group(function () {
    Route::post('log/logs', [LogCotejoIndividualController::class, 'store']);
    Route::get('log/logs', [LogCotejoIndividualController::class, 'index']);
    Route::get('log/logs/view', [LogCotejoIndividualController::class, 'showLogs']);
+   Route::get('/log-fotografia/csv', [LogFotografiaController::class, 'exportCsv']);
+   Route::get('cotejounoauno', [LogCotejoIndividualController::class, 'cotejounoauno']);
+   Route::post('mostrarcedula', [LogCotejoIndividualController::class, 'capturarCedula'])->name('capturar.cedula');
+   Route::post('/generar-pdf', [LogCotejoIndividualController::class, 'generarPDF'])->name('generar.pdf');
 
 });
 
