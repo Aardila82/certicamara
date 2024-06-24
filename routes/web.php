@@ -70,6 +70,12 @@ Route::middleware('auth')->group(function () {
    Route::get('cotejounoauno', [LogCotejoIndividualController::class, 'cotejounoauno']);
    Route::post('mostrarcedula', [LogCotejoIndividualController::class, 'capturarCedula'])->name('capturar.cedula');
    Route::post('/generar-pdf', [LogCotejoIndividualController::class, 'generarPDF'])->name('generar.pdf');
+   Route::get('/execute-jar', [LogFacialEnvivoUnoAUnoController::class, 'executeJar']);
+
+   Route::get('log/upload', function () {
+    return view('log/upload');
+});
+Route::post('log/upload-image', [LogFacialEnvivoUnoAUnoController::class, 'log/upload']);
 
 });
 
