@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>co.com.certicamara</groupId>
+    <artifactId>commons4j</artifactId>
+    <version>3.0.4</version>
+    <name>commons4j</name>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+    </properties>
+
+  <distributionManagement>
+		<snapshotRepository>
+			<id>Dependencias-nexus</id>
+			<url>https://pkgs.dev.azure.com/certicamara-devops/_packaging/Dependencias-nexus/maven/v1</url>
+		</snapshotRepository>
+		<repository>
+			<id>Dependencias-nexus</id>
+			<url>https://pkgs.dev.azure.com/certicamara-devops/_packaging/Dependencias-nexus/maven/v1</url>
+		</repository>
+	</distributionManagement>
+
+	<repositories>
+		<repository>
+			<id>Dependencias-nexus</id>
+			<url>https://pkgs.dev.azure.com/certicamara-devops/_packaging/Dependencias-nexus/maven/v1</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+	</repositories>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </resource>
+    </resources>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.12.1</version>
+            <configuration>
+                <source>17</source>
+                <target>17</target>
+            </configuration>
+        </plugin>
+    </plugins>
+  </build>
+</project>

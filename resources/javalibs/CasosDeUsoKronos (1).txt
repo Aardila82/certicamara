@@ -1,0 +1,275 @@
+package co.com.certicamara.kronos.test;
+
+import static org.junit.Assert.fail;
+
+import java.io.File;
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+
+import org.junit.Test;
+
+import co.com.certicamara.kronos.TSAAuthentication;
+import co.com.certicamara.kronos.TSAProperties;
+import co.com.certicamara.kronos.TimeStampObject;
+import co.com.certicamara.kronos.authentications.TSACertAuthentication;
+import co.com.certicamara.kronos.authentications.TSAUserPassAuthentication;
+import co.com.certicamara.kronos.authentications.TSAWithoutAuthentication;
+import co.com.certicamara.kronos.exception.KronosException;
+import co.com.certicamara.kronos.response.ResponseTimeStamp;
+import co.com.certicamara.kronos.utils.TimeStampConstants;
+import co.com.certicamara.kronos.utils.Utilities;
+
+public class TestKronos {
+	@Test
+	public void timeStampSinAutenticacionSHA1(){
+		try{
+			File fileAux = new File("resources");
+			String pathResources = fileAux.getAbsolutePath();
+			//Dirección de la TSA
+			String TSAURLString = "http://190.131.205.170:9235";
+			String policy = "1.3.6.1.4.1.23267.60.1";
+			//Algoritmo de hash que vamos a utilizar
+			String hashAlgorithm = TimeStampConstants.SHA_1;
+			//Fabricamos un objeto con las caracteristicas anteriores
+			TSAAuthentication autenticacion = new TSAWithoutAuthentication();
+			String textoClaro = "Hola mundo";
+			MessageDigest sha1 = null;
+			try{
+				sha1 = MessageDigest.getInstance(hashAlgorithm);
+				
+			} 
+			catch (NoSuchAlgorithmException e) {
+				throw new KronosException(KronosException.getMessage("T112"));
+			}
+			byte[] bytesHashed = sha1.digest( textoClaro.getBytes());
+			TSAProperties properties = new TSAProperties(TSAURLString, policy, bytesHashed, true, hashAlgorithm, autenticacion);
+			TimeStampObject timeStamper = new TimeStampObject(properties);
+			ResponseTimeStamp resp = timeStamper.stampObject();
+			System.out.println(resp.getResponseTSR().getTsaName());
+			System.out.println(resp.getResponseTSR().getTimeStamp().toString());
+			System.out.println(resp.getResponseTSR().getSerialNumber());
+			System.out.println(resp.getResponseTSR().getPolicyId());
+			System.out.println(new String(resp.getResponseTSR().getHashedMsg()));
+			System.out.println(new String(bytesHashed));
+			System.out.println(bytesHashed.length+" "+resp.getResponseTSR().getHashedMsg().length);
+			System.out.println(Arrays.equals(bytesHashed, resp.getResponseTSR().getHashedMsg()));
+			try {
+				Utilities.saveBytesToFile(pathResources+"/outputs/pkcs7testAtached.p7z.tsr", resp.getResponseTSR().getTSRstampResponse());
+			} 
+			catch (IOException e) {
+				fail(e.getMessage());
+			}
+		}
+		catch(KronosException e){
+			System.out.println(e.getMessage());
+			//e.printStackTrace();
+			//fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void timeStampSinAutenticacionSHA256() throws IOException, Exception
+	{
+		try{
+		File fileAux = new File("src/test/resources");
+		String pathResources = fileAux.getAbsolutePath();
+		//Dirección de la TSA
+		String TSAURLString = "http://190.131.205.170:9235";
+		String policy = "1.3.6.1.4.1.23267.60.1";
+		//Algoritmo de hash que vamos a utilizar
+		String hashAlgorithm = TimeStampConstants.SHA_256;
+		//Fabricamos un objeto con las caracteristicas anteriores
+		String certificatePath = pathResources + "/certificates/EstampaPruebas.p12";
+		//String certificatePath = pathResources + "/certificates/certificadoJhon.p12";
+		//Contraseña del certificado con el que vamos a estampar
+		String certificatePass = "Password1";
+		TSAAuthentication autenticacion = new TSACertAuthentication(Utilities.getBytesFromFile(certificatePath),certificatePass);
+		
+		String textoClaro = "Hola mundo";
+		MessageDigest sha1 = null;
+    	
+		try {
+			
+			sha1 = MessageDigest.getInstance(hashAlgorithm);
+			
+		} catch (NoSuchAlgorithmException e) {
+			throw new KronosException(KronosException.getMessage("T112"));
+			
+		}
+		byte[] bytesHashed = sha1.digest( textoClaro.getBytes());
+		TSAProperties properties = new TSAProperties(TSAURLString, policy, bytesHashed, true, hashAlgorithm, autenticacion);
+		TimeStampObject timeStamper = new TimeStampObject(properties);
+		ResponseTimeStamp resp = timeStamper.stampObject();
+		
+		System.out.println(resp.getResponseTSR().getTsaName());
+		System.out.println(resp.getResponseTSR().getTimeStamp().toString());
+		System.out.println(resp.getResponseTSR().getSerialNumber());
+		System.out.println(resp.getResponseTSR().getPolicyId());
+		System.out.println(new String(resp.getResponseTSR().getHashedMsg()));
+		System.out.println(new String(bytesHashed));
+		System.out.println(bytesHashed.length+" "+resp.getResponseTSR().getHashedMsg().length);
+		System.out.println(Arrays.equals(bytesHashed, resp.getResponseTSR().getHashedMsg()));
+		try {
+			Utilities.saveBytesToFile(pathResources+"/outputs/pkcs7testAtached.p7z.tsr", resp.getResponseTSR().getTSRstampResponse());
+		} catch (IOException e) {
+			fail(e.getMessage());
+		}
+		}catch(KronosException e){
+			System.out.println(e.getMessage());
+			//e.printStackTrace();
+			//fail(e.getMessage());
+		}
+	}
+	
+	
+	@Test
+	public void timeStampSinAutenticacionSHA512()
+	{
+		try{
+		File fileAux = new File("src/test/resources");
+		String pathResources = fileAux.getAbsolutePath();
+		//Dirección de la TSA
+		String TSAURLString = "http://190.131.205.170:9233";
+		String policy = "1.3.6.1.4.1.23267.60.1";
+		//Algoritmo de hash que vamos a utilizar
+		String hashAlgorithm = TimeStampConstants.SHA_512;
+		//Fabricamos un objeto con las caracteristicas anteriores
+		TSAAuthentication autenticacion = new TSAUserPassAuthentication("PCE20130115007","C3r&i249Med");
+		
+		String textoClaro = "Hola mundo";
+		MessageDigest sha1 = null;
+    	
+		try {
+			
+			sha1 = MessageDigest.getInstance(hashAlgorithm);
+			
+		} catch (NoSuchAlgorithmException e) {
+			throw new KronosException(KronosException.getMessage("T112"));
+			
+		}
+		byte[] bytesHashed = sha1.digest( textoClaro.getBytes());
+		TSAProperties properties = new TSAProperties(TSAURLString, policy, textoClaro.getBytes(), false, hashAlgorithm, autenticacion);
+		TimeStampObject timeStamper = new TimeStampObject(properties);
+		ResponseTimeStamp resp = timeStamper.stampObject();
+		
+		System.out.println(resp.getResponseTSR().getTsaName());
+		System.out.println(resp.getResponseTSR().getTimeStamp().toString());
+		System.out.println(resp.getResponseTSR().getSerialNumber());
+		System.out.println(resp.getResponseTSR().getPolicyId());
+		System.out.println(new String(resp.getResponseTSR().getHashedMsg()));
+		System.out.println(new String(bytesHashed));
+		System.out.println(bytesHashed.length+" "+resp.getResponseTSR().getHashedMsg().length);
+		System.out.println(Arrays.equals(bytesHashed, resp.getResponseTSR().getHashedMsg()));
+		try {
+			Utilities.saveBytesToFile(pathResources+"/outputs/pkcs7testAtached.p7z.tsr", resp.getResponseTSR().getTSRstampResponse());
+		} catch (IOException e) {
+			fail(e.getMessage());
+		}
+		}catch(KronosException e){
+			System.out.println(e.getMessage());
+			//e.printStackTrace();
+			//fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void timeStampUsuarioPass()
+	{
+		try{
+		File fileAux = new File("src/test/resources");
+		String pathResources = fileAux.getAbsolutePath();
+		//Dirección de la TSA
+		String TSAURLString = "http://190.131.205.170:9233";
+		String policy = "";
+		
+		//Algoritmo de hash que vamos a utilizar
+		String hashAlgorithm = TimeStampConstants.SHA_1;
+		
+		//Fabricamos un objeto con las caracteristicas anteriores
+		TSAAuthentication autenticacion = new TSAUserPassAuthentication("CE20171204387","Password1");
+		
+		String textoClaro = "Hola mundo";
+		MessageDigest sha1 = null;
+    	
+		try {
+			
+			sha1 = MessageDigest.getInstance("SHA1");
+			
+		} catch (NoSuchAlgorithmException e) {
+			
+		}
+		byte[] bytesHashed = sha1.digest( textoClaro.getBytes());
+		TSAProperties properties = new TSAProperties(TSAURLString, policy, textoClaro.getBytes(), false, hashAlgorithm, autenticacion);
+		TimeStampObject timeStamper = new TimeStampObject(properties);
+		ResponseTimeStamp resp = timeStamper.stampObject();
+		
+		System.out.println(resp.getResponseTSR().getTsaName());
+		System.out.println(resp.getResponseTSR().getTimeStamp().toString());
+		System.out.println(resp.getResponseTSR().getSerialNumber());
+		System.out.println(resp.getResponseTSR().getPolicyId());
+		System.out.println(new String(resp.getResponseTSR().getHashedMsg()));
+		System.out.println(new String(bytesHashed));
+		System.out.println(bytesHashed.length+" "+resp.getResponseTSR().getHashedMsg().length);
+		System.out.println(Arrays.equals(bytesHashed, resp.getResponseTSR().getHashedMsg()));
+		
+		}catch(KronosException e){
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void timeStampCertificado() throws IOException, Exception
+	{
+		try{
+		File fileAux = new File("src/test/resources");
+		String pathResources = fileAux.getAbsolutePath();
+		//Ruta absoluta en donde se encuentra el certificado con el que vamos a estampar
+		String certificatePath = pathResources + "/certificates/pruebas.p12";
+		//String certificatePath = pathResources + "/certificates/certificadoJhon.p12";
+		//Contraseña del certificado con el que vamos a estampar
+		String certificatePass = "Password1";
+		//Dirección de la TSA
+		String TSAURLString = "http://190.131.205.170:9235";
+		String policy = "1.3.6.1.4.1.23267.60.1";
+		
+		//Algoritmo de hash que vamos a utilizar
+		String hashAlgorithm = TimeStampConstants.SHA_512;
+		
+		//Fabricamos un objeto con las caracteristicas anteriores
+		TSAAuthentication autenticacion = new TSACertAuthentication(Utilities.getBytesFromFile(certificatePath),certificatePass);
+		
+//		String textoClaro = "Hola mundo";
+//		MessageDigest sha1 = null;
+//    	
+//		try {
+//			
+//			sha1 = MessageDigest.getInstance("SHA1");
+//			
+//		} catch (NoSuchAlgorithmException e) {
+//			throw new KronosException(KronosException.getMessage("T112"));
+//			
+//		}
+//		byte[] bytesHashed = sha1.digest( textoClaro.getBytes());
+		
+		//TSAProperties properties = new TSAProperties(TSAURLString, policy, textoClaro.getBytes(), false, hashAlgorithm, autenticacion);
+		TSAProperties properties = new TSAProperties(TSAURLString, policy, Utilities.getBytesFromFile("C:/Users/oscar.castaeda/Desktop/ProyectosCerticamara/ApiJava/cronos4j/src/test/resources/inputs/estampa.jpg"), false, hashAlgorithm, autenticacion);
+		TimeStampObject timeStamper = new TimeStampObject(properties);
+		ResponseTimeStamp resp = timeStamper.stampObject();
+		System.out.println(resp.getResponseTSR().getTsaName());
+		System.out.println(resp.getResponseTSR().getTimeStamp().toString());
+		System.out.println(resp.getResponseTSR().getSerialNumber());
+		System.out.println(resp.getResponseTSR().getPolicyId());
+		System.out.println(new String(resp.getResponseTSR().getHashedMsg()));
+//		System.out.println(new String(bytesHashed));
+//		System.out.println(bytesHashed.length+" "+resp.getResponseTSR().getHashedMsg().length);
+//		System.out.println(Arrays.equals(bytesHashed, resp.getResponseTSR().getHashedMsg()));
+		Utilities.saveBytesToFile(pathResources+"/outputs/pkcs7testAtached.p7z.tsr", resp.getResponseTSR().getTSRstampResponse());
+		}catch(KronosException e){
+			System.out.println(e.getMessage());
+			//e.printStackTrace();
+			//fail(e.getMessage());
+		}
+	}
+}
