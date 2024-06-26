@@ -6,6 +6,9 @@ use App\Models\LogFacialEnvivoUnoAUno;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Exception;
 
 class LogFacialEnvivoUnoAUnoController extends Controller
 {
@@ -158,7 +161,61 @@ public function exportCsv2()
     ]);
 }
 
+public function executeJar()
+{
+    // Ruta al archivo .jar en el directorio storage
+    $jarFilePath = storage_path('app/libs/commons4j-3.0.4.jar');
 
+    // Comando para ejecutar el archivo .jar
+    $command = "java -jar $jarFilePath 2>&1"; // Redirige stderr a stdout
+
+    // Ejecutar el comando
+    $output = [];
+    $returnVar = 0;
+    exec($command, $output, $returnVar);
+
+    // Registrar la salida y el código de retorno para depuración
+    Log::info('Comando ejecutado: ' . $command);
+    Log::info('Salida del comando: ' . implode("\n", $output));
+    Log::info('Código de retorno: ' . $returnVar);
+
+    // Revisar el resultado de la ejecución
+    if ($returnVar === 0) {
+        // Éxito
+        return response()->json([
+            'message' => 'Archivo .jar ejecutado exitosamente',
+            'output' => $output,
+        ]);
+    } else {
+        // Error
+        return response()->json([
+            'message' => 'Error al ejecutar el archivo .jar',
+            'output' => $output,
+            'error' => $returnVar,
+        ], 500);
+    }
+}
+
+
+public function upload(Request $request)
+    {
+        $request->validate([
+            'image' => ['required', 'string', function ($attribute, $value, $fail) {
+                if (!base64_decode($value, true)) {
+                    $fail('The ' . $attribute . ' is not a valid base64 encoded string.');
+                }
+            }],
+        ]);
+
+        $base64Image = $request->input('image');
+        $imageData = base64_decode($base64Image);
+
+        // Guardar la imagen en el sistema de archivos
+        $imageName = time() . '.png';
+        Storage::disk('public')->put($imageName, $imageData);
+
+        return response()->json(['message' => 'Image uploaded successfully', 'image_name' => $imageName]);
+    }
     /**
      * Show the form for creating a new resource.
      */
