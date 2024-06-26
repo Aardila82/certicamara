@@ -1,4 +1,4 @@
-<!-- resources/views/upload.blade.php -->
+<!-- resources/views/log/upload.blade.php -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,7 +46,7 @@
                 event.preventDefault();
                 const base64Image = document.getElementById('base64Image').value;
 
-                const response = await fetch('/upload-image', {
+                const response = await fetch('/log/upload-image', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -54,6 +54,11 @@
                     },
                     body: JSON.stringify({ image: base64Image }),
                 });
+
+                if (!response.ok) {
+                    console.error('Error uploading image:', response.statusText);
+                    return;
+                }
 
                 const result = await response.json();
                 console.log(result);

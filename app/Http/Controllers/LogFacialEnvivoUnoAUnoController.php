@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Exception;
 
 class LogFacialEnvivoUnoAUnoController extends Controller
 {
@@ -197,24 +198,24 @@ public function executeJar()
 
 
 public function upload(Request $request)
-{
-    $request->validate([
-        'image' => ['required', 'string', function ($attribute, $value, $fail) {
-            if (!base64_decode($value, true)) {
-                $fail('The ' . $attribute . ' is not a valid base64 encoded string.');
-            }
-        }],
-    ]);
+    {
+        $request->validate([
+            'image' => ['required', 'string', function ($attribute, $value, $fail) {
+                if (!base64_decode($value, true)) {
+                    $fail('The ' . $attribute . ' is not a valid base64 encoded string.');
+                }
+            }],
+        ]);
 
-    $base64Image = $request->input('image');
-    $imageData = base64_decode($base64Image);
+        $base64Image = $request->input('image');
+        $imageData = base64_decode($base64Image);
 
-    // Guardar la imagen en el sistema de archivos
-    $imageName = time() . '.png';
-    Storage::disk('public')->put($imageName, $imageData);
+        // Guardar la imagen en el sistema de archivos
+        $imageName = time() . '.png';
+        Storage::disk('public')->put($imageName, $imageData);
 
-    return response()->json(['message' => 'Image uploaded successfully', 'image_name' => $imageName]);
-}
+        return response()->json(['message' => 'Image uploaded successfully', 'image_name' => $imageName]);
+    }
     /**
      * Show the form for creating a new resource.
      */

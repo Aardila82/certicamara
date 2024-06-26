@@ -73,9 +73,9 @@ Route::middleware('auth')->group(function () {
    Route::get('/execute-jar', [LogFacialEnvivoUnoAUnoController::class, 'executeJar']);
 
    Route::get('log/upload', function () {
-    return view('log/upload');
+    return view('log.upload');
 });
-Route::post('log/upload-image', [LogFacialEnvivoUnoAUnoController::class, 'log/upload']);
+Route::post('log/upload-image', [LogFacialEnvivoUnoAUnoController::class, 'upload']);
 
 });
 
