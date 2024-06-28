@@ -35,7 +35,7 @@
                 <div class="icon">
                     <i class="fa fa-solid fa-share" aria-hidden="true"></i>
                 </div>
-                <a href="/masiva" class="card-box-footer" id="masiva">
+                <a href="masiva" class="card-box-footer" id="masiva">
                     Ver Mas
                     <i class="fa fa-arrow-circle-right"></i>
                 </a>
@@ -67,7 +67,7 @@
                 <div class="icon">
                     <i class="fa fa-solid fa-eye" aria-hidden="true"></i>
                 </div>
-                <a href="#" class="card-box-footer">
+                <a href="log/unoauno" class="card-box-footer">
                     Ver Mas
                     <i class="fa fa-arrow-circle-right"></i>
                 </a>
