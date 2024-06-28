@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class municipio extends Model
+class Municipio extends Model
 {
     use HasFactory;
     protected $fillable = ['nombre','departamento_id', 'codigodivipola', 'numeromunicipio', 'estado'];
