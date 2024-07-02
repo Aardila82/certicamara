@@ -38,7 +38,7 @@ class MunicipioTableSeeder extends Seeder
             }
 
             // Crear un nuevo municipio y asignar los valores del CSV
-            $municipio = new Municipio();
+            $municipio = new municipio();
             $municipio->nombre = $data[0];
             $municipio->departamento_id = $departamento->id;
             $municipio->codigodivipola = $data[1];
