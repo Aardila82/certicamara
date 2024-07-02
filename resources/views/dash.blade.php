@@ -35,7 +35,7 @@
                 <div class="icon">
                     <i class="fa fa-solid fa-share" aria-hidden="true"></i>
                 </div>
-                <a href="masiva" class="card-box-footer" id="masiva">
+                <a href="loader" class="card-box-footer" id="masiva">
                     Ver Mas
                     <i class="fa fa-arrow-circle-right"></i>
                 </a>

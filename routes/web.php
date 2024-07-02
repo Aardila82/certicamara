@@ -77,6 +77,10 @@ Route::middleware('auth')->group(function () {
 });
 Route::post('log/upload-image', [LogFacialEnvivoUnoAUnoController::class, 'upload']);
 
+Route::get('loader', function () {
+    return view('loader');
+});
+
 });
 
 

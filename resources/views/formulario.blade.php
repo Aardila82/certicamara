@@ -159,7 +159,7 @@
         var departamentoId = $(this).val();
         if (departamentoId) {
           $.ajax({
-            url: '/departamentos/' + departamentoId + '/municipios',
+            url: '../departamentos/' + departamentoId + '/municipios',
             type: "GET",
             dataType: "json",
             success: function(data) {
