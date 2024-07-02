@@ -33,7 +33,7 @@
             </table>
         </div>
         <div class="col-md-12 text-center">
-            <a type="button" class="btn btn-secondary" href="../usuario/reporte">Atras</a>
+            <a type="button" class="btn btn-secondary" href="usuario/reporte">Atras</a>
         </div>
     </div>
 </div>
