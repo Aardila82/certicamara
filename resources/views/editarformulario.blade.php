@@ -141,7 +141,7 @@
 
         <div class="mt-3  col-12">
           <button type="submit" class="btn btn-primary">Guardar</button>
-          <a href="menu" class="btn btn-warning text-white">Atrás</a>
+          <a href="../listado" class="btn btn-warning text-white">Atrás</a>
         </div>
 
       </div>

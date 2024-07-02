@@ -26,7 +26,7 @@
 
         <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
             <div class="container-fluid">
-                <a class="navbar-brand" href="logout">Salir</a>
+                <a class="navbar-brand" href="{{url('logout')}}">Salir</a>
                 @auth
                     <h6 class="text-white">Usuario: {{ Auth::user()->name }}!</h6>
                 @endauth
