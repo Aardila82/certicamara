@@ -78,52 +78,48 @@ class UsuarioController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $campos = $request->all();
+{
+    $campos = $request->all();
 
-        //var_dump($campos );
-        //die();
+    $request->validate([
+        'nombre1' => 'required|string|max:255',
+        'nombre2' => 'required|string|max:255',
+        'apellido1' => 'required|string|max:255',
+        'apellido2' => 'required|string|max:255',
+        'numerodedocumento' => 'required|unique:usuarios,numerodedocumento|numeric|digits_between:7,10',
+        'email' => 'required|unique:usuarios,email|email|max:255',
+        'telefono' => 'required|string|max:20',
+        'departamento' => 'required|numeric',
+        'municipio' => 'required|numeric',
+        'usuario' => 'required|unique:usuarios,usuario|string|max:255',
+        'contrasena' => [
+            'required',
+            'string',
+            'min:8',
+            'max:255',
+            'regex:/[A-Z]/',      // al menos una letra mayúscula
+            'regex:/[0-9]/',      // al menos un número
+        ],
+        'confirmacion_contrasena' => 'required|string|max:255|same:contrasena',
+        'estado' => 'required|boolean',
+        'rol' => 'required|numeric',
+    ]);
 
-        $request->validate([
-            'nombre1' => 'required|string|max:255',
-            'nombre2' => 'required|string|max:255',
-            'apellido1' => 'required|string|max:255',
-            'apellido2' => 'required|string|max:255',
-            'numerodedocumento' => 'required|unique:usuarios,numerodedocumento|numeric|digits_between:7,10',
-            'email' => 'required|unique:usuarios,email|email|max:255',
-            'telefono' => 'required|string|max:20',
-            'departamento' => 'required|numeric',
-            'municipio' => 'required|numeric',
-            'usuario' => 'required|unique:usuarios,usuario|string|max:255',
-            'contrasena' => 'required|string|max:255|min:8',
-            'confirmacion_contrasena' => 'required|string|max:255|same:contrasena',
+    // Crear un nuevo registro en la base de datos
+    $campos["contrasena"] = Hash::make($campos["contrasena"]);
+    Usuario::create($campos);
 
-            'estado' => 'required|boolean',
-            'rol' => 'required|numeric',
-        ]);
+    User::create([
+        'name' => $campos["nombre1"] . " " . $campos["nombre2"] . " " . $campos["apellido1"] . " " . $campos["apellido2"],
+        'email' => $campos["email"],
+        'password' => $campos["contrasena"],
+        'email_verified_at' => Carbon::now(),
+    ]);
 
-        // Crear un nuevo registro en la base de datos
-        $campos["contrasena"] = Hash::Make($campos["contrasena"]);
-        Usuario::create($campos);
+    // Redirigir a una ruta específica después de guardar los datos
+    return redirect('/guardadoFormulario')->with('success', 'Usuario creado exitosamente.');
+}
 
-
-        User::create(
-            [
-                'name' => $campos["nombre1"] . " " . $campos["nombre2"] . " " . $campos["apellido1"] . " " . $campos["apellido2"],
-                'email' => $campos["email"],
-                'password' => $campos["contrasena"],
-                'email_verified_at' => Carbon::now(),
-
-            ]
-        );
-        //Registrra info en la tabla users de laravel para poder hacer  el logueo con auth
-
-        //$request->session()->flash('success', 'Usuario creado exitosamente. ');
-
-
-        // Redirigir a una ruta específica después de guardar los datos
-        return redirect('/guardadoFormulario')->with('success', 'Usuario creado exitosamente.');
-    }
 
     /**
      * Display the specified resource.
@@ -236,6 +232,90 @@ class UsuarioController extends Controller
         return response()->json(['success' => false, 'message' => 'Usuario no encontrado'], 404);
     }
 }
+
+// Otros métodos existentes
+
+    /**
+     * Mostrar el formulario para solicitar el cambio de contraseña
+     */
+    public function showChangePasswordForm()
+    {
+        return view('cambiodecontrasena');
+    }
+
+    /**
+     * Manejar la solicitud de cambio de contraseña
+     */
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'cedula' => 'required|string',
+        ]);
+
+        $usuario = Usuario::where('email', $request->email)
+                          ->where('numerodedocumento', $request->cedula)
+                          ->first();
+
+        if (!$usuario) {
+            return back()->withErrors(['email' => 'No se encontró una cuenta con esos datos.']);
+        }
+
+        // Redirigir a la vista para actualizar la contraseña
+        return redirect()->route('actualizar.contrasena.form', [
+            'email' => $request->email,
+            'cedula' => $request->cedula,
+        ]);
+    }
+
+    /**
+     * Mostrar el formulario para actualizar la contraseña
+     */
+    public function showUpdatePasswordForm(Request $request)
+    {
+        $email = $request->query('email');
+        $cedula = $request->query('cedula');
+
+        return view('actualizarcontrasena', compact('email', 'cedula'));
+    }
+
+    /**
+     * Manejar la actualización de la contraseña
+     */
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'cedula' => 'required|string',
+            'new_password' => [
+                'required',
+                'string',
+                'min:8',
+                'max:255',
+                'regex:/[A-Z]/',      // al menos una letra mayúscula
+                'regex:/[0-9]/',      // al menos un número
+                'confirmed',
+            ],
+        ]);
+
+        $usuario = Usuario::where('email', $request->email)
+                          ->where('numerodedocumento', $request->cedula)
+                          ->first();
+
+        $user = User::where('email', $request->email)
+        ->first();
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        if (!$usuario) {
+            return back()->withErrors(['email' => 'No se encontró una cuenta con esos datos.']);
+        }
+
+        $usuario->contrasena = Hash::make($request->new_password);
+        $usuario->save();
+
+        return redirect()->route('login')->with('success', 'Contraseña actualizada exitosamente.');
+    }
 }
 
 

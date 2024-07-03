@@ -172,8 +172,11 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'contrasena' => [
+            'regex' => 'La contraseña debe contener al menos una letra mayúscula y un número.',
+        ],
+        'new_password' => [
+            'regex' => 'La nueva contraseña debe contener al menos una letra mayúscula y un número.',
         ],
     ],
 
@@ -204,6 +207,4 @@ return [
         'estado' => 'Estado',
         'rol' => 'Rol',
     ],
-    
-
 ];

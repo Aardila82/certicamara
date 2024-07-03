@@ -81,7 +81,14 @@ Route::get('loader', function () {
     return view('loader');
 });
 
+
+
 });
+
+Route::get('/cambiar-contrasena', [UsuarioController::class, 'showChangePasswordForm'])->name('cambiar.contrasena.form');
+Route::post('/cambiar-contrasena', [UsuarioController::class, 'changePassword'])->name('cambiar.contrasena');
+Route::get('/actualizar-contrasena', [UsuarioController::class, 'showUpdatePasswordForm'])->name('actualizar.contrasena.form');
+Route::post('/actualizar-contrasena', [UsuarioController::class, 'updatePassword'])->name('actualizar.contrasena');
 
 
 //require __DIR__.'/auth.php';
