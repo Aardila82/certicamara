@@ -1,5 +1,7 @@
 @extends('layouts.plantilla')
 
+@section('titulo', 'Log Sistemas')
+
 @section('contenido')
 
 

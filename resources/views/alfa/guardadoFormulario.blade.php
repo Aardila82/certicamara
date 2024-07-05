@@ -1,5 +1,7 @@
 @extends('layouts.plantilla')
 
+@section('titulo', 'Lista de Errores')
+
 @section('contenido')
 
 <div class="container-fluid justify-content-center align-items-center">

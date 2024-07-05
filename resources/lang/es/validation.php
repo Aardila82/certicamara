@@ -159,6 +159,8 @@ return [
     'url' => 'El formato de :attribute no es válido.',
     'ulid' => 'El :attribute debe ser un ULID valido.',
     'uuid' => 'El :attribute debe ser un UUID valido.',
+    'failed' => 'Estas credenciales no coinciden con nuestros registros.',
+    'inactive' => 'Esta cuenta no está activa.',
 
     /*
     |--------------------------------------------------------------------------

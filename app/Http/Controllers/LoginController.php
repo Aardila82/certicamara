@@ -6,14 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\usuario;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\RedirectResponse;
-
 
 class LoginController extends Controller
 {
@@ -23,7 +21,7 @@ class LoginController extends Controller
 
     public function store(Request $request)
     {
-
+        // Implementar si es necesario
     }
 
     public function loginApi(Request $request)
@@ -33,62 +31,58 @@ class LoginController extends Controller
             'password' => 'required|string|max:255',
         ]);
 
-//var_dump($request->all());
         $user = Usuario::where('email', $request->email)->first();
 
-        // Verificar si el usuario existe y la contraseña es correcta
+        // Verificar si el usuario existe, la contraseña es correcta y el estado es 1
         if ($user && Hash::check($request->password, $user->contrasena)) {
-            // La contraseña es correcta
-            $request->session()->regenerate();
-            return response()->json(['message' => 'Login exitoso', 'user' => $user]);
-
+            if ($user->estado == 1) {
+                // La contraseña es correcta y el usuario está activo
+                $request->session()->regenerate();
+                return response()->json(['message' => 'Login exitoso', 'user' => $user]);
+            } else {
+                // Usuario no activo
+                return response()->json(['message' => 'Usuario no activo'], 403);
+            }
         } else {
             // Credenciales incorrectas
             return response()->json(['message' => 'Email o contraseña incorrectos'], 401);
-
-
         }
     }
 
     public function login(Request $request)
     {
-
         $request->validate([
             'email' => 'required|string|max:255',
             'password' => 'required|string|max:255',
         ]);
 
         $user = User::where('email', $request->email)->first();
-        //var_dump($user->password);
-        //die();
-        // Verificar si el usuario existe y la contraseña es correcta
-        if ( Auth::attempt($request->only('email', 'password'))) {
-            // La contraseña es correcta
-            $request->session()->regenerate();
-            //return response()->json(['message' => 'Login exitoso', 'user' => $user]);
-            return redirect('/dash');
 
-
+        // Verificar si el usuario existe y el estado es 1
+        if ($user && $user->estado == 1) {
+            if (Auth::attempt($request->only('email', 'password'))) {
+                // La contraseña es correcta y el usuario está activo
+                $request->session()->regenerate();
+                return redirect('/dash');
+            } else {
+                // Credenciales incorrectas
+                throw ValidationException::withMessages([
+                    'email' => __('auth.failed'),
+                ]);
+            }
         } else {
-            // Credenciales incorrectas
-            //return response()->json(['message' => 'Email o contraseña incorrectos'], 401);
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
-            return view('login' , []);
-
+            // Usuario no activo o no encontrado
+            if (!$user) {
+                throw ValidationException::withMessages([
+                    'email' => __('auth.failed'),
+                ]);
+            } else {
+                throw ValidationException::withMessages([
+                    'email' => __('auth.inactive'),
+                ]);
+            }
         }
-
-        //consultar tabla usuarios por email y contraseña
-
-
-        //die();
-        /*if (auth()->attempt($credentials)) {
-            return redirect()->intended('/dash');
-        }
-        return redirect('/login')->with('error', 'Credenciales incorrectas');*/
     }
-
 
     public function logout(Request $request): RedirectResponse
     {
@@ -100,5 +94,4 @@ class LoginController extends Controller
 
         return redirect('/');
     }
-
 }

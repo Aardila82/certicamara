@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
 class usuario extends Model
 {
@@ -41,4 +42,15 @@ class usuario extends Model
     {
         return $this->hasMany(LogFacialEnvivoUnoAUno::class, 'idusuario');
     }
+     // Método para verificar el rol
+     public function hasRole($role)
+     {
+         return $this->rol == $role;
+     }
+
+     // Mutator para hash de contraseñas
+     public function setContrasenaAttribute($value)
+     {
+         $this->attributes['contrasena'] = Hash::make($value);
+     }
 }

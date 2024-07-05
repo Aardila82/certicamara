@@ -1,5 +1,7 @@
 @extends('layouts.plantilla')
 
+@section('titulo', 'Gestión Usuarios')
+
 @section('contenido')
     <div class="container text-center d-block mx-auto">
         <div class="row">

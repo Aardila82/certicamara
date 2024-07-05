@@ -1,5 +1,7 @@
 @extends('layouts.plantilla')
 
+@section('titulo', 'Dash')
+
 @section('contenido')
 
 <div class="container text-center d-block mx-auto">

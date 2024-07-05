@@ -1,5 +1,9 @@
 @extends('layouts.plantilla')
 
+
+
+@section('titulo', 'Log Masivas')
+
 @section('contenido')
 <div class="container-fluid mt-5" >
     <h2 class="text-center mb-4">Log Masivas</h2>
@@ -33,7 +37,7 @@
                       <td><a href="../log/facial/{{$log->id}}">Ver</a></td>
                   </tr>
                   @endforeach
-                  
+
               </tbody>
           </table>
         </div>

@@ -31,8 +31,11 @@
             <div class="col col-xl-6 col-lg-8 col-md-10">
                 <div class="card" style="border-radius: 1rem;">
                     <div class="card-body p-4 p-lg-5 text-black">
+                        <div class="d-flex justify-content-center mb-3 pb-1">
+                            <img src="{{ URL::asset('/image/logo.jpg') }}" alt="login form" class="img-fluid" />
+                        </div>
 
-                        <h3 class="fw-normal mb-3 pb-3 text-center" style="letter-spacing: 1px;">Actualizar Contraseña</h3>
+                        <h5 class="fw-normal mb-3 pb-3 text-center" style="letter-spacing: 1px;">Actualizar Contraseña</h5>
 
                         <form action="{{ route('actualizar.contrasena') }}" method="POST">
                             @csrf
@@ -57,6 +60,10 @@
 
                             <div class="d-flex justify-content-center pt-1 mb-4">
                                 <input type="submit" value="Actualizar Contraseña" class="btn btn-danger btn-lg btn-block">
+                            </div>
+
+                            <div class="d-flex justify-content-center pt-1 mb-4">
+                                <a href="login">Atras</a>
                             </div>
                         </form>
 

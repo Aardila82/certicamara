@@ -1,5 +1,7 @@
 @extends('layouts.plantilla')
 
+@section('titulo', 'Log Uno a Uno')
+
 @section('contenido')
 
 <div class="container-fluid mt-5">

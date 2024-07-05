@@ -1,5 +1,7 @@
 @extends('layouts.plantilla')
 
+@section('titulo', 'Log Fotografia')
+
 @section('contenido')
 <div class="container-fluid mt-5" >
     <h2 class="text-center mb-4">Log Fotografia</h2>

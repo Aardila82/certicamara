@@ -1,5 +1,6 @@
-<!-- resources/views/loader.blade.php -->
 @extends('layouts.plantilla')
+
+@section('titulo', 'Carga Masiva')
 
 @section('contenido')
 
@@ -58,6 +59,14 @@
         font-size: 20px;
         color: #333;
     }
+
+    .content-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh; /* 100% de la altura de la ventana gráfica */
+        flex-direction: column;
+    }
 </style>
 
 <div id="loader" class="loader-overlay">
@@ -65,10 +74,10 @@
     <div class="loading-text">Cargando Masivas</div>
 </div>
 
-<div id="content" style="display: none;">
+<div id="content" class="content-container" style="display: none;">
     <!-- Aquí va el contenido de tu aplicación -->
-    <h1>Mi Aplicación</h1>
-    <p>Contenido de la página...</p>
+    <h2>Carga Masiva</h2>
+    <p>Contenido 1 de 5000...</p>
 </div>
 
 <script>
@@ -82,7 +91,7 @@
                 loader.style.display = 'none';
             }
             if (content) {
-                content.style.display = 'block';
+                content.style.display = 'flex';
             }
         }, 5000); // 5000 milisegundos = 5 segundos
     });

@@ -32,7 +32,11 @@
                 <div class="card" style="border-radius: 1rem;">
                     <div class="card-body p-4 p-lg-5 text-black">
 
-                        <h3 class="fw-normal mb-3 pb-3 text-center" style="letter-spacing: 1px;">Cambio de Contraseña</h3>
+                        <div class="d-flex justify-content-center mb-3 pb-1">
+                            <img src="{{ URL::asset('/image/logo.jpg') }}" alt="login form" class="img-fluid" />
+                        </div>
+
+                        <h5 class="fw-normal mb-3 pb-3 text-center" style="letter-spacing: 1px;">Cambio de Contraseña</h5>
 
                         <form action="{{ route('cambiar.contrasena') }}" method="POST">
                             @csrf
@@ -54,6 +58,9 @@
 
                             <div class="d-flex justify-content-center pt-1 mb-4">
                                 <input type="submit" value="Solicitar Cambio de Contraseña" class="btn btn-danger btn-lg btn-block">
+                            </div>
+                            <div class="d-flex justify-content-center pt-1 mb-4">
+                                <a href="login">Atras</a>
                             </div>
                         </form>
 

@@ -1,5 +1,7 @@
 @extends( 'layouts.plantilla' )
 
+@section('titulo', 'Creación Usuario')
+
 @section('contenido')
 
 <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
@@ -140,9 +142,10 @@
         <div class="mt-3 col col-12 col-sm-12 col-md-6 col-lg-6">
           <label for="estado" class="form-label">Estado:</label>
           <div class="form-check">
+            <input type="hidden" name="estado" value="0">
             <input class="form-check-input" type="checkbox" id="estado" name="estado" value="1" checked>
             <label class="form-check-label" for="estado">Activo</label>
-          </div>
+        </div>
         </div>
 
         <div class="mt-3 col-12">
