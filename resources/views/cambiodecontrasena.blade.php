@@ -60,7 +60,7 @@
                                 <input type="submit" value="Solicitar Cambio de Contraseña" class="btn btn-danger btn-lg btn-block">
                             </div>
                             <div class="d-flex justify-content-center pt-1 mb-4">
-                                <a href="login">Atras</a>
+                                <a href="login">Volver</a>
                             </div>
                         </form>
 
