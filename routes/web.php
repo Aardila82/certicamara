@@ -16,7 +16,7 @@ Route::post('login',[LoginController::class,'login']);
 Route::get('logout',[LoginController::class,'logout']);
 
 
-Route::middleware('auth')->group(function () {
+//Route::middleware('auth')->group(function () {
 
    Route::get('dash', function () {
       return view('dash');
@@ -83,7 +83,7 @@ Route::get('loader', function () {
 
 
 
-});
+//});
 
 Route::get('/cambiar-contrasena', [UsuarioController::class, 'showChangePasswordForm'])->name('cambiar.contrasena.form');
 Route::post('/cambiar-contrasena', [UsuarioController::class, 'changePassword'])->name('cambiar.contrasena');

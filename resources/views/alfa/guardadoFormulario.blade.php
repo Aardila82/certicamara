@@ -10,6 +10,7 @@
     </div>
 
     <h2 class="text-center mb-4">Lista de Errores - Tiempo ejecución {{$tiempoTotal}} segundos</h2>
+    <h2 class="text-center mb-4">Fecha Inicio {{$timeIni}} - Fecha Fin {{$timeFin}} </h2>
 
     <table id="dataTable" class="table table-striped table-bordered shadow-lg">
         <thead class="bg-primary text-white">

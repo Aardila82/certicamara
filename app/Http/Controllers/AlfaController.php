@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 
+
 use SoapClient;
 use SoapFault;
 use App\Jobs\ConsumeMatcher;
@@ -133,6 +134,8 @@ class AlfaController extends Controller
         $tiempoTotal = number_format(($timeFin - $timeIni) , 2, '.', '');
         return view('alfa/guardadoFormulario', [
             "data" => $dataError,
+            "timeFin" => $this->formatTime($timeFin),
+            "timeIni" => $this->formatTime($timeIni),
             "tiempoTotal" => $tiempoTotal
         ]);
 
@@ -329,5 +332,17 @@ class AlfaController extends Controller
     {
         list($usec, $sec) = explode(" ", microtime());
         return ((float)$usec + (float)$sec);
+    }
+
+
+    private function formatTime($timestamp)
+    {
+        $seconds = floor($timestamp);
+        $microseconds = ($timestamp - $seconds) * 1e6;
+
+        $carbon = Carbon::createFromTimestamp($seconds);
+        $formattedTime = $carbon->format('Y/m/d H:i:s');
+
+        return $formattedTime;
     }
 }
