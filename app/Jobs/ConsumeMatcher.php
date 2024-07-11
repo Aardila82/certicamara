@@ -49,35 +49,7 @@ class ConsumeMatcher implements ShouldQueue
         $this->idLogMasiva = $idLogMasiva;
     }
 
-    /**
-     * Execute the job.
-     */
-    /*public function handle()
-    {
-        // Registrar la marca de tiempo de inicio
-        if (!Cache::has(self::$startTimeKey)) {
-            Cache::put(self::$startTimeKey, microtime(true), now()->addMinutes(30));
-        }
-        $msn = $this->processRow($this->row);
-        // Registrar la marca de tiempo de fin al procesar la última fila
-        if (Cache::increment('processed_rows_count') === $this->totalRows) {
-            Cache::put(self::$endTimeKey, microtime(true), now()->addMinutes(30));
-
-            // Calcular el tiempo total de procesamiento
-            $startTime = Cache::get(self::$startTimeKey);
-            $endTime = Cache::get(self::$endTimeKey);
-            $executionTime = $endTime - $startTime;
-
-            // Registrar el tiempo de ejecución
-            Log::info("Procesamiento del CSV completado en {$executionTime} segundos.");
-        }
-
-        return $msn;
-    }*/
-
     public function handle(){
-        
-
             //echo $file->getFilename() . '<br>';
             $directoryFotosPath = storage_path('app/fotos');
 

@@ -28,7 +28,8 @@
             <div class="container-fluid">
                 <a class="navbar-brand" href="{{url('logout')}}">Salir</a>
                 @auth
-                    <h6 class="text-white">Usuario: {{ Auth::user()->name }}!</h6>
+                    <h6 class="text-white">Usuario: {{ Auth::user()->name }}</h6>
+                    <h6 class="text-white">Rol: {{ Auth::user()->nombrerol }}</h6>
                 @endauth
             </div>
         </nav>

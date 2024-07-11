@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 
-class usuario extends Model
+class Usuario extends Model
 {
     use HasFactory;
     protected $fillable=[

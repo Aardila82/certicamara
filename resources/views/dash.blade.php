@@ -12,6 +12,7 @@
     </div>
 
     <div class="row">
+        @if($permisos['creacion_usuarios'] == true) 
         <div class="col-lg-3 col-sm-6">
             <div class="card-box bg-green">
                 <div class="inner">
@@ -27,7 +28,9 @@
                 </a>
             </div>
         </div>
-
+        @endif
+        
+        @if($permisos['carga_masiva'] == true) 
         <div class="col-lg-3 col-sm-6">
             <div class="card-box bg-blue">
                 <div class="inner">
@@ -37,13 +40,15 @@
                 <div class="icon">
                     <i class="fa fa-solid fa-share" aria-hidden="true"></i>
                 </div>
-                <a href="loader" class="card-box-footer" id="masiva">
+                <a href="masiva" class="card-box-footer" id="masiva">
                     Ver Mas
                     <i class="fa fa-arrow-circle-right"></i>
                 </a>
             </div>
         </div>
+        @endif
 
+        @if($permisos['logs'] == true) 
         <div class="col-lg-3 col-sm-6">
             <div class="card-box bg-orange">
                 <div class="inner">
@@ -59,7 +64,9 @@
                 </a>
             </div>
         </div>
+        @endif
 
+        @if($permisos['uno_a_uno'] == true) 
         <div class="col-lg-3 col-sm-6">
             <div class="card-box bg-red">
                 <div class="inner">
@@ -75,7 +82,9 @@
                 </a>
             </div>
         </div>
+        @endif
 
+        @if($permisos['cargar_alpha_db'] == true) 
         <div class="col-lg-3 col-sm-6">
             <div class="card-box bg-green">
                 <div class="inner">
@@ -91,6 +100,7 @@
                 </a>
             </div>
         </div>
+        @endif
     </div>
 </div>
 

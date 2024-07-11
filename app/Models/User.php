@@ -14,7 +14,6 @@ class User extends Authenticatable
 
     protected $table = 'users';
 
-
     /**
      * The attributes that are mass assignable.
      *
@@ -48,4 +47,6 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+
 }

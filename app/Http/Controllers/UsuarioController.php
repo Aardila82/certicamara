@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\usuario;
+use App\Models\Usuario;
 use App\Models\User;
 use App\Models\Departamento;
 use App\Models\Municipio;
+use App\Models\Roles;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -77,48 +78,52 @@ class UsuarioController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-{
-    $campos = $request->all();
+    public function store(Request $request){
+        $campos = $request->all();
 
-    $request->validate([
-        'nombre1' => 'required|string|max:255',
-        'nombre2' => 'required|string|max:255',
-        'apellido1' => 'required|string|max:255',
-        'apellido2' => 'required|string|max:255',
-        'numerodedocumento' => 'required|unique:usuarios,numerodedocumento|numeric|digits_between:7,10',
-        'email' => 'required|unique:usuarios,email|email|max:255',
-        'telefono' => 'required|string|max:20',
-        'departamento' => 'required|numeric',
-        'municipio' => 'required|numeric',
-        'usuario' => 'required|unique:usuarios,usuario|string|max:255',
-        'contrasena' => [
-            'required',
-            'string',
-            'min:8',
-            'max:255',
-            'regex:/[A-Z]/',      // al menos una letra mayúscula
-            'regex:/[0-9]/',      // al menos un número
-        ],
-        'confirmacion_contrasena' => 'required|string|max:255|same:contrasena',
-        'estado' => 'required|boolean',
-        'rol' => 'required|numeric',
-    ]);
+        $request->validate([
+            'nombre1' => 'required|string|max:255',
+            'nombre2' => 'required|string|max:255',
+            'apellido1' => 'required|string|max:255',
+            'apellido2' => 'required|string|max:255',
+            'numerodedocumento' => 'required|unique:usuarios,numerodedocumento|numeric|digits_between:7,10',
+            'email' => 'required|unique:usuarios,email|email|max:255',
+            'telefono' => 'required|string|max:20',
+            'departamento' => 'required|numeric',
+            'municipio' => 'required|numeric',
+            'usuario' => 'required|unique:usuarios,usuario|string|max:255',
+            'contrasena' => [
+                'required',
+                'string',
+                'min:8',
+                'max:255',
+                'regex:/[A-Z]/',         // Al menos una letra mayúscula
+                'regex:/[a-z]/',         // Al menos una letra minúscula
+                'regex:/[0-9]/',         // Al menos un número
+                'regex:/[@$!%*?&#\-_]/', // Al menos un carácter especial incluyendo - y _
+            ],
+            'confirmacion_contrasena' => 'required|string|max:255|same:contrasena',
+            'estado' => 'required|boolean',
+            'rol' => 'required|numeric',
+        ]);
 
-    // Crear un nuevo registro en la base de datos
-    $campos["contrasena"] = Hash::make($campos["contrasena"]);
-    Usuario::create($campos);
+        // Crear un nuevo registro en la base de datos
+        $campos["contrasena"] = Hash::make($campos["contrasena"]);
+        Usuario::create($campos);
 
-    User::create([
-        'name' => $campos["nombre1"] . " " . $campos["nombre2"] . " " . $campos["apellido1"] . " " . $campos["apellido2"],
-        'email' => $campos["email"],
-        'password' => $campos["contrasena"],
-        'email_verified_at' => Carbon::now(),
-    ]);
+        $roles = Roles::where('id', $request->rol)->first();
+        User::create([
+            'name' => $campos["nombre1"] . " " . $campos["nombre2"] . " " . $campos["apellido1"] . " " . $campos["apellido2"],
+            'email' => $campos["email"],
+            'password' => $campos["contrasena"],
+            'email_verified_at' => Carbon::now(),
+            'nombrerol' => $roles->nombre,
+            
+        ]);
 
-    // Redirigir a una ruta específica después de guardar los datos
-    return redirect('/guardadoFormulario')->with('success', 'Usuario creado exitosamente.');
-}
+        // Redirigir a una ruta específica después de guardar los datos
+        return redirect('/guardadoFormulario')->with('success', 'Usuario creado exitosamente.');
+    }
 
 
     /**
@@ -140,7 +145,7 @@ class UsuarioController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(usuario $usuario)
+    public function show(Usuario $usuario)
     {
         //
     }
@@ -154,6 +159,7 @@ class UsuarioController extends Controller
         $departamentos = DB::table('departamentos')->orderBy('nombre')->get();
         $municipios = DB::table('municipios')->get();
         $usuario = Usuario::findOrFail($id);
+        //dd($usuario);
         return view('editarformulario', [
             "roles" => $roles,
             "departamentos" => $departamentos,
@@ -171,9 +177,19 @@ class UsuarioController extends Controller
             'apellido2' => 'nullable|string|max:255',
             'telefono' => 'nullable|string|max:20',
             'departamento' => 'required|numeric',
+            'email' => 'required|email|max:255',
             'municipio' => 'required|numeric',
-            'contrasena' => 'nullable|string|max:255|min:8',
-          //  'confirmacion_contrasena' => 'nullable|string|max:255|same:contrasena',
+            'contrasena' => [
+                'required',
+                'string',
+                'min:8',
+                'max:255',
+                'regex:/[A-Z]/',         // Al menos una letra mayúscula
+                'regex:/[a-z]/',         // Al menos una letra minúscula
+                'regex:/[0-9]/',         // Al menos un número
+                'regex:/[@$!%*?&#\-_]/', // Al menos un carácter especial incluyendo - y _
+            ],
+            'confirmacion_contrasena' => 'required|string|max:255|same:contrasena',
             'estado' => 'boolean',
             'rol' => 'required|numeric',
         ]);
@@ -183,10 +199,26 @@ class UsuarioController extends Controller
         $data = $request->except(['contrasena', 'confirmacion_contrasena']);
 
         if ($request->filled('contrasena')) {
-            $data['contrasena'] = bcrypt($request->contrasena);
+            $data['contrasena'] = Hash::make($request->contrasena);
         }
 
         $usuario->update($data);
+
+
+        
+        $roles = Roles::where('id', $request->rol)->first();
+
+        $user = User::where('email', $request->input('email'))->first();
+
+        // Actualizar los campos
+        $user->name = $data["nombre1"] . " " . $data["nombre2"] . " " . $data["apellido1"] . " " . $data["apellido2"];
+        $user->email = $data["email"];
+        $user->nombrerol = $roles->nombre;
+        $user->password = $data['contrasena'];
+
+        // Guardar los cambios
+        $user->save();
+
 
         return redirect()->route('usuario.editadoformulario')->with('success', 'Usuario actualizado correctamente');
     }
@@ -195,7 +227,7 @@ class UsuarioController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(usuario $usuario)
+    public function destroy(Usuario $usuario)
     {
         //
     }
@@ -315,6 +347,55 @@ class UsuarioController extends Controller
         $usuario->save();
 
         return redirect()->route('login')->with('success', 'Contraseña actualizada exitosamente.');
+    }
+
+
+    public function dash(){
+        $usuarioEmail = Auth::user()->email;
+        $usuario = Usuario::where('email', $usuarioEmail)
+        ->first();
+
+        $roles = [
+            [
+                'id' => 1,
+                'nombre' => 'SuperAdmin',
+                'permisos' => [
+                    'cargar_alpha_db' => true,
+                    'carga_masiva' => true,
+                    'creacion_usuarios' => true,
+                    'uno_a_uno' => true,
+                    'logs' => true,
+                ]
+            ],
+            [
+                'id' => 2,
+                'nombre' => 'Admin',
+                'permisos' => [
+                    'cargar_alpha_db' => true,
+                    'carga_masiva' => true,
+                    'creacion_usuarios' => false,
+                    'uno_a_uno' => true,
+                    'logs' => true,
+                ]
+            ],
+            [
+                'id' => 3,
+                'nombre' => 'Operario',
+                'permisos' => [
+                    'cargar_alpha_db' => false,
+                    'carga_masiva' => false,
+                    'creacion_usuarios' => false,
+                    'uno_a_uno' => true,
+                    'logs' => false,
+                ]
+            ],
+        ];
+        
+        $role = collect($roles)->firstWhere('id', $usuario->rol);
+
+        return view('dash' , [
+            "permisos" => $role['permisos'],
+        ]);
     }
 }
 

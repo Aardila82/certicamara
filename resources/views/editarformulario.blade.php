@@ -3,6 +3,11 @@
 @section('titulo' ,'Lista de Usuarios')
 
 @section('contenido')
+  
+  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+
+
   <div class="container">
     <div class="row">
       <div class="col-md-12 text-center">
@@ -74,7 +79,7 @@
 
         <div class="mt-3 col col-12 col-sm-12 col-md-6 col-lg-6">
           <label for="email" class="form-label">Email</label>
-          <input type="text" value="{{ old('email', $usuario->email) }}" id="email" name="email" class="form-control @error('email') is-invalid @enderror" disabled>
+          <input type="text" value="{{ old('email', $usuario->email) }}" id="email" name="email" class="form-control @error('email') is-invalid @enderror" readonly>
           @error('email')
           <div class="invalid-feedback">{{ $message }}</div>
           @enderror
@@ -85,7 +90,7 @@
           <select name="departamento" id="departamento" class="form-control @error('departamento') is-invalid @enderror">
             <option value="">Selecciona un departamento</option>
             @foreach ($departamentos as $departamento)
-            <option value="{{ $departamento->id }}" {{ old('departamento', $usuario->departamento_id) == $departamento->id ? 'selected' : '' }}>{{ $departamento->nombre }}</option>
+            <option value="{{ $departamento->id }}" {{ old('departamento', $usuario->departamento) == $departamento->id ? 'selected' : '' }}>{{ $departamento->nombre }}</option>
             @endforeach
           </select>
           @error('departamento')
@@ -124,7 +129,7 @@
           <select name="rol" id="rol" class="form-control @error('rol') is-invalid @enderror">
             <option value="">Selecciona un rol</option>
             @foreach ($roles as $rol)
-            <option value="{{ $rol->id }}" {{ old('rol', $usuario->rol_id) == $rol->id ? 'selected' : '' }}>{{ $rol->nombre }}</option>
+            <option value="{{ $rol->id }}" {{ old('rol', $usuario->rol) == $rol->id ? 'selected' : '' }}>{{ $rol->nombre }}</option>
             @endforeach
           </select>
           @error('rol')
@@ -147,7 +152,7 @@
           var departamentoId = $(this).val();
           if (departamentoId) {
             $.ajax({
-              url: '/departamentos/' + departamentoId + '/municipios',
+              url: '../../departamentos/' + departamentoId + '/municipios',
               type: "GET",
               dataType: "json",
               success: function(data) {
@@ -158,7 +163,7 @@
                 });
 
                 // Seleccionar el municipio actual si existe
-                var selectedMunicipio = '{{ old("municipio", $usuario->municipio_id) }}';
+                var selectedMunicipio = '{{ old("municipio", $usuario->municipio) }}';
                 $('#municipio').val(selectedMunicipio);
               }
             });
@@ -169,13 +174,12 @@
         });
 
         // Disparar el cambio para cargar los municipios cuando se carga la página si hay un departamento seleccionado
-        var initialDepartamento = '{{ old("departamento", $usuario->departamento_id) }}';
+        var initialDepartamento = '{{ old("departamento", $usuario->departamento) }}';
         if (initialDepartamento) {
           $('#departamento').val(initialDepartamento).trigger('change');
         }
       });
     </script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+
 @endsection

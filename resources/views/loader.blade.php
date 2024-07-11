@@ -77,7 +77,8 @@
 <div id="content" class="content-container" style="display: none;">
     <!-- Aquí va el contenido de tu aplicación -->
     <h2>Carga Masiva</h2>
-    <p>Contenido 1 de 5000...</p>
+    <p>Contenido {{$registros}} de {{$total}} ...</p>
+    <a href="{{url('dash')}}" class="btn btn-primary mt-3">Volver</a></a>
 </div>
 
 <script>
@@ -93,7 +94,7 @@
             if (content) {
                 content.style.display = 'flex';
             }
-        }, 5000); // 5000 milisegundos = 5 segundos
+        }, 100); // 5000 milisegundos = 5 segundos
     });
 </script>
 

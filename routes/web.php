@@ -28,8 +28,6 @@ Route::get('logout',[LoginController::class,'logout']);
       return view('guardadoFormulario');
    });
 
-
-
    Route::get('editadoFormulario', function () {
     return view('usuario/editadoformulario');
  })->name('usuario.editadoformulario');
@@ -40,6 +38,11 @@ Route::get('logout',[LoginController::class,'logout']);
    Route::get('usuario/listado',[UsuarioController::class,'lista']);
    Route::get('usuario/creacion',[UsuarioController::class,'index']);
    Route::post('usuario/creacion',[UsuarioController::class,'store']);
+   Route::get('dash',[UsuarioController::class,'dash']);
+
+
+
+
    Route::get('departamentos/{departamento_id}/municipios', [UsuarioController::class, 'getMunicipios']);
 
    Route::get('usuario/edicion/{id}', [UsuarioController::class, 'edit'])->name('usuario.edit');
@@ -54,6 +57,7 @@ Route::get('logout',[LoginController::class,'logout']);
    Route::get('log/unoauno',[LogFacialEnvivoUnoAUnoController::class,'listaunoauno']);
    Route::get('log/fotografia',[LogFotografiaController::class,'lista']);
    Route::get('log/masiva',[LogMasivaController::class,'lista']);
+   Route::get('/loaderAjax/{idmasiva}', [AlfaController::class, 'loaderAjax']);
 
    Route::get('/importaralfa',[AlfaController::class,'importaralfa']);
    Route::get('/masiva', [AlfaController::class, 'masivaTest']);
@@ -77,11 +81,12 @@ Route::get('logout',[LoginController::class,'logout']);
 });
 Route::post('log/upload-image', [LogFacialEnvivoUnoAUnoController::class, 'upload']);
 
-Route::get('loader', function () {
+/*Route::get('loader/{idLogMasiva}', function () {
     return view('loader');
-});
+});*/
 
 
+Route::get('loader/{idmasiva}', [AlfaController::class, 'loader']);
 
 //});
 

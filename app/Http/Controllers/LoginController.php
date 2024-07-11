@@ -24,9 +24,6 @@ class LoginController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-
-
-
         // Verificar si el usuario existe y el estado es true (activo)
         if ($user) {
             $usuario = Usuario::where('email', $request->email)->first();

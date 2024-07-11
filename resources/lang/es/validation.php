@@ -175,7 +175,7 @@ return [
 
     'custom' => [
         'contrasena' => [
-            'regex' => 'La contraseña debe contener al menos una letra mayúscula y un número.',
+            'regex' => 'La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un carecter especial (@$!%*?&#\-_) y un número.',
         ],
         'new_password' => [
             'regex' => 'La nueva contraseña debe contener al menos una letra mayúscula y un número.',

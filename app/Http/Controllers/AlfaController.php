@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 
+use Exception;
 
 use SoapClient;
 use SoapFault;
@@ -23,6 +24,11 @@ use App\Jobs\ConsumeMatcher;
 class AlfaController extends Controller
 {
 
+    protected $client;
+    protected $fileName;
+
+    protected $usuario;
+    protected $idLogMasiva;
 
     /**
      * Display a listing of the resource.
@@ -215,11 +221,6 @@ class AlfaController extends Controller
         $logMasiva = LogMasiva::create($logMasivaData);
         $idLogMasiva = $logMasiva->id;
 
-
-        $index = 0;
-
-        $resultados = [];
-
         $directoryMuniciasPath = 'minucias';
         if (!Storage::exists($directoryMuniciasPath)) {
             Storage::makeDirectory($directoryMuniciasPath);
@@ -239,33 +240,105 @@ class AlfaController extends Controller
         // Mostrar los nombres de los archivos
         $iFile = 0;
 
+        $logMasivaData['fechafin'] = Carbon::now();
+        $logMasivaData['totalregistros'] = count($files);
+
+        $logMasiva->update($logMasivaData);
+
         foreach ($files as $file) {
             $fileName = $file->getFilename();
-            $msn = ConsumeMatcher::dispatch(
+            /*$msn = ConsumeMatcher::dispatch(
                 $fileName,
                 $usuario,
                 $idLogMasiva
-            )->onQueue('photos');
-            $iFile++;
-            /*if($iFile > 5){
-                die("Muerto");
-            }*/
-        }
-        $logMasivaData['fechafin'] = Carbon::now();
-        $logMasivaData['totalregistros'] = $index;
+            )->onQueue('photos');*/
 
-        $logMasiva->update($logMasivaData);
-        return view('alfa.masiva', [
+            //echo $file->getFilename() . '<br>';
+
+            $this->fileName = $fileName;
+            $this->usuario = $usuario;
+            $this->idLogMasiva = $idLogMasiva;
+
+
+            $directoryFotosPath = storage_path('app/fotos');
+
+            $cedula = str_replace(".txt", "", $this->fileName);
+            $foto = $directoryFotosPath . "/" . $cedula . ".jpg";
+            $sha256 = hash('SHA256' , $foto);
+
+            try {
+                // Crear la solicitud
+                $request =  [
+                    'nut2' => '12345',
+                    'oaid_id' => 'OAID123',
+                    'cliente_id' => 'CLT678',
+                    'nuip_aplicante' => $cedula,
+                    'dispositivo_id' => 'DISP789',
+                    'coordenadas' => ['latitud' => '12.345678', 'longitud' => '98.765432'],
+                    'rostro2' => 'encoded_face_data',
+                    'file_foto_sha256' => 'sha256hash'
+                ];
+
+                $options = [
+                    'trace' => 4,
+                    'exceptions' => true
+                ];
+                // Llamar al método SOAP
+                /*$client = new SoapClient('http://localhost/mock_wsdl.wsdl', $options);
+
+                $response = $client->validate_client_data(['validate_client_data' => $request]);
+                // Insertar los datos usando Eloquent
+                // Insertar en la tabla log_facial_envivo_uno_a_uno
+                $logData = [
+                    'nut' => $cedula, // Ejemplo de asignación, ajusta según sea necesario
+                    'nuip' => $cedula, // Ejemplo de asignación, ajusta según sea necesario
+                    'resultado' => $response->resultado_cotejo, // Ejemplo de valor estático, ajusta según sea necesario
+                    'fechafin' => Carbon::now(), // Usar la fecha actual
+                    'idusuario' => $this->usuario->id, // ID del usuario actual o cualquier otro valor
+                    'hashalgo' => $sha256, // Ejemplo de cálculo hash
+                    'idmasiva' => $this->idLogMasiva,
+                ];
+
+                LogFacialEnvivoUnoAUno::create($logData);*/
+                $logData['usuarioNombre'] = $this->usuario->name;
+                //$resultados[$index] = (object)$logData;
+                //$index++;
+
+
+            } catch (Exception $e) {
+                // Registrar el error en los logs
+                Log::error('Error en ConsumeMatcher: ' . $e->getMessage(), [
+                    'exception' => $e,
+                    'line' => $e->getLine(),
+                    'file' => $e->getFile()
+                ]);
+                
+                // Lanzar nuevamente la excepción para que el job falle
+                throw $e;
+            }
+            //$iFile++;
+            /*if($iFile > 2){
+                die("muerto");
+            }*/
+            $iFile++;
+            if($iFile > 5){
+                die("Muerto");
+            }
+        }
+
+        /*return view('loader', [
             "resultados" => $resultados,
             "logMasiva" => $logMasivaData
-        ]);
+        ]);*/
+
+        return redirect('loader/' . $idLogMasiva);
     }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $datos = Alfa::all();
+        $datos = Alfa::get();
 
         $logData = [
             'fechainicio' => Carbon::now(),
@@ -344,5 +417,50 @@ class AlfaController extends Controller
         $formattedTime = $carbon->format('Y/m/d H:i:s');
 
         return $formattedTime;
+    }
+
+
+        /**
+     * Show the form for creating a new resource.
+     */
+
+
+    public function loaderAjax(Int $idmasiva)
+    {
+        // Realizar la consulta para contar los registros
+        $total = LogMasiva::select('totalregistros')->where('id', $idmasiva)->first();
+        $registros = LogFacialEnvivoUnoAUno::where('idmasiva', $idmasiva)->count();
+        $mensaje = '';
+        // Manejar el caso cuando no se encuentran registros
+        if (empty($total)) {
+            $mensaje = 'Registro no encontrado';
+        }
+
+        return response()->json( [
+            "total" => $total->totalregistros,
+            "registros" => $registros,
+            "mensaje" => $mensaje
+        ] , 200);     
+    }
+
+
+
+    public function loader(Int $idmasiva)
+    {
+        // Realizar la consulta para contar los registros
+        $total = LogMasiva::select('totalregistros')->where('id', $idmasiva)->first();
+        $registros = LogFacialEnvivoUnoAUno::where('idmasiva', $idmasiva)->count();
+        $mensaje = '';
+        // Manejar el caso cuando no se encuentran registros
+        if (empty($total)) {
+            $mensaje = 'Registro no encontrado';
+        }
+
+        return view('loader', [
+            "total" => $total->totalregistros,
+            "registros" => $registros,
+            "mensaje" => $mensaje
+        ]);     
+
     }
 }
