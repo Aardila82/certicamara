@@ -85,7 +85,7 @@ Route::post('log/upload-image', [LogFacialEnvivoUnoAUnoController::class, 'uploa
     return view('loader');
 });*/
 
-
+Route::get('/download-zip', [LogMasivaController::class, 'createZip'])->name('download.zip');
 Route::get('loader/{idmasiva}', [AlfaController::class, 'loader']);
 
 //});

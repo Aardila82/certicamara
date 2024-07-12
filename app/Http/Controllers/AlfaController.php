@@ -137,14 +137,17 @@ class AlfaController extends Controller
         die();*/
         $timeFin = $this->microtime_float();
 
-        $tiempoTotal = number_format(($timeFin - $timeIni) , 2, '.', '');
+        // Convertir timeIni y timeFin a la zona horaria de Bogotá
+        $timeIniInBogota = Carbon::createFromTimestamp($timeIni)->setTimezone('America/Bogota');
+        $timeFinInBogota = Carbon::createFromTimestamp($timeFin)->setTimezone('America/Bogota');
+
+        $tiempoTotal = number_format(($timeFin - $timeIni), 2, '.', '');
         return view('alfa/guardadoFormulario', [
             "data" => $dataError,
-            "timeFin" => $this->formatTime($timeFin),
-            "timeIni" => $this->formatTime($timeIni),
+            "timeFin" => $timeFinInBogota->format('Y-m-d H:i:s'),
+            "timeIni" => $timeIniInBogota->format('Y-m-d H:i:s'),
             "tiempoTotal" => $tiempoTotal
         ]);
-
     }
 
 
@@ -312,7 +315,7 @@ class AlfaController extends Controller
                     'line' => $e->getLine(),
                     'file' => $e->getFile()
                 ]);
-                
+
                 // Lanzar nuevamente la excepción para que el job falle
                 throw $e;
             }
@@ -440,7 +443,7 @@ class AlfaController extends Controller
             "total" => $total->totalregistros,
             "registros" => $registros,
             "mensaje" => $mensaje
-        ] , 200);     
+        ] , 200);
     }
 
 
@@ -460,7 +463,7 @@ class AlfaController extends Controller
             "total" => $total->totalregistros,
             "registros" => $registros,
             "mensaje" => $mensaje
-        ]);     
+        ]);
 
     }
 }

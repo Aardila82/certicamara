@@ -12,7 +12,7 @@
     </div>
 
     <div class="row">
-        @if($permisos['creacion_usuarios'] == true) 
+        @if($permisos['creacion_usuarios'] == true)
         <div class="col-lg-3 col-sm-6">
             <div class="card-box bg-green">
                 <div class="inner">
@@ -29,8 +29,8 @@
             </div>
         </div>
         @endif
-        
-        @if($permisos['carga_masiva'] == true) 
+
+        @if($permisos['carga_masiva'] == true)
         <div class="col-lg-3 col-sm-6">
             <div class="card-box bg-blue">
                 <div class="inner">
@@ -48,7 +48,7 @@
         </div>
         @endif
 
-        @if($permisos['logs'] == true) 
+        @if($permisos['logs'] == true)
         <div class="col-lg-3 col-sm-6">
             <div class="card-box bg-orange">
                 <div class="inner">
@@ -66,7 +66,7 @@
         </div>
         @endif
 
-        @if($permisos['uno_a_uno'] == true) 
+        @if($permisos['uno_a_uno'] == true)
         <div class="col-lg-3 col-sm-6">
             <div class="card-box bg-red">
                 <div class="inner">
@@ -84,7 +84,7 @@
         </div>
         @endif
 
-        @if($permisos['cargar_alpha_db'] == true) 
+        @if($permisos['cargar_alpha_db'] == true)
         <div class="col-lg-3 col-sm-6">
             <div class="card-box bg-green">
                 <div class="inner">
@@ -104,8 +104,8 @@
     </div>
 </div>
 
-<div class="avisoCargando" id="avisoCargando">Cargando...</div>
-<div class="avisoCargando" id="avisoCargandoMasiva">Cargando...</div>
+<div class="avisoCargando" id="avisoCargando">Estamos generando tu solicitud...</div>
+<div class="avisoCargando" id="avisoCargandoMasiva">Estamos generando tu solicitud...</div>
 
 <style>
     body {

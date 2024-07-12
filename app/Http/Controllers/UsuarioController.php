@@ -118,7 +118,7 @@ class UsuarioController extends Controller
             'password' => $campos["contrasena"],
             'email_verified_at' => Carbon::now(),
             'nombrerol' => $roles->nombre,
-            
+
         ]);
 
         // Redirigir a una ruta específica después de guardar los datos
@@ -205,7 +205,7 @@ class UsuarioController extends Controller
         $usuario->update($data);
 
 
-        
+
         $roles = Roles::where('id', $request->rol)->first();
 
         $user = User::where('email', $request->input('email'))->first();
@@ -390,7 +390,7 @@ class UsuarioController extends Controller
                 ]
             ],
         ];
-        
+
         $role = collect($roles)->firstWhere('id', $usuario->rol);
 
         return view('dash' , [
