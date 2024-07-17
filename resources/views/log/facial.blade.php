@@ -23,7 +23,7 @@
                   @foreach ($logs as $log)
                   <tr>
                       <td>{{$log->id}}</td>
-                      <td>{{$log->nut}}</td>
+                      <td>{{$log->nuip}}</td>
                       <td> {{$log->ciudadano}}</td>
 
                       <td>{{$log->fechafin}}</td>

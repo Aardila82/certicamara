@@ -15,7 +15,7 @@
 <body>
     <div class="container">
         <h1>El número de cédula ingresado es: {{ $cedula }}</h1>
-        <h2>{{ $mensaje }}</h2>
+        {!! nl2br($mensaje) !!}
     </div>
 </body>
 </html>

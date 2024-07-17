@@ -6,6 +6,7 @@ use App\Models\LogCotejoIndividual;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class LogCotejoIndividualController extends Controller
 {
@@ -48,7 +49,14 @@ class LogCotejoIndividualController extends Controller
     {
 
          // Leer el contenido del archivo mensaje.txt
-        $mensaje = Storage::get('mensaje.txt');
+        //$mensaje = Storage::get('mensaje.txt');
+        $filePath = storage_path('app/mensaje.txt');
+
+        $mensaje = File::get($filePath);
+
+        //$mensaje = nl2br($mensaje);
+        //$mensaje = str_replace("<br />" , "<br>" , $mensaje);
+        //$mensaje = htmlto("<br />" , "<br/>" , $mensaje);
         // Validar la cédula
         $request->validate([
             'cedula' => 'required|numeric',
@@ -56,7 +64,7 @@ class LogCotejoIndividualController extends Controller
 
         // Capturar el número de cédula y redirigir a otra vista
         $cedula = $request->input('cedula');
-        return view('mostrarcedula', ['cedula' => $cedula, 'mensaje' => $mensaje]);
+        return view('mostrarcedula', ['cedula' => $cedula, 'mensaje' => ($mensaje)]);
     }
     public function generarPDF(Request $request)
     {

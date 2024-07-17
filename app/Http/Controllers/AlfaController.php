@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Client;
 
 
 use Exception;
@@ -208,124 +210,164 @@ class AlfaController extends Controller
 
     public function masivaTest()
     {
-        $usuario = Auth::user();
-        // Insertar los datos usando Eloquent
-        $logMasivaData = [
-            'fechainicio' => Carbon::now(),
-            'fechafin' => Carbon::now(),
-            'usuariocarga_id' => $usuario->id,
-            'totalregistros' => 0,
-            'errortotalregistros' => 0,
-        ];
+        try{
+            $usuario = Auth::user();
+            // Insertar los datos usando Eloquent
+            $logMasivaData = [
+                'fechainicio' => Carbon::now(),
+                'fechafin' => Carbon::now(),
+                'usuariocarga_id' => $usuario->id,
+                'totalregistros' => 0,
+                'errortotalregistros' => 0,
+            ];
 
-        $logMasiva = LogMasiva::create($logMasivaData);
-        $idLogMasiva = $logMasiva->id;
-
-        $directoryMuniciasPath = 'minucias';
-        if (!Storage::exists($directoryMuniciasPath)) {
-            Storage::makeDirectory($directoryMuniciasPath);
-        }
-        $directoryMuniciasPath = storage_path("app/".$directoryMuniciasPath);
+            $logMasiva = LogMasiva::create($logMasivaData);
+            $idLogMasiva = $logMasiva->id;
 
 
-        $directoryFotosPath = storage_path('fotos');
-        if (!Storage::exists($directoryFotosPath)) {
-            Storage::makeDirectory($directoryFotosPath);
-        }
-        $directoryFotosPath = storage_path("app/".$directoryFotosPath);
-
-
-        $files = File::allFiles($directoryMuniciasPath);
-
-        // Mostrar los nombres de los archivos
-        $iFile = 0;
-
-        $logMasivaData['fechafin'] = Carbon::now();
-        $logMasivaData['totalregistros'] = count($files);
-
-        $logMasiva->update($logMasivaData);
-
-        foreach ($files as $file) {
-            $fileName = $file->getFilename();
-            /*$msn = ConsumeMatcher::dispatch(
-                $fileName,
-                $usuario,
-                $idLogMasiva
-            )->onQueue('photos');*/
-
-            //echo $file->getFilename() . '<br>';
-
-            $this->fileName = $fileName;
-            $this->usuario = $usuario;
-            $this->idLogMasiva = $idLogMasiva;
-
-
-            $directoryFotosPath = storage_path('app/fotos');
-
-            $cedula = str_replace(".txt", "", $this->fileName);
-            $foto = $directoryFotosPath . "/" . $cedula . ".jpg";
-            $sha256 = hash('SHA256' , $foto);
-
-            try {
-                // Crear la solicitud
-                $request =  [
-                    'nut2' => '12345',
-                    'oaid_id' => 'OAID123',
-                    'cliente_id' => 'CLT678',
-                    'nuip_aplicante' => $cedula,
-                    'dispositivo_id' => 'DISP789',
-                    'coordenadas' => ['latitud' => '12.345678', 'longitud' => '98.765432'],
-                    'rostro2' => 'encoded_face_data',
-                    'file_foto_sha256' => 'sha256hash'
-                ];
-
-                $options = [
-                    'trace' => 4,
-                    'exceptions' => true
-                ];
-                // Llamar al método SOAP
-                /*$client = new SoapClient('http://localhost/mock_wsdl.wsdl', $options);
-
-                $response = $client->validate_client_data(['validate_client_data' => $request]);
-                // Insertar los datos usando Eloquent
-                // Insertar en la tabla log_facial_envivo_uno_a_uno
-                $logData = [
-                    'nut' => $cedula, // Ejemplo de asignación, ajusta según sea necesario
-                    'nuip' => $cedula, // Ejemplo de asignación, ajusta según sea necesario
-                    'resultado' => $response->resultado_cotejo, // Ejemplo de valor estático, ajusta según sea necesario
-                    'fechafin' => Carbon::now(), // Usar la fecha actual
-                    'idusuario' => $this->usuario->id, // ID del usuario actual o cualquier otro valor
-                    'hashalgo' => $sha256, // Ejemplo de cálculo hash
-                    'idmasiva' => $this->idLogMasiva,
-                ];
-
-                LogFacialEnvivoUnoAUno::create($logData);*/
-                $logData['usuarioNombre'] = $this->usuario->name;
-                //$resultados[$index] = (object)$logData;
-                //$index++;
-
-
-            } catch (Exception $e) {
-                // Registrar el error en los logs
-                Log::error('Error en ConsumeMatcher: ' . $e->getMessage(), [
-                    'exception' => $e,
-                    'line' => $e->getLine(),
-                    'file' => $e->getFile()
-                ]);
-                
-                // Lanzar nuevamente la excepción para que el job falle
-                throw $e;
+            /*$directoryMuniciasPath = 'minucias';
+            if (!Storage::exists($directoryMuniciasPath)) {
+                Storage::makeDirectory($directoryMuniciasPath);
             }
-            //$iFile++;
-            /*if($iFile > 2){
-                die("muerto");
-            }*/
-            $iFile++;
-            if($iFile > 5){
-                die("Muerto");
-            }
-        }
+            $directoryMuniciasPath = storage_path("app/".$directoryMuniciasPath);*/
 
+            $fotosPath = "fotos";
+            $directoryFotosPath = storage_path($fotosPath);
+            if (!Storage::exists($directoryFotosPath)) {
+                Storage::makeDirectory($directoryFotosPath);
+            }
+            $directoryFotosPath = storage_path("app/".$fotosPath);
+
+            $files = File::allFiles($directoryFotosPath);
+
+            // Mostrar los nombres de los archivos
+            $iFile = 0;
+
+            $logMasivaData['fechafin'] = Carbon::now();
+            $logMasivaData['totalregistros'] = count($files);
+
+            $logMasiva->update($logMasivaData);
+            $apiUrl = 'http://localhost:3000/location';
+            
+            // Parámetros de la API
+            $params = [];
+
+            // Realizar la solicitud GET
+            $response = Http::get($apiUrl, $params);
+
+            // Verificar si la solicitud fue exitosa
+            if ($response->successful()) {
+                // Devolver la respuesta de la API
+                $coordenadasResponse = (array)$response->json();
+                var_dump($coordenadasResponse);
+            } else {
+                // Manejar el error
+                //var_dump(['error' => 'Error al obtener el clima'], $response->status());
+            }
+
+            //$coordenadasResponse['latitude'] = "4.5794";
+            //$coordenadasResponse['longitude'] = "-74.2168";
+            
+            
+            foreach ($files as $file) {
+                $fileName = $file->getFilename();
+                $msn = ConsumeMatcher::dispatch(
+                    $fileName,
+                    $usuario,
+                    $idLogMasiva,
+                    $coordenadasResponse
+                )->onQueue('photos');
+
+                //echo $file->getFilename() . '<br>';
+
+                /*$this->fileName = $fileName;
+                $this->usuario = $usuario;
+                $this->idLogMasiva = $idLogMasiva;
+
+                $directoryFotosPath = storage_path('app/fotos');
+
+                $cedula = str_replace(".txt", "", $this->fileName);
+                $foto = $directoryFotosPath . "/" . $cedula . ".jpg";
+                $base64 = base64_encode(file_get_contents($foto));
+                $sha256 = hash('SHA256' , $base64);
+                $nextValue = DB::select('SELECT nextval(\'secuencia_facial\') as value');
+                $nut = $nextValue[0]->value;
+                echo 'Next value: ' . $nut;*/
+
+                /*try {
+                    // Crear la solicitud
+                    $request =  [
+                        'nut2' => $nut,
+                        'oaid_id' => 'OAID123',
+                        'cliente_id' => 'CLT678',
+                        'nuip_aplicante' => $cedula,
+                        'dispositivo_id' => 'DISP789',
+                        'latitud' => $coordenadasResponse['latitude'], 
+                        'longitud' => $coordenadasResponse['longitude'],
+                        'rostro2' => $base64,
+                        'file_foto_sha256' => $sha256
+                    ];
+                    //var_dump($request);
+
+                    $options = [
+                        'trace' => 4,
+                        'exceptions' => true
+                    ];
+                    // Llamar al método SOAP
+                    //$client = new SoapClient('http://localhost/mock_wsdl.wsdl', $options);
+
+                    //$response = $client->validate_client_data(['validate_client_data' => $request]);
+                    // Insertar los datos usando Eloquent
+                    // Insertar en la tabla log_facial_envivo_uno_a_uno
+                    //$resultado = $response->resultado_cotejo;
+                    $response = $this->callSoapService($request);
+                    //echo "<pre>".print_r($response , true)."</pre>";
+        
+                    $logData = [
+                        'nut' => $nut, // Ejemplo de asignación, ajusta según sea necesario
+                        'nuip' => $cedula, // Ejemplo de asignación, ajusta según sea necesario
+                        'resultado' => $response["resultado_cotejo"], // Ejemplo de valor estático, ajusta según sea necesario
+                        'fechafin' => Carbon::now(), // Usar la fecha actual
+                        'idusuario' => $this->usuario->id, // ID del usuario actual o cualquier otro valor
+                        'hashalgo' => $sha256, // Ejemplo de cálculo hash
+                        'idmasiva' => $this->idLogMasiva,
+                    ];
+
+                    LogFacialEnvivoUnoAUno::create($logData);
+                    $logData['usuarioNombre'] = $this->usuario->name;
+                    //$resultados[$index] = (object)$logData;
+                    //$index++;
+
+
+                } catch (Exception $e) {
+                    // Registrar el error en los logs
+                    Log::error('Error en ConsumeMatcher: ' . $e->getMessage(), [
+                        'exception' => $e,
+                        'line' => $e->getLine(),
+                        'file' => $e->getFile()
+                    ]);
+                    
+                    // Lanzar nuevamente la excepción para que el job falle
+                    throw $e;
+                }
+                //$iFile++;
+                if($iFile > 2){
+                    die("muerto");
+                }*/
+
+            }
+        
+        } catch (Exception $e) {
+            // Registrar el error en los logs
+            Log::error('Error en ConsumeMatcher: ' . $e->getMessage(), [
+                'exception' => $e,
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
+            
+            // Lanzar nuevamente la excepción para que el job falle
+            throw $e;
+        }
         /*return view('loader', [
             "resultados" => $resultados,
             "logMasiva" => $logMasivaData
@@ -459,8 +501,12 @@ class AlfaController extends Controller
         return view('loader', [
             "total" => $total->totalregistros,
             "registros" => $registros,
-            "mensaje" => $mensaje
+            "mensaje" => $mensaje,
+            "idmasiva" => $idmasiva
+
         ]);     
 
     }
+
+
 }

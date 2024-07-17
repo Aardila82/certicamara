@@ -1,18 +1,22 @@
 @extends('layouts.plantilla')
 
 @section('contenido')
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-2 text-right">
-            <label for="cedula">Ingresa tu Cédula: </label>
+<div class="container mt-5 justify-content-center">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1>Ingresa tu Cédula: </h1>
         </div>
-        <div class="col-3">
+    </div>
+    <div class="row justify-content-center">  
+            
+        <div class="col-8  text-center">
             <form action="{{ route('capturar.cedula') }}" method="POST">
                 @csrf
-                <input type="text" name="cedula" id="cedula" class="form-control">
-                <button type="submit" class="btn btn-primary mt-2">Enviar</button>
+                <input type="text" name="cedula" id="cedula" class="form-control" placeholder="Ingresa tu Cédula" required>
+                <button type="submit" class="btn btn-success mt-2">Buscar Cédula</button>
             </form>
         </div>
     </div>
+
 </div>
 @endsection

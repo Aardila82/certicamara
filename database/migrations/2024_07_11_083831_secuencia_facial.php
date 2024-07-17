@@ -3,18 +3,17 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
-return new class extends Migration
+
+class SecuenciaFacial extends Migration
 {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('secuencia_facial', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+        DB::statement('CREATE SEQUENCE secuencia_facial START WITH 100000000000 INCREMENT BY 1');
     }
 
     /**
@@ -22,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('secuencia_facial');
+        DB::statement('DROP SEQUENCE IF EXISTS secuencia_facial');
     }
 };
+
+
