@@ -88,17 +88,19 @@
         </div>
 
         <div class="mt-3 col col-12 col-sm-12 col-md-6 col-lg-6">
-          <label for="departamento" class="form-label">Departamento</label>
-          <select name="departamento" id="departamento" class="form-control  @error('departamento') is-invalid @enderror">
-            <option value="">Selecciona un departamento</option>
-            @foreach ($departamentos as $departamento)
-              <option value="{{ $departamento->id }}">{{ $departamento->nombre }}</option>
-            @endforeach
-          </select>
-          @error('departamento')
-          <div class="invalid-feedback">{{ $message }}</div>
-          @enderror
-        </div>
+    <label for="departamento" class="form-label">Departamento</label>
+    <select name="departamento" id="departamento" class="form-control @error('departamento') is-invalid @enderror">
+        <option value="">Selecciona un departamento</option>
+        @foreach ($departamentos as $departamento)
+            <option value="{{ $departamento->id }}" {{ old('departamento') == $departamento->id ? 'selected' : '' }}>
+                {{ $departamento->nombre }}
+            </option>
+        @endforeach
+    </select>
+    @error('departamento')
+    <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+</div>
 
         <div class="mt-3 col col-12 col-sm-12 col-md-6 col-lg-6">
           <label for="municipio" class="form-label">Municipio</label>
@@ -127,16 +129,18 @@
         </div>
 
         <div class="mt-3 col col-12 col-sm-12 col-md-6 col-lg-6">
-          <label for="rol" class="form-label">Roles</label>
-          <select name="rol" id="rol" class="form-control  @error('rol') is-invalid @enderror">
-            <option value="">Selecciona un rol</option>
-            @foreach ($roles as $rol)
-              <option value="{{ $rol->id }}">{{ $rol->nombre }}</option>
-            @endforeach
-          </select>
-          @error('rol')
-          <div class="invalid-feedback">{{ $message }}</div>
-          @enderror
+            <label for="rol" class="form-label">Roles</label>
+            <select name="rol" id="rol" class="form-control @error('rol') is-invalid @enderror">
+                <option value="">Selecciona un rol</option>
+                @foreach ($roles as $rol)
+                    <option value="{{ $rol->id }}" {{ old('rol') == $rol->id ? 'selected' : '' }}>
+                        {{ $rol->nombre }}
+                    </option>
+                @endforeach
+            </select>
+            @error('rol')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="mt-3 col col-12 col-sm-12 col-md-6 col-lg-6">
@@ -158,27 +162,37 @@
 
   <script>
     $(document).ready(function() {
-      $('#departamento').on('change', function() {
-        var departamentoId = $(this).val();
-        if (departamentoId) {
-          $.ajax({
-            url: '../departamentos/' + departamentoId + '/municipios',
-            type: "GET",
-            dataType: "json",
-            success: function(data) {
-              $('#municipio').empty();
-              $('#municipio').append('<option value="">Selecciona un municipio</option>');
-              $.each(data, function(key, value) {
-                $('#municipio').append('<option value="' + value.id + '">' + value.nombre + '</option>');
-              });
-            }
-          });
-        } else {
-          $('#municipio').empty();
-          $('#municipio').append('<option value="">Selecciona un municipio</option>');
+        $('#departamento').on('change', function() {
+          var departamentoId = $(this).val();
+          if (departamentoId) {
+            $.ajax({
+              url: '../departamentos/' + departamentoId + '/municipios',
+              type: "GET",
+              dataType: "json",
+              success: function(data) {
+                $('#municipio').empty();
+                $('#municipio').append('<option value="">Selecciona un municipio</option>');
+                $.each(data, function(key, value) {
+                  $('#municipio').append('<option value="' + value.id + '">' + value.nombre + '</option>');
+                });
+
+                // Seleccionar el municipio actual si existe
+                var selectedMunicipio = '{{ old("municipio") }}';
+                $('#municipio').val(selectedMunicipio);
+              }
+            });
+          } else {
+            $('#municipio').empty();
+            $('#municipio').append('<option value="">Selecciona un municipio</option>');
+          }
+        });
+
+        // Disparar el cambio para cargar los municipios cuando se carga la página si hay un departamento seleccionado
+        var initialDepartamento = '{{ old("departamento") }}';
+        if (initialDepartamento) {
+          $('#departamento').val(initialDepartamento).trigger('change');
         }
       });
-    });
   </script>
 
 

@@ -118,7 +118,7 @@ class UsuarioController extends Controller
             'password' => $campos["contrasena"],
             'email_verified_at' => Carbon::now(),
             'nombrerol' => $roles->nombre,
-            
+
         ]);
 
         // Redirigir a una ruta específica después de guardar los datos
@@ -169,59 +169,69 @@ class UsuarioController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'nombre1' => 'required|string|max:255',
-            'nombre2' => 'nullable|string|max:255',
-            'apellido1' => 'required|string|max:255',
-            'apellido2' => 'nullable|string|max:255',
-            'telefono' => 'nullable|string|max:20',
-            'departamento' => 'required|numeric',
-            'email' => 'required|email|max:255',
-            'municipio' => 'required|numeric',
-            'contrasena' => [
-                'required',
-                'string',
-                'min:8',
-                'max:255',
-                'regex:/[A-Z]/',         // Al menos una letra mayúscula
-                'regex:/[a-z]/',         // Al menos una letra minúscula
-                'regex:/[0-9]/',         // Al menos un número
-                'regex:/[@$!%*?&#\-_]/', // Al menos un carácter especial incluyendo - y _
-            ],
-            'confirmacion_contrasena' => 'required|string|max:255|same:contrasena',
-            'estado' => 'boolean',
-            'rol' => 'required|numeric',
-        ]);
+{
+    // Reglas de validación básicas
+    $rules = [
+        'nombre1' => 'required|string|max:255',
+        'nombre2' => 'nullable|string|max:255',
+        'apellido1' => 'required|string|max:255',
+        'apellido2' => 'nullable|string|max:255',
+        'telefono' => 'nullable|string|max:20',
+        'departamento' => 'required|numeric',
+        'email' => 'required|email|max:255',
+        'municipio' => 'required|numeric',
+        'estado' => 'boolean',
+        'rol' => 'required|numeric',
+    ];
 
-        $usuario = Usuario::findOrFail($id);
-
-        $data = $request->except(['contrasena', 'confirmacion_contrasena']);
-
-        if ($request->filled('contrasena')) {
-            $data['contrasena'] = Hash::make($request->contrasena);
-        }
-
-        $usuario->update($data);
-
-
-        
-        $roles = Roles::where('id', $request->rol)->first();
-
-        $user = User::where('email', $request->input('email'))->first();
-
-        // Actualizar los campos
-        $user->name = $data["nombre1"] . " " . $data["nombre2"] . " " . $data["apellido1"] . " " . $data["apellido2"];
-        $user->email = $data["email"];
-        $user->nombrerol = $roles->nombre;
-        $user->password = $data['contrasena'];
-
-        // Guardar los cambios
-        $user->save();
-
-
-        return redirect()->route('usuario.editadoformulario')->with('success', 'Usuario actualizado correctamente');
+    // Añadir reglas de validación para la contraseña solo si está presente
+    if ($request->filled('contrasena')) {
+        $rules['contrasena'] = [
+            'string',
+            'min:8',
+            'max:255',
+            'regex:/[A-Z]/',         // Al menos una letra mayúscula
+            'regex:/[a-z]/',         // Al menos una letra minúscula
+            'regex:/[0-9]/',         // Al menos un número
+            'regex:/[@$!%*?&#\-_]/', // Al menos un carácter especial incluyendo - y _
+        ];
+        $rules['confirmacion_contrasena'] = 'string|max:255|same:contrasena';
     }
+
+    // Validar la solicitud
+    $request->validate($rules);
+
+    $usuario = Usuario::findOrFail($id);
+
+    $data = $request->except(['contrasena', 'confirmacion_contrasena']);
+
+    // Si la contraseña está presente, cifrarla y añadirla a los datos
+    if ($request->filled('contrasena')) {
+        $data['contrasena'] = Hash::make($request->contrasena);
+    }
+
+    // Actualizar el usuario
+    $usuario->update($data);
+
+    // Actualizar los datos del usuario en la tabla User
+    $roles = Roles::where('id', $request->rol)->first();
+    $user = User::where('email', $request->input('email'))->first();
+
+    // Actualizar los campos
+    $user->name = $data["nombre1"] . " " . $data["nombre2"] . " " . $data["apellido1"] . " " . $data["apellido2"];
+    $user->email = $data["email"];
+    //$user->roles = $roles->nombre;
+
+    // Actualizar la contraseña solo si se proporcionó una nueva
+    if ($request->filled('contrasena')) {
+        $user->password = Hash::make($request->contrasena);
+    }
+
+    // Guardar los cambios
+    $user->save();
+
+    return redirect()->route('usuario.editadoformulario')->with('success', 'Usuario actualizado correctamente');
+}
 
 
     /**
@@ -390,7 +400,7 @@ class UsuarioController extends Controller
                 ]
             ],
         ];
-        
+
         $role = collect($roles)->firstWhere('id', $usuario->rol);
 
         return view('dash' , [

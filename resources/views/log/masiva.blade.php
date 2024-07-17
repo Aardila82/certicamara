@@ -43,6 +43,7 @@
         </div>
         <div class="col-md-12 text-center">
           <a type="button" class="btn btn-secondary" href="../usuario/reporte">Atras</a>
+          <a href="{{ route('download.zip') }}" class="btn btn-primary">Descargar ZIP</a>
         </div>
     </div>
 </div>

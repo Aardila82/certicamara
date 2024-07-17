@@ -23,6 +23,64 @@ class LogMasivaController extends Controller
         return view('log/masiva', ['logs' => $logs]);
     }
 
+    public function createZip()
+    {
+        $zip = new \ZipArchive();
+        $fileName = 'example.zip';
+        $filePath = public_path('files'); // Ruta a los archivos
+
+        // Obtener la lista de logs
+        $logs = DB::table('log_masivas')
+            ->join('usuarios', 'log_masivas.usuariocarga_id', '=', 'usuarios.id')
+            ->select(
+                'log_masivas.*',
+                DB::raw("CONCAT(usuarios.nombre1, ' ', usuarios.nombre2, ' ', usuarios.apellido1, ' ', usuarios.apellido2) as usuario_carga"),
+                DB::raw("ROUND(EXTRACT(EPOCH FROM (CAST(fechafin AS timestamp) - CAST(fechainicio AS timestamp)))::NUMERIC, 2) AS diferencia_segundos")
+            )
+            ->get();
+
+        // Crear el archivo CSV temporalmente
+        $csvFileName = 'logs.csv';
+        $csvFilePath = $filePath . '/' . $csvFileName;
+        $file = fopen($csvFilePath, 'w');
+
+        // Encabezados del CSV
+        fputcsv($file, ['ID', 'Usuario Carga', 'Fecha Inicio', 'Fecha Fin', 'Diferencia Segundos']);
+
+        // Agregar los registros al CSV
+        foreach ($logs as $log) {
+            fputcsv($file, [
+                $log->id,
+                $log->usuario_carga,
+                $log->fechainicio,
+                $log->fechafin,
+                $log->diferencia_segundos,
+            ]);
+        }
+
+        fclose($file);
+
+        if ($zip->open(public_path($fileName), \ZipArchive::CREATE) === TRUE) {
+            // Agregar el archivo CSV al ZIP
+            if (file_exists($csvFilePath)) {
+                $zip->addFile($csvFilePath, $csvFileName);
+            } else {
+                return response()->json(['error' => 'No se pudo encontrar el archivo CSV'], 404);
+            }
+
+            $zip->close();
+        } else {
+            return response()->json(['error' => 'No se pudo crear el archivo ZIP'], 500);
+        }
+
+        // Eliminar el archivo CSV temporal
+        unlink($csvFilePath);
+
+        return response()->download(public_path($fileName));
+    }
+
+    // Otros métodos...
+
     /**
      * Display a listing of the resource.
      */
