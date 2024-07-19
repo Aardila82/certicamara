@@ -70,8 +70,23 @@ class LogCotejoIndividualController extends Controller
         $cedula = $request->input('cedula');
         $mensaje = $request->input('mensaje');
 
+        $folderPath = storage_path('app/pdf');
+    
+        // Verificar si la carpeta existe, y si no, crearla
+        if (!file_exists($folderPath)) {
+            mkdir($folderPath, 0755, true);
+        }
+
+        
+
         // Generar el PDF
         $pdf = Pdf::loadView('mostrarcedula_pdf', compact('cedula', 'mensaje'));
-        return $pdf->download('cedula.pdf');
+        $time = time();
+        $nombrepdf = $cedula."_".$time.".pdf";
+        //$filePath = storage_path('app/public/'.$nombre_pdf);
+        Storage::put('pdf/'.$nombrepdf, $pdf->output());
+
+
+        //return $pdf->download('cedula.pdf');
     }
 }
