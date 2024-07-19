@@ -47,25 +47,24 @@ class LogCotejoIndividualController extends Controller
 
     public function capturarCedula(Request $request)
     {
-
-         // Leer el contenido del archivo mensaje.txt
-        //$mensaje = Storage::get('mensaje.txt');
+        // Leer el contenido del archivo mensaje.txt
         $filePath = storage_path('app/mensaje.txt');
-
         $mensaje = File::get($filePath);
 
-        //$mensaje = nl2br($mensaje);
-        //$mensaje = str_replace("<br />" , "<br>" , $mensaje);
-        //$mensaje = htmlto("<br />" , "<br/>" , $mensaje);
         // Validar la cédula
         $request->validate([
-            'cedula' => 'required|numeric',
+            'cedula' => 'required|numeric|digits_between:8,10',
+        ], [
+            'cedula.required' => 'La cédula es obligatoria.',
+            'cedula.numeric' => 'La cédula debe ser un número.',
+            'cedula.digits_between' => 'La cédula debe tener entre 6 y 10 dígitos.',
         ]);
 
         // Capturar el número de cédula y redirigir a otra vista
         $cedula = $request->input('cedula');
-        return view('mostrarcedula', ['cedula' => $cedula, 'mensaje' => ($mensaje)]);
+        return view('mostrarcedula', ['cedula' => $cedula, 'mensaje' => $mensaje]);
     }
+
     public function generarPDF(Request $request)
     {
         $cedula = $request->input('cedula');
