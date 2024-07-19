@@ -8,7 +8,7 @@
         @csrf
         <input type="hidden" name="cedula" value="{{ $cedula }}">
         <input type="hidden" name="mensaje" value="{{ $mensaje }}">
-        <button type="submit" class="btn btn-success mt-3">Generar PDF</button>
+        <button type="submit" class="btn btn-success mt-3">Aceptar términos y condiciones </button>
     </form>
 </div>
 @endsection

@@ -53,7 +53,7 @@ class LogCotejoIndividualController extends Controller
 
         // Validar la cédula
         $request->validate([
-            'cedula' => 'required|numeric|digits_between:8,10',
+            'cedula' => 'required|numeric|digits_between:6,10',
         ], [
             'cedula.required' => 'La cédula es obligatoria.',
             'cedula.numeric' => 'La cédula debe ser un número.',
