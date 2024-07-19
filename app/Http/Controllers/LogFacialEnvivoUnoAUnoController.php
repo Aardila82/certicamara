@@ -19,20 +19,45 @@ class LogFacialEnvivoUnoAUnoController extends Controller
         //$logs = LogFacialEnvivoUnoAUno::with('usuario')->get();
 
         $results = DB::table('log_facial_envivo_uno_a_uno')
-        ->leftJoin('usuarios', 'log_facial_envivo_uno_a_uno.idusuario', '=', 'usuarios.id')
-        ->leftJoin('alfas', 'log_facial_envivo_uno_a_uno.nuip', '=', 'alfas.pin')
-        ->select(
-            'log_facial_envivo_uno_a_uno.*',
-            'usuarios.nombre1',
-            'usuarios.nombre2',
-            'usuarios.apellido1',
-            'usuarios.apellido2',
-            'usuarios.numerodedocumento',
-            DB::raw("CONCAT(alfas.nombre1, ' ', alfas.nombre2, '', alfas.apellido1, ' ', alfas.apellido2) as ciudadano"),
-            )
-            ->where('idmasiva', $id)
+            ->join('usuarios', 'log_facial_envivo_uno_a_uno.idusuario', '=', 'usuarios.id')
+            ->join('response_matcher_masiva', 'response_matcher_masiva.idunoauno', '=', 'log_facial_envivo_uno_a_uno.id')
 
-        ->get();
+            ->select(
+                'log_facial_envivo_uno_a_uno.id',
+                'log_facial_envivo_uno_a_uno.nut',
+                'log_facial_envivo_uno_a_uno.nuip',
+                'log_facial_envivo_uno_a_uno.resultado',
+                'log_facial_envivo_uno_a_uno.fechafin',
+                'usuarios.nombre1',
+                'usuarios.nombre2',
+                'usuarios.apellido1',
+                'usuarios.apellido2',
+                'usuarios.numerodedocumento',
+
+                'response_matcher_masiva.codigo_resultado',
+                'response_matcher_masiva.nut as response_nut',
+                'response_matcher_masiva.nuip as response_nuip',
+                'response_matcher_masiva.id_log',
+                'response_matcher_masiva.id_oaid',
+                'response_matcher_masiva.id_cliente',
+                'response_matcher_masiva.resultado_cotejo',
+                'response_matcher_masiva.primer_nombre',
+                'response_matcher_masiva.segundo_nombre',
+                'response_matcher_masiva.codigo_particula',
+                'response_matcher_masiva.descripcion_particula',
+                'response_matcher_masiva.primer_apellido',
+                'response_matcher_masiva.segundo_apellido',
+                'response_matcher_masiva.lugar_expedicion',
+                'response_matcher_masiva.fecha_expedicion',
+                'response_matcher_masiva.codigo_vigencia',
+                'response_matcher_masiva.descripcion_vigencia',
+                'response_matcher_masiva.message_error',
+                'response_matcher_masiva.idunoauno',
+                'response_matcher_masiva.idmasiva'
+            )
+            ->where('log_facial_envivo_uno_a_uno.idmasiva', $id)
+            ->get();
+
 
         // Pasamos los registros a la vista
         return view('log.facial', [
@@ -73,6 +98,8 @@ class LogFacialEnvivoUnoAUnoController extends Controller
     {
         $results = DB::table('log_facial_envivo_uno_a_uno')
             ->join('usuarios', 'log_facial_envivo_uno_a_uno.idusuario', '=', 'usuarios.id')
+            ->join('response_matcher_masiva', 'response_matcher_masiva.idunoauno', '=', 'log_facial_envivo_uno_a_uno.id')
+
             ->select(
                 'log_facial_envivo_uno_a_uno.id',
                 'log_facial_envivo_uno_a_uno.nut',
@@ -83,7 +110,28 @@ class LogFacialEnvivoUnoAUnoController extends Controller
                 'usuarios.nombre2',
                 'usuarios.apellido1',
                 'usuarios.apellido2',
-                'usuarios.numerodedocumento'
+                'usuarios.numerodedocumento',
+
+                'response_matcher_masiva.codigo_resultado',
+                'response_matcher_masiva.nut as response_nut',
+                'response_matcher_masiva.nuip as response_nuip',
+                'response_matcher_masiva.id_log',
+                'response_matcher_masiva.id_oaid',
+                'response_matcher_masiva.id_cliente',
+                'response_matcher_masiva.resultado_cotejo',
+                'response_matcher_masiva.primer_nombre',
+                'response_matcher_masiva.segundo_nombre',
+                'response_matcher_masiva.codigo_particula',
+                'response_matcher_masiva.descripcion_particula',
+                'response_matcher_masiva.primer_apellido',
+                'response_matcher_masiva.segundo_apellido',
+                'response_matcher_masiva.lugar_expedicion',
+                'response_matcher_masiva.fecha_expedicion',
+                'response_matcher_masiva.codigo_vigencia',
+                'response_matcher_masiva.descripcion_vigencia',
+                'response_matcher_masiva.message_error',
+                'response_matcher_masiva.idunoauno',
+                'response_matcher_masiva.idmasiva'
             )
             ->where('idmasiva', $id)
             ->get();

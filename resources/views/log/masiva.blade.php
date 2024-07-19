@@ -18,8 +18,10 @@
                       <th>Fecha Fin</th>
                       <th>Usuario</th>
                       <th>Total Registros</th>
-                      <th>Total Errores</th>
+                      <!--<th>Total Errores</th>-->
                       <th>Tiempo Total</th>
+                      <th>Total HITS</th>
+                      <th>Total NO HITS</th>
                       <th>Ver Detalle</th>
 
                     </tr>
@@ -32,8 +34,11 @@
                       <td>{{$log->fechafin}}</td>
                       <td>{{$log->usuario_carga}}</td>
                       <td>{{$log->totalregistros}}</td>
-                      <td>{{$log->errortotalregistros}}</td>
+                     <!-- <td>{{$log->errortotalregistros}}</td>-->
                       <td>{{$log->diferencia_segundos}}</td>
+
+                      <td>{{$log->total_hit}}</td>
+                      <td>{{$log->total_nohit}}</td>
                       <td><a href="../log/facial/{{$log->id}}">Ver</a></td>
                   </tr>
                   @endforeach

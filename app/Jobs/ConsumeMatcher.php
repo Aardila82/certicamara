@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Models\LogFacialEnvivoUnoAUno;
+use App\Models\ResponseMatcherMasiva;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -57,11 +58,10 @@ class ConsumeMatcher implements ShouldQueue
 
     public function handle(){
             //echo $file->getFilename() . '<br>';
-            $directoryFotosPath = storage_path('app/fotos');
-            echo $this->idLogMasiva;
-
-            //$cedula = str_replace(".txt", "", $this->fileName);
             $cedula = explode(".", $this->fileName)[0];
+            $directoryFotosPath = storage_path('app/FotosMasiva/' . $cedula);
+            echo $this->idLogMasiva;
+            
             $foto = $directoryFotosPath . "/" . $this->fileName;
 
             try {
@@ -76,10 +76,10 @@ class ConsumeMatcher implements ShouldQueue
                 // Crear la solicitud
                 $request =  [
                     'nut2' => $nut,
-                    'oaid_id' => 'OAID123',
-                    'cliente_id' => 'CLT678',
+                    'oaid_id' => '1234567890',
+                    'cliente_id' => '12345678',
                     'nuip_aplicante' => $cedula,
-                    'dispositivo_id' => 'DISP789',
+                    'dispositivo_id' => '12345678901234567890',
                     'latitud' => $this->coordenadasResponse['latitude'], 
                     'longitud' => $this->coordenadasResponse['longitude'],
                     'rostro2' => $base64,
@@ -89,7 +89,7 @@ class ConsumeMatcher implements ShouldQueue
                 // Llamar al método SOAP
 
                 $response = $this->callSoapService($request);
-
+                var_dump($response);
                 // Insertar los datos usando Eloquent
                 // Insertar en la tabla log_facial_envivo_uno_a_uno
                 $logData = [
@@ -98,12 +98,23 @@ class ConsumeMatcher implements ShouldQueue
                     'resultado' => $response["resultado_cotejo"], // Ejemplo de valor estático, ajusta según sea necesario
                     'fechafin' => Carbon::now(), // Usar la fecha actual
                     'idusuario' => $this->usuario->id, // ID del usuario actual o cualquier otro valor
+                    //'hashalgo' => $sha256, // Ejemplo de cálculo hash
                     'hashalgo' => $sha256, // Ejemplo de cálculo hash
                     'idmasiva' => $this->idLogMasiva,
+                    //'response' => json_encode($response),
                 ];
 
-                LogFacialEnvivoUnoAUno::create($logData);
+            
                 $logData['usuarioNombre'] = $this->usuario->name;
+                $idUnoAUno = LogFacialEnvivoUnoAUno::create($logData);
+
+
+                $response["idmasiva"] = (int)$this->idLogMasiva;
+                $response["idunoauno"] =$idUnoAUno->id;
+                $idResponse = ResponseMatcherMasiva::create($response);
+                Log::info('Valor del array res: ' . $idResponse);
+
+
                 //$resultados[$index] = (object)$logData;
                 //$index++;
 
@@ -137,7 +148,7 @@ class ConsumeMatcher implements ShouldQueue
 
         // Define la URL del servicio SOAP
         $url = 'http://172.17.111.22:8834/wsrnec/ValidateCandidate/?name=arthuro';
-
+        echo "<br>file_foto_sha256 : ".$request['file_foto_sha256']."<br>";
         // Define el cuerpo XML de la solicitud SOAP
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
         <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="ws.mockrnec.com" xmlns:apl="apl">
@@ -154,7 +165,7 @@ class ConsumeMatcher implements ShouldQueue
                         <apl:longitud>'.$request['longitud'].'</apl:longitud>
                     </apl:coordenadas>
                     <apl:rostro>'.$request['rostro2'].'</apl:rostro>
-                    <apl:file_foto_sha256>e32b061fa28a3cdbd846421de142629a60d69c8b24f7a0372bae71546829cf32</apl:file_foto_sha256>
+                    <apl:file_foto_sha256>'.$request['file_foto_sha256'].'</apl:file_foto_sha256>
                 </ws:validate_client_data>
             </soapenv:Body>
         </soapenv:Envelope>';
@@ -184,15 +195,31 @@ class ConsumeMatcher implements ShouldQueue
             $response = $body->children($namespaces['tns'])->validate_client_dataResponse;
             $properties = $response->children($namespaces['s1']);
 
-            $res = array(
-                'codigoResultado' => (string)$properties->codigoResultado,
+            $res = [
+                'codigo_resultado' => (string)$properties->codigoResultado,
                 'nut' => (string)$properties->nut,
                 'nuip' => (string)$properties->nuip,
-                'idLog' => (string)$properties->idLog,
-                'idOAID' => (string)$properties->idOAID,
-                'idCliente' => (string)$properties->idCliente,
+                'id_log' => (string)$properties->idLog,
+                'id_oaid' => (string)$properties->idOAID,
+                'id_cliente' => (string)$properties->idCliente,
                 'resultado_cotejo' => (string)$properties->resultado_cotejo,
-            );
+                'primer_nombre' => (string)$properties->primerNombre,
+                'segundo_nombre' => (string)$properties->segundoNombre,
+                'codigo_particula' => (string)$properties->codigoParticula,
+                'descripcion_particula' => (string)$properties->descripcionParticula,
+                'primer_apellido' => (string)$properties->primerApellido,
+                'segundo_apellido' => (string)$properties->segundoApellido,
+                'lugar_expedicion' => (string)$properties->lugarExpedicion,
+                'fecha_expedicion' => (string)$properties->fechaExpedicion,
+                'codigo_vigencia' => (string)$properties->codigoVigencia,
+                'descripcion_vigencia' => (string)$properties->descripcionVigencia,
+                'message_error' => isset($properties->messageError) ? (string)$properties->messageError : '', // Este campo es opcional
+            ];
+            
+            
+            //Log::info('Valor del array properties: ' . json_encode((array)$properties));
+            //Log::info('Valor del array res: ' . json_encode($res));
+            //Log::info('Valor del array request: ' . json_encode($request));
 
             // Mostrar el valor de codigoResultado
 

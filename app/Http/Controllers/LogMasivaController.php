@@ -11,15 +11,41 @@ class LogMasivaController extends Controller
 {
     public function lista()
     {
-        $logs = DB::table('log_masivas')
+        /*$logs = DB::table('log_masivas')
             ->join('usuarios', 'log_masivas.usuariocarga_id', '=', 'usuarios.id')
             ->select(
                 'log_masivas.*',
                 DB::raw("CONCAT(usuarios.nombre1, ' ', usuarios.nombre2, ' ', usuarios.apellido1, ' ', usuarios.apellido2) as usuario_carga"),
                 DB::raw("ROUND(EXTRACT(EPOCH FROM (CAST(fechafin AS timestamp) - CAST(fechainicio AS timestamp)))::NUMERIC, 2) AS diferencia_segundos")
             )
-            ->get();
+            ->get();*/
+            /*$logs = DB::table('log_masivas')
+            ->leftJoin('log_facial_envivo_uno_a_uno as lf', 'log_masivas.id', '=', 'lf.idmasiva')
+            ->join('usuarios', 'log_masivas.usuariocarga_id', '=', 'usuarios.id')
 
+            ->select('log_masivas.*',
+                //DB::raw("CONCAT(usuarios.nombre1, ' ', usuarios.nombre2, ' ', usuarios.apellido1, ' ', usuarios.apellido2) as usuario_carga"),
+
+                DB::raw('SUM(CASE WHEN lf.resultado = \'Hit\' THEN 1 ELSE 0 END) AS total_hit'),
+                DB::raw('SUM(CASE WHEN lf.resultado = \'No Hit\' THEN 1 ELSE 0 END) AS total_nohit')
+            )
+            ->groupBy('log_masivas.id')
+            ->orderBy('log_masivas.id', 'desc')
+            ->get();*/
+
+            $logs = DB::table('log_masivas')
+     
+                ->join('view_log_facial_total_hits as vfs', 'log_masivas.id', '=', 'vfs.idmasiva')
+                ->join('usuarios', 'log_masivas.usuariocarga_id', '=', 'usuarios.id')
+
+                ->select('log_masivas.*', 
+                    'vfs.total_hit', 'vfs.total_nohit',
+                    DB::raw("CONCAT(usuarios.nombre1, ' ', usuarios.nombre2, ' ', usuarios.apellido1, ' ', usuarios.apellido2) as usuario_carga"),
+                    DB::raw("ROUND(EXTRACT(EPOCH FROM (CAST(fechafin AS timestamp) - CAST(fechainicio AS timestamp)))::NUMERIC, 2) AS diferencia_segundos")
+                )
+                ->get();
+
+            //var_dump($logs);
         return view('log/masiva', ['logs' => $logs]);
     }
 

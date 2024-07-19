@@ -21,6 +21,7 @@ class LogFacialEnvivoUnoAUno extends Model
         'idusuario',
         'hashalgo',
         'idmasiva',
+        'response',
     ];
 
     public function usuario()
