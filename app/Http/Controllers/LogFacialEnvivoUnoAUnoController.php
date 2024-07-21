@@ -133,7 +133,7 @@ class LogFacialEnvivoUnoAUnoController extends Controller
                 'response_matcher_masiva.idunoauno',
                 'response_matcher_masiva.idmasiva'
             )
-            ->where('idmasiva', $id)
+            ->where('log_facial_envivo_uno_a_uno.idmasiva', $id)
             ->get();
 
         $filename = "logs_facial.csv";
