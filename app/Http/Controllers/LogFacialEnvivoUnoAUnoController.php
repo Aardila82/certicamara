@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 use Exception;
 
 class LogFacialEnvivoUnoAUnoController extends Controller
@@ -203,10 +204,21 @@ public function exportCsv2()
 
     $csvContent = $csvExporter->getContent();
 
-    return Response::make($csvContent, 200, [
-        'Content-Type' => 'text/csv',
-        'Content-Disposition' => 'attachment; filename="posts.csv"',
-    ]);
+    $csvFileName = 'posts.csv';
+    $zipFileName = 'posts.zip';
+
+    $tempFile = tempnam(sys_get_temp_dir(), $csvFileName);
+    file_put_contents($tempFile, $csvContent);
+
+    $zip = new ZipArchive();
+    if ($zip->open($zipFileName, ZipArchive::CREATE) === TRUE) {
+        $zip->addFile($tempFile, $csvFileName);
+        $zip->close();
+    }
+
+    unlink($tempFile);
+
+    return response()->download($zipFileName)->deleteFileAfterSend(true);
 }
 
 public function executeJar()

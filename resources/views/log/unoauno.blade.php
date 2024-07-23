@@ -9,7 +9,7 @@
 
     <div class="row mb-3">
         <div class="col-md-12 text-end">
-            <a href="{{ route('posts.export') }}" class="btn btn-primary">Descargar CSV</a>
+            <a href="{{ route('posts.export') }}" class="btn btn-primary">Descargar ZIP</a>
         </div>
     </div>
 
