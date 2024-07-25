@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use GuzzleHttp\Client;
+
+
 
 class LogCotejoIndividualController extends Controller
 {
@@ -67,6 +70,36 @@ class LogCotejoIndividualController extends Controller
 
     public function generarPDF(Request $request)
     {
+
+
+                
+        /*$client = new Client();
+
+        $url = 'idemia.com';
+
+        $body = [
+            'client_id' => 'xB5tDfx6fv3nv9qTflyaXWkJNWqMGAPo',
+            'client_secret' => 'NIr7J9CfsdfSDEVChQC3FZ',
+            'grant_type' => 'password',
+            'provision_key' => 'iwT5kIr7J9CfflyaXr0qYvq3M04y2836R',
+            'authenticated_userid' => 'cliente'
+        ];
+
+        try {
+            $response = $client->post($url, [
+                'json' => $body
+            ]);
+
+            $responseBody = $response->getBody()->getContents();
+
+            $data = json_decode($responseBody, true);
+
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }*/
+
+
         $cedula = $request->input('cedula');
         $mensaje = $request->input('mensaje');
 

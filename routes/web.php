@@ -9,7 +9,7 @@ use App\Http\Controllers\LogFotografiaController;
 use App\Http\Controllers\LogCotejoIndividualController;
 use App\Http\Controllers\LogFacialEnvivoUnoAUnoController;
 
-Route::get('',[LoginController::class,'index']);
+
 
 Route::get('login', [LoginController::class, 'index'])->name('login');
 Route::post('login',[LoginController::class,'login']);
@@ -18,11 +18,12 @@ Route::get('logout',[LoginController::class,'logout']);
 
 Route::middleware('auth')->group(function () {
 
-   Route::get('dash', function () {
+   Route::get('/', [LoginController::class, 'index']);
+Route::head('/', [LoginController::class, 'index']);
+
+   /*Route::get('dash', function () {
       return view('dash');
-   });
-
-
+   });*/
 
    Route::get('guardadoFormulario', function () {
       return view('guardadoFormulario');
@@ -78,15 +79,15 @@ Route::middleware('auth')->group(function () {
 
    Route::get('log/upload', function () {
     return view('log.upload');
-});
-Route::post('log/upload-image', [LogFacialEnvivoUnoAUnoController::class, 'upload']);
+   });
+   Route::post('log/upload-image', [LogFacialEnvivoUnoAUnoController::class, 'upload']);
 
-/*Route::get('loader/{idLogMasiva}', function () {
-    return view('loader');
-});*/
+   /*Route::get('loader/{idLogMasiva}', function () {
+      return view('loader');
+   });*/
 
-Route::get('/download-zip', [LogMasivaController::class, 'createZip'])->name('download.zip');
-Route::get('loader/{idmasiva}', [AlfaController::class, 'loader']);
+   Route::get('/download-zip', [LogMasivaController::class, 'createZip'])->name('download.zip');
+   Route::get('loader/{idmasiva}', [AlfaController::class, 'loader']);
 
 });
 
@@ -94,7 +95,6 @@ Route::get('/cambiar-contrasena', [UsuarioController::class, 'showChangePassword
 Route::post('/cambiar-contrasena', [UsuarioController::class, 'changePassword'])->name('cambiar.contrasena');
 Route::get('/actualizar-contrasena', [UsuarioController::class, 'showUpdatePasswordForm'])->name('actualizar.contrasena.form');
 Route::post('/actualizar-contrasena', [UsuarioController::class, 'updatePassword'])->name('actualizar.contrasena');
-
 
 //require __DIR__.'/auth.php';
 
