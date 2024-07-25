@@ -20,6 +20,7 @@
                 @endif
 
                 <button type="submit" class="btn btn-success mt-2">Validar Cédula</button>
+                <a type="button" class="btn btn-secondary mt-2" href="dash">Atras</a>
             </form>
         </div>
     </div>
