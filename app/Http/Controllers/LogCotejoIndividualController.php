@@ -8,7 +8,12 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use GuzzleHttp\Client;
+use Illuminate\Http\Body;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
+
+use Illuminate\Support\Facades\Http;
 
 
 class LogCotejoIndividualController extends Controller
@@ -69,58 +74,134 @@ class LogCotejoIndividualController extends Controller
     }
 
     public function generarPDF(Request $request)
-{
-    /*$client = new Client();
+    {
 
-    $url = 'idemia.com';
+        $cedula = $request->input('cedula');
+        $mensaje = $request->input('mensaje');
 
-    $body = [
-        'client_id' => 'xB5tDfx6fv3nv9qTflyaXWkJNWqMGAPo',
-        'client_secret' => 'NIr7J9CfsdfSDEVChQC3FZ',
-        'grant_type' => 'password',
-        'provision_key' => 'iwT5kIr7J9CfflyaXr0qYvq3M04y2836R',
-        'authenticated_userid' => 'cliente'
-    ];
+        $folderPath = storage_path('app/pdf');
 
-    try {
-        $response = $client->post($url, [
-            'json' => $body
-        ]);
+        // Verificar si la carpeta existe, y si no, crearla
+        if (!file_exists($folderPath)) {
+            mkdir($folderPath, 0755, true);
+        }
 
-        $responseBody = $response->getBody()->getContents();
 
-        $data = json_decode($responseBody, true);
+        // Generar el PDF
+        $pdf = Pdf::loadView('mostrarcedula_pdf', compact('cedula', 'mensaje'));
+        $time = time();
+        $nombrepdf = $cedula."_".$time.".pdf";
+        //$filePath = storage_path('app/public/'.$nombre_pdf);
+        Storage::put('pdf/'.$nombrepdf, $pdf->output());
 
-        return response()->json($data);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
-    }*/
-
-    $cedula = $request->input('cedula');
-    $mensaje = $request->input('mensaje');
-
-    $folderPath = storage_path('app/pdf');
-
-    // Verificar si la carpeta existe, y si no, crearla
-    if (!file_exists($folderPath)) {
-        mkdir($folderPath, 0755, true);
+        //return $pdf->download('cedula.pdf');
+        return view("cotejo/pdf", ["cedula" => $cedula, "mensaje" => $mensaje, "documento" => $nombrepdf]);
     }
 
-    // Generar el PDF
-    $pdf = Pdf::loadView('mostrarcedula_pdf', compact('cedula', 'mensaje'));
-    $time = time();
-    $nombrepdf = $cedula . "_" . $time . ".pdf";
-    Storage::put('pdf/' . $nombrepdf, $pdf->output());
 
-    // Redirigir a la vista de confirmación
-    return redirect()->route('pdf.confirmation')->with(['cedula' => $cedula, 'mensaje' => $mensaje]);
-}
+    public function connectliveness(Request $request)
+    {
+        try {
+            // Obtener el siguiente valor de la secuencia
+            $nextValue = DB::select('SELECT nextval(\'secuencia_facial\') as value');
+            $nut = $nextValue[0]->value;
 
-public function pdfConfirmation()
-{
-    $cedula = session('cedula');
-    $mensaje = session('mensaje');
+            // Configurar el cliente HTTP
+            $client = new \GuzzleHttp\Client();
 
-    return view('pdf_confirmation', compact('cedula', 'mensaje'));
-}
-}
+            // Definir la URL y el agente de usuario
+            $url = 'https://certirostrotst.certicamara.com:7443/v1/colope/oauth2/token';
+            $userAgent = $request->header('User-Agent');
+
+            // Definir los encabezados de la solicitud
+            $headers = [
+                'Content-Type' => 'application/json',
+                'User-Agent' => $userAgent,
+                'Accept' => '/',
+                'Accept-Encoding' => 'gzip, deflate, br',
+                'Connection' => 'keep-alive',
+            ];
+
+            // Definir el cuerpo de la solicitud
+            $body = [
+                'client_id' => 'O3LRM0GJR1YBAZDwz3LDYz6LUvam63g8',
+                'client_secret' => 'PDRxi9Ae9txdk8wFT3SBLgC9WYq8RG5u',
+                'grant_type' => 'password',
+                'provision_key' => 'cCVatCI3pO3hnG7jK7PUf7nMa1r1iiMM',
+                'authenticated_userid' => 'certicamara'
+            ];
+
+            // Hacer la solicitud POST
+            $response = Http::withHeaders($headers)
+                ->withOptions([
+                    'verify' => false,
+                    'timeout' => 300,
+                    'debug' => false,
+                    'allow_redirects' => [
+                        'max' => 5,
+                        'strict' => false,
+                        'referer' => false,
+                        'protocols' => ['http', 'https'],
+                        'track_redirects' => true
+                    ],
+                ])
+                ->post($url, $body);
+
+            // Procesar la respuesta
+            $json_response = json_decode($response->body(), true);
+            if (isset($json_response['access_token'])) {
+                $access_token = $json_response['access_token'];
+            } else {
+                throw new \Exception('Error retrieving access token');
+            }
+
+            // Obtener el valor de la cédula desde la solicitud
+            $cedula = $request->input('cedula');
+
+            // Renderizar la vista con los datos obtenidos
+            return view("cotejo/idemia", [
+                "access_token" => $access_token,
+                "cedula" => $cedula
+            ]);
+
+        } catch (\Exception $e) {
+            // Verificar si la carpeta 'Fotosmasiva' existe
+            $directory = storage_path('app/Fotosmasiva');
+            if (!File::exists($directory)) {
+                // Crear la carpeta si no existe (solo por seguridad)
+                File::makeDirectory($directory, 0755, true);
+            }
+
+            // Obtener todas las imágenes en la carpeta 'Fotosmasiva'
+            $files = File::files($directory);
+
+            if (count($files) > 0) {
+                // Seleccionar una imagen aleatoriamente
+                $randomFile = $files[array_rand($files)];
+
+                // Obtener el nombre del archivo
+                $randomImage = basename($randomFile);
+            } else {
+                // Si no hay imágenes, usar una imagen por defecto
+                $randomImage = 'nueva1.jpg'; // asegúrate de tener una imagen por defecto en la carpeta 'Fotosmasiva'
+            }
+
+            // Redirigir a la vista de error con la imagen seleccionada
+            return view('error', ['randomImage' => $randomImage]);
+        }
+    }
+
+    }
+
+//     public function downloadPDF($filename)
+//     {
+//         $filePath = storage_path('app/pdf/' . $filename);
+
+//         if (file_exists($filePath)) {
+//             return response()->download($filePath);
+//         } else {
+//             return abort(404, 'File not found.');
+//         }
+//     }
+
+
