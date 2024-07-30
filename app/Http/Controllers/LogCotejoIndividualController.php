@@ -69,58 +69,58 @@ class LogCotejoIndividualController extends Controller
     }
 
     public function generarPDF(Request $request)
-    {
+{
+    /*$client = new Client();
 
+    $url = 'idemia.com';
 
-                
-        /*$client = new Client();
+    $body = [
+        'client_id' => 'xB5tDfx6fv3nv9qTflyaXWkJNWqMGAPo',
+        'client_secret' => 'NIr7J9CfsdfSDEVChQC3FZ',
+        'grant_type' => 'password',
+        'provision_key' => 'iwT5kIr7J9CfflyaXr0qYvq3M04y2836R',
+        'authenticated_userid' => 'cliente'
+    ];
 
-        $url = 'idemia.com';
+    try {
+        $response = $client->post($url, [
+            'json' => $body
+        ]);
 
-        $body = [
-            'client_id' => 'xB5tDfx6fv3nv9qTflyaXWkJNWqMGAPo',
-            'client_secret' => 'NIr7J9CfsdfSDEVChQC3FZ',
-            'grant_type' => 'password',
-            'provision_key' => 'iwT5kIr7J9CfflyaXr0qYvq3M04y2836R',
-            'authenticated_userid' => 'cliente'
-        ];
+        $responseBody = $response->getBody()->getContents();
 
-        try {
-            $response = $client->post($url, [
-                'json' => $body
-            ]);
+        $data = json_decode($responseBody, true);
 
-            $responseBody = $response->getBody()->getContents();
+        return response()->json($data);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }*/
 
-            $data = json_decode($responseBody, true);
+    $cedula = $request->input('cedula');
+    $mensaje = $request->input('mensaje');
 
-            return response()->json($data);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }*/
+    $folderPath = storage_path('app/pdf');
 
-
-        $cedula = $request->input('cedula');
-        $mensaje = $request->input('mensaje');
-
-        $folderPath = storage_path('app/pdf');
-    
-        // Verificar si la carpeta existe, y si no, crearla
-        if (!file_exists($folderPath)) {
-            mkdir($folderPath, 0755, true);
-        }
-
-        
-
-        // Generar el PDF
-        $pdf = Pdf::loadView('mostrarcedula_pdf', compact('cedula', 'mensaje'));
-        $time = time();
-        $nombrepdf = $cedula."_".$time.".pdf";
-        //$filePath = storage_path('app/public/'.$nombre_pdf);
-        Storage::put('pdf/'.$nombrepdf, $pdf->output());
-
-        echo "";
-
-        //return $pdf->download('cedula.pdf');
+    // Verificar si la carpeta existe, y si no, crearla
+    if (!file_exists($folderPath)) {
+        mkdir($folderPath, 0755, true);
     }
+
+    // Generar el PDF
+    $pdf = Pdf::loadView('mostrarcedula_pdf', compact('cedula', 'mensaje'));
+    $time = time();
+    $nombrepdf = $cedula . "_" . $time . ".pdf";
+    Storage::put('pdf/' . $nombrepdf, $pdf->output());
+
+    // Redirigir a la vista de confirmación
+    return redirect()->route('pdf.confirmation')->with(['cedula' => $cedula, 'mensaje' => $mensaje]);
+}
+
+public function pdfConfirmation()
+{
+    $cedula = session('cedula');
+    $mensaje = session('mensaje');
+
+    return view('pdf_confirmation', compact('cedula', 'mensaje'));
+}
 }
