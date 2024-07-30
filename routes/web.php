@@ -19,7 +19,6 @@ Route::get('logout',[LoginController::class,'logout']);
 Route::middleware('auth')->group(function () {
 
    Route::get('/', [LoginController::class, 'index']);
-Route::head('/', [LoginController::class, 'index']);
 
    /*Route::get('dash', function () {
       return view('dash');
@@ -74,8 +73,10 @@ Route::head('/', [LoginController::class, 'index']);
    Route::get('/log-fotografia/csv', [LogFotografiaController::class, 'exportCsv']);
    Route::get('cotejounoauno', [LogCotejoIndividualController::class, 'cotejounoauno']);
    Route::post('mostrarcedula', [LogCotejoIndividualController::class, 'capturarCedula'])->name('capturar.cedula');
-   Route::post('/generar-pdf', [LogCotejoIndividualController::class, 'generarPDF'])->name('generar.pdf');
+   Route::post('generar-pdf', [LogCotejoIndividualController::class, 'generarPDF'])->name('generar.pdf');
    Route::get('/execute-jar', [LogFacialEnvivoUnoAUnoController::class, 'executeJar']);
+   Route::get('connectliveness/{cedula}', [LogCotejoIndividualController::class, 'connectliveness'])->name('connectliveness');
+   Route::get('/download-pdf/{filename}', [LogCotejoIndividualController::class, 'downloadPDF'])->name('download.pdf');
 
    Route::get('log/upload', function () {
     return view('log.upload');

@@ -12,8 +12,6 @@
 
         <div class="row">
 
-
-
             <div class="col-lg-3 col-sm-6">
                 <div class="card-box bg-gray">
                     <div class="inner">
@@ -29,7 +27,6 @@
                     </a>
                 </div>
             </div>
-
 
             <div class="col-lg-3 col-sm-6">
                 <div class="card-box bg-green">
