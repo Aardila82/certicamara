@@ -32,8 +32,9 @@
 <body>
     <div class="center">
         <div class="loader"></div>
-        {{-- <img src="{{ asset('storage/app/FotoMasiva/' . $randomImage) }}" alt="Random Image"> --}}
-        <img src="{{$randomImageBase64}}" alt="Random Image">
+        Consumiendo Matcher y realizando Cotejo
+        <!--{{-- <img src="{{ asset('storage/app/FotoMasiva/' . $randomImage) }}" alt="Random Image"> --}}
+        <img src="{{$randomImageBase64}}" alt="Random Image">-->
     </div>
 </body>
 </html>

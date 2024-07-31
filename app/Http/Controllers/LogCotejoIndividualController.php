@@ -134,7 +134,7 @@ class LogCotejoIndividualController extends Controller
             // Hacer la solicitud POST
             $response = Http::withHeaders($headers)
                 ->withOptions([
-                    'verify' => false,
+                    'verify' => true,
                     'timeout' => 300,
                     'debug' => false,
                     'allow_redirects' => [
@@ -166,26 +166,33 @@ class LogCotejoIndividualController extends Controller
 
         } catch (\Exception $e) {
             // Verificar si la carpeta 'Fotosmasiva' existe
-            $directory = storage_path('app/Fotosmasiva');
+            $directory = storage_path('app/FotosMasiva');
             if (!File::exists($directory)) {
                 // Crear la carpeta si no existe (solo por seguridad)
                 File::makeDirectory($directory, 0755, true);
             }
 
             // Obtener todas las imágenes en la carpeta 'Fotosmasiva'
-            $files = File::files($directory);
-            //var_dump($files);
+    
+            $fotosPath = "app/FotosMasiva";
+            $directoryFotosPath = storage_path($fotosPath);
+            $directories = File::directories($directoryFotosPath);
 
 
             // Verificar si hay imágenes
-            if (count($files) > 0) {
+            if (count($directories) > 0) {                
 
                 // Seleccionar una imagen aleatoriamente
-                $randomFile = $files[array_rand($files)];
+                $randomDir = $directories[array_rand($directories)];
+                $files = File::files($randomDir);
+                //var_dump($files[0]);
+                $randomFile = $files[0]->getPathname();
+             
                 $imageData = file_get_contents($randomFile);
                 $hash = hash('sha256', $imageData);
+                $base64 = base64_encode($imageData);
                 $type = pathinfo($randomFile, PATHINFO_EXTENSION);
-                $randomImageBase64 = 'data:image/' . $type . ';base64,'.base64_encode($imageData);
+                $randomImageBase64 = 'data:image/' . $type . ';base64,'.$base64;
                 // Obtener el nombre del archivo
                 $randomImage = basename($randomFile);
               //  var_dump($randomImage);
