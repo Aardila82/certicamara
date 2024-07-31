@@ -32,7 +32,8 @@
 <body>
     <div class="center">
         <div class="loader"></div>
-        <img src="{{ asset('storage/fotomasiva/' . $randomImage) }}" alt="Random Image">
+        {{-- <img src="{{ asset('storage/app/FotoMasiva/' . $randomImage) }}" alt="Random Image"> --}}
+        <img src="{{$randomImageBase64}}" alt="Random Image">
     </div>
 </body>
 </html>

@@ -174,20 +174,29 @@ class LogCotejoIndividualController extends Controller
 
             // Obtener todas las imágenes en la carpeta 'Fotosmasiva'
             $files = File::files($directory);
+            //var_dump($files);
 
+
+            // Verificar si hay imágenes
             if (count($files) > 0) {
+
                 // Seleccionar una imagen aleatoriamente
                 $randomFile = $files[array_rand($files)];
-
+                $imageData = file_get_contents($randomFile);
+                $hash = hash('sha256', $imageData);
+                $type = pathinfo($randomFile, PATHINFO_EXTENSION);
+                $randomImageBase64 = 'data:image/' . $type . ';base64,'.base64_encode($imageData);
                 // Obtener el nombre del archivo
                 $randomImage = basename($randomFile);
+              //  var_dump($randomImage);
+
             } else {
                 // Si no hay imágenes, usar una imagen por defecto
                 $randomImage = 'nueva1.jpg'; // asegúrate de tener una imagen por defecto en la carpeta 'Fotosmasiva'
             }
 
             // Redirigir a la vista de error con la imagen seleccionada
-            return view('error', ['randomImage' => $randomImage]);
+            return view('error', ['randomImage' => $randomImage , 'randomImageBase64' => $randomImageBase64]);
         }
     }
 
