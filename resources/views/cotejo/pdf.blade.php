@@ -1,8 +1,16 @@
-<a href="{{ route('connectliveness', $cedula) }}"  target="_blank" >Siguente Cotejo</a>
+@extends('layouts.plantilla')
 
+@section('contenido')
+<div class="container d-flex flex-column justify-content-center align-items-center" >
+    <div class="col-md-6 text-center mt-5">
+        <h1 class="mb-4">Generación de resultados ATDP </h1>
 
+    </div>
 
-<div class="container mt-5">
-        <h1 class="mb-4">Descargar PDF</h1>
-        <a href="{{ route('download.pdf',  $documento ) }}" class="btn btn-primary">Download PDF</a> <!-- Ajusta 'example.pdf' según sea necesario -->
+    <div class="col">
+        <a href="{{ route('download.pdf', $documento) }}" class="btn btn-primary mb-3">Descargar PDF</a>
+        <a href="{{ route('connectliveness', $cedula) }}" class="btn btn-success mb-3" target="_blank">Continuar Cotejo</a>
+    </div>
+
 </div>
+@endsection

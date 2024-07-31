@@ -135,7 +135,7 @@ class LogCotejoIndividualController extends Controller
             $response = Http::withHeaders($headers)
                 ->withOptions([
                     'verify' => true,
-                    'timeout' => 300,
+                    'timeout' => 10,
                     'debug' => false,
                     'allow_redirects' => [
                         'max' => 5,
@@ -173,29 +173,30 @@ class LogCotejoIndividualController extends Controller
             }
 
             // Obtener todas las imágenes en la carpeta 'Fotosmasiva'
-    
+
             $fotosPath = "app/FotosMasiva";
             $directoryFotosPath = storage_path($fotosPath);
             $directories = File::directories($directoryFotosPath);
 
 
             // Verificar si hay imágenes
-            if (count($directories) > 0) {                
+            if (count($directories) > 0) {
 
                 // Seleccionar una imagen aleatoriamente
                 $randomDir = $directories[array_rand($directories)];
                 $files = File::files($randomDir);
                 //var_dump($files[0]);
                 $randomFile = $files[0]->getPathname();
-             
+
                 $imageData = file_get_contents($randomFile);
                 $hash = hash('sha256', $imageData);
                 $base64 = base64_encode($imageData);
                 $type = pathinfo($randomFile, PATHINFO_EXTENSION);
                 $randomImageBase64 = 'data:image/' . $type . ';base64,'.$base64;
+
                 // Obtener el nombre del archivo
                 $randomImage = basename($randomFile);
-              //  var_dump($randomImage);
+
 
             } else {
                 // Si no hay imágenes, usar una imagen por defecto
