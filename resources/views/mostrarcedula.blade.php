@@ -9,7 +9,8 @@
         <input type="hidden" name="cedula" value="{{ $cedula }}">
         <input type="hidden" name="mensaje" value="{{ $mensaje }}">
         <button type="submit" class="btn btn-success mt-3">Aceptar términos y condiciones </button>
-        <a type="button" class="btn btn-secondary mt-3" href="dash">Atras</a>
+        <a href="{{ route('connectliveness', $cedula) }}" class="btn btn-success mt-3">Continuar Cotejo</a>
+        <a type="button" class="btn btn-danger mt-3" href="cotejounoauno">Rechazar</a>
     </form>
 </div>
 @endsection
