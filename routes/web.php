@@ -40,9 +40,6 @@ Route::middleware('auth')->group(function () {
    Route::post('usuario/creacion',[UsuarioController::class,'store']);
    Route::get('dash',[UsuarioController::class,'dash']);
 
-
-
-
    Route::get('departamentos/{departamento_id}/municipios', [UsuarioController::class, 'getMunicipios']);
 
    Route::get('usuario/edicion/{id}', [UsuarioController::class, 'edit'])->name('usuario.edit');
@@ -76,7 +73,7 @@ Route::middleware('auth')->group(function () {
    Route::post('generar-pdf', [LogCotejoIndividualController::class, 'generarPDF'])->name('generar.pdf');
    Route::get('/execute-jar', [LogFacialEnvivoUnoAUnoController::class, 'executeJar']);
    Route::get('connectliveness/{cedula}', [LogCotejoIndividualController::class, 'connectliveness'])->name('connectliveness');
-   Route::get('/download-pdf/{filename}', [LogCotejoIndividualController::class, 'downloadPDF'])->name('download.pdf');
+   Route::get('/download-pdf/{filename}', [LogCotejoIndividualController::class, 'downloadpdf'])->name('download.pdf');
 
    Route::get('log/upload', function () {
     return view('log.upload');

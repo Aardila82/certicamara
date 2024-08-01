@@ -9,7 +9,7 @@
 
     <div class="col">
         <a href="{{ route('download.pdf', $documento) }}" class="btn btn-primary mb-3">Descargar PDF</a>
-        <a href="{{ route('connectliveness', $cedula) }}" class="btn btn-success mb-3" target="_blank">Continuar Cotejo</a>
+        <a href="{{ route('connectliveness', $cedula) }}" class="btn btn-success mb-3">Continuar Cotejo</a>
     </div>
 
 </div>

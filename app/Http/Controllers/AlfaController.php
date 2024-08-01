@@ -240,28 +240,10 @@ class AlfaController extends Controller
             $logMasivaData['totalregistros'] = count($directories);
 
             $logMasiva->update($logMasivaData);
-            /*$apiUrl = 'http://localhost:3000/location';
-            
-            // Parámetros de la API
-            $params = [];
 
-            // Realizar la solicitud GET
-            $response = Http::get($apiUrl, $params);
-
-            // Verificar si la solicitud fue exitosa
-            if ($response->successful()) {
-                // Devolver la respuesta de la API
-                $coordenadasResponse = (array)$response->json();
-                var_dump($coordenadasResponse);
-            } else {
-                // Manejar el error
-                //var_dump(['error' => 'Error al obtener el clima'], $response->status());
-            }*/
             $coordenadasResponse =  $this->getCoordenadas();
             $coordenadasResponse['latitude'] = $coordenadasResponse["latitud"];
             $coordenadasResponse['longitude'] = $coordenadasResponse["longitud"];
-            //echo "<pre>".print_r($coordenadasResponse , true)."</pre>";
-
         
             $i=0;
             foreach ($directories as $dir) {

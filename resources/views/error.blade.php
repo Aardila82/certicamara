@@ -1,11 +1,47 @@
-<!-- resources/views/error.blade.php -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error</title>
+@extends('layouts.plantilla')
+
+@section('titulo', 'Liveness')
+
+@section('contenido')
+
+<div class="container-fluid text-center d-block mx-auto">
+        <div class="loader-contenedor" id="loader-contenedor">
+            <div class="loader"></div>
+        </div>
+
+        <div class="row" id="matcherResponse">
+            <h5>Respuesta de Matcher</h5>
+            @foreach($matcherResponse as $key => $value)
+
+                <div class="row">
+                    <div class="col-3"></div>
+                    <div class="col-2 text-start"><strong>{{ $key }}</strong></div>
+                    <div class="col-4">{{ $value }}</div>
+                    <div class="col-3"></div>
+                </div>
+            @endforeach
+        </div>
+        <a href="{{url('dash')}}" class="btn btn-primary mt-3">Volver</a></a>
+
+    </div>
+
     <style>
+        .loader-contenedor {
+            margin-top: 25vh;
+            width: 100vw;
+            height: 200px;
+            text-align:center;
+            border:0px solid red;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #matcherResponse {
+            display: none;
+            margin-top:15vh;
+        }
+
         .loader {
             border: 16px solid #f3f3f3;
             border-radius: 50%;
@@ -20,21 +56,15 @@
             100% { transform: rotate(360deg); }
         }
 
-        .center {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-        }
+
     </style>
-</head>
-<body>
-    <div class="center">
-        <div class="loader"></div>
-        Consumiendo Matcher y realizando Cotejo
-        <!--{{-- <img src="{{ asset('storage/app/FotoMasiva/' . $randomImage) }}" alt="Random Image"> --}}
-        <img src="{{$randomImageBase64}}" alt="Random Image">-->
-    </div>
-</body>
-</html>
+
+    <script>
+        // JavaScript para ocultar el div después de 3 segundos
+        setTimeout(function() {
+            document.getElementById('loader-contenedor').style.display = 'none';
+            document.getElementById('matcherResponse').style.display = 'block';
+        }, 3000); // 3000 milisegundos = 3 segundos
+    </script>    
+
+@endsection

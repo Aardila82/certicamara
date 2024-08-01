@@ -7,11 +7,9 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
-use GuzzleHttp\Client;
-use Illuminate\Http\Body;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-
+use App\Services\Matcher;
+use App\Services\Coordenadas;
 
 use Illuminate\Support\Facades\Http;
 
@@ -99,8 +97,9 @@ class LogCotejoIndividualController extends Controller
     }
 
 
-    public function connectliveness(Request $request)
+    public function connectliveness($cedula , Request $request)
     {
+ 
         try {
             // Obtener el siguiente valor de la secuencia
             $nextValue = DB::select('SELECT nextval(\'secuencia_facial\') as value');
@@ -166,6 +165,8 @@ class LogCotejoIndividualController extends Controller
 
         } catch (\Exception $e) {
             // Verificar si la carpeta 'Fotosmasiva' existe
+           
+
             $directory = storage_path('app/FotosMasiva');
             if (!File::exists($directory)) {
                 // Crear la carpeta si no existe (solo por seguridad)
@@ -189,36 +190,44 @@ class LogCotejoIndividualController extends Controller
                 $randomFile = $files[0]->getPathname();
 
                 $imageData = file_get_contents($randomFile);
-                $hash = hash('sha256', $imageData);
+                $sha256 = hash('sha256', $imageData);
                 $base64 = base64_encode($imageData);
                 $type = pathinfo($randomFile, PATHINFO_EXTENSION);
                 $randomImageBase64 = 'data:image/' . $type . ';base64,'.$base64;
 
                 // Obtener el nombre del archivo
                 $randomImage = basename($randomFile);
+                $cedula = explode("." , $randomImage)[0];
+                $coordenadas = new Coordenadas();
+                $coordenadasData = $coordenadas->getCoordenadas();
+                $latitud = $coordenadasData['latitud'];
+                $longitud = $coordenadasData['longitud'];
 
+                $matcher = new Matcher();
+                $matcherResponse = $matcher->connect($cedula, 0, $base64, $sha256, $latitud, $longitud);
 
             } else {
                 // Si no hay imágenes, usar una imagen por defecto
                 $randomImage = 'nueva1.jpg'; // asegúrate de tener una imagen por defecto en la carpeta 'Fotosmasiva'
+                die("No hay imagenes");
             }
 
             // Redirigir a la vista de error con la imagen seleccionada
-            return view('error', ['randomImage' => $randomImage , 'randomImageBase64' => $randomImageBase64]);
+            return view('error', [
+                'randomImage' => $randomImage, 
+                'randomImageBase64' => $randomImageBase64,
+                'matcherResponse' => $matcherResponse,
+            ]);
         }
     }
 
+    public function downloadPDF($filename)
+    {
+        $filePath = storage_path('app/pdf/' . $filename);
+        if (file_exists($filePath)) {
+            return response()->download($filePath);
+        } else {
+            return abort(404, 'File not found.');
+        }
     }
-
-//     public function downloadPDF($filename)
-//     {
-//         $filePath = storage_path('app/pdf/' . $filename);
-
-//         if (file_exists($filePath)) {
-//             return response()->download($filePath);
-//         } else {
-//             return abort(404, 'File not found.');
-//         }
-//     }
-
-
+}
