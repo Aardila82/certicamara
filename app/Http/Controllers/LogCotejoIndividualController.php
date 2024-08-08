@@ -10,12 +10,24 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use App\Services\Matcher;
 use App\Services\Coordenadas;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use App\Models\LogFacialEnvivoUnoAUno;
+
 
 use Illuminate\Support\Facades\Http;
 
 
 class LogCotejoIndividualController extends Controller
 {
+
+    private $usuario;
+        
+    public function __construct(){
+        $this->usuario = Auth::user();
+    }
+
+
     public function store(Request $request)
     {
         $log = new LogCotejoIndividual();
@@ -45,10 +57,10 @@ class LogCotejoIndividualController extends Controller
         return view('log/logs', compact('logs'));
     }
 
-    public function cotejounoauno(Request $request)
+    public function cotejounoauno()
     {
 
-        return view('cotejounoauno');
+        return view('cotejo/consultar');
     }
 
     public function capturarCedula(Request $request)
@@ -77,13 +89,15 @@ class LogCotejoIndividualController extends Controller
         $cedula = $request->input('cedula');
         $mensaje = $request->input('mensaje');
 
+
+        $filePath = storage_path('app/mensaje.txt');
+        $mensaje = File::get($filePath);
         $folderPath = storage_path('app/pdf');
 
         // Verificar si la carpeta existe, y si no, crearla
         if (!file_exists($folderPath)) {
             mkdir($folderPath, 0755, true);
         }
-
 
         // Generar el PDF
         $pdf = Pdf::loadView('mostrarcedula_pdf', compact('cedula', 'mensaje'));
@@ -99,7 +113,7 @@ class LogCotejoIndividualController extends Controller
 
     public function connectliveness($cedula , Request $request)
     {
- 
+        $cedulaResponse = $cedula;
         try {
             // Obtener el siguiente valor de la secuencia
             $nextValue = DB::select('SELECT nextval(\'secuencia_facial\') as value');
@@ -164,9 +178,27 @@ class LogCotejoIndividualController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            // Verificar si la carpeta 'Fotosmasiva' existe
-           
 
+            //Generar PDF
+            $filePath = storage_path('app/mensaje.txt');
+            $mensaje = File::get($filePath);
+            $folderPath = storage_path('app/pdf');
+    
+            // Verificar si la carpeta existe, y si no, crearla
+            if (!file_exists($folderPath)) {
+                mkdir($folderPath, 0755, true);
+            }
+    
+            $pdf = Pdf::loadView('mostrarcedula_pdf', compact('cedula', 'mensaje'));
+            $time = time();
+            $nombrepdf = $cedula."_".$time.".pdf";
+            $atdpRuta = $nombrepdf;
+
+            //$filePath = storage_path('app/public/'.$nombre_pdf);
+            Storage::put('pdf/'.$nombrepdf, $pdf->output());
+            
+            
+            // Verificar si la carpeta 'Fotosmasiva' existe
             $directory = storage_path('app/FotosMasiva');
             if (!File::exists($directory)) {
                 // Crear la carpeta si no existe (solo por seguridad)
@@ -178,7 +210,6 @@ class LogCotejoIndividualController extends Controller
             $fotosPath = "app/FotosMasiva";
             $directoryFotosPath = storage_path($fotosPath);
             $directories = File::directories($directoryFotosPath);
-
 
             // Verificar si hay imágenes
             if (count($directories) > 0) {
@@ -204,7 +235,10 @@ class LogCotejoIndividualController extends Controller
                 $longitud = $coordenadasData['longitud'];
 
                 $matcher = new Matcher();
-                $matcherResponse = $matcher->connect($cedula, 0, $base64, $sha256, $latitud, $longitud);
+                $matcherResponse = $matcher->connect($cedula, 0, $base64, $sha256, $latitud, $longitud, $atdpRuta);
+                $matcherResponse['nuip'] = $cedulaResponse;
+
+                
 
             } else {
                 // Si no hay imágenes, usar una imagen por defecto
@@ -216,7 +250,7 @@ class LogCotejoIndividualController extends Controller
             return view('error', [
                 'randomImage' => $randomImage, 
                 'randomImageBase64' => $randomImageBase64,
-                'matcherResponse' => $matcherResponse,
+                'data' => $matcherResponse,
             ]);
         }
     }
@@ -230,4 +264,33 @@ class LogCotejoIndividualController extends Controller
             return abort(404, 'File not found.');
         }
     }
+
+
+    public function rechazarcotejo($cedula)
+    {
+        $nextValue = DB::select('SELECT nextval(\'secuencia_facial\') as value');
+        $nut = $nextValue[0]->value;
+
+        // Insertar los datos usando Eloquent
+        // Insertar en la tabla log_facial_envivo_uno_a_uno
+        $logData = [
+            'nut' => $nut, // Ejemplo de asignación, ajusta según sea necesario
+            'nuip' => $cedula, // Ejemplo de asignación, ajusta según sea necesario
+            'resultado' => 'RECHAZADO', // Ejemplo de valor estático, ajusta según sea necesario
+            'fechafin' => Carbon::now(), // Usar la fecha actual
+            'idusuario' => $this->usuario->id, // ID del usuario actual o cualquier otro valor
+            //'hashalgo' => $sha256, // Ejemplo de cálculo hash
+            'hashalgo' => '', // Ejemplo de cálculo hash
+            'idmasiva' => 0,
+            'atdpruta' => '',
+            //'response' => json_encode($response),
+        ];
+
+        $logData['usuarioNombre'] = $this->usuario->name;
+        $idUnoAUno = LogFacialEnvivoUnoAUno::create($logData);
+
+        return redirect()->to('/cotejounoauno');
+    }
+
+    
 }

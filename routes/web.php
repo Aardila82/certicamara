@@ -16,7 +16,7 @@ Route::post('login',[LoginController::class,'login']);
 Route::get('logout',[LoginController::class,'logout']);
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->middleware('rol:all,all')->group(function () {
 
    Route::get('/', [LoginController::class, 'index']);
 
@@ -29,8 +29,8 @@ Route::middleware('auth')->group(function () {
    });
 
    Route::get('editadoFormulario', function () {
-    return view('usuario/editadoformulario');
- })->name('usuario.editadoformulario');
+      return view('usuario/editadoformulario');
+   })->name('usuario.editadoformulario');
 
    Route::get('usuario/listado',[UsuarioController::class,'lista']);
    Route::post('/usuario/desactivar/{id}', [UsuarioController::class, 'desactivar'])->name('usuario.desactivar');
@@ -47,7 +47,7 @@ Route::middleware('auth')->group(function () {
    Route::post('usuario/edicion/{id}', [UsuarioController::class, 'update'])->name('usuario.update');
 
    Route::get('usuario/menu',[UsuarioController::class,'menu'])->name('usuario.menu');
-   Route::get('usuario/reporte',[UsuarioController::class,'reporte']);
+   Route::get('log/menu',[UsuarioController::class,'reporte']);
 
    Route::get('log/facial/{id}',[LogFacialEnvivoUnoAUnoController::class,'lista']);
    Route::get('log-facial/export/{id}', [LogFacialEnvivoUnoAUnoController::class, 'exportCsv']);
@@ -68,12 +68,14 @@ Route::middleware('auth')->group(function () {
    Route::get('log/logs', [LogCotejoIndividualController::class, 'index']);
    Route::get('log/logs/view', [LogCotejoIndividualController::class, 'showLogs']);
    Route::get('/log-fotografia/csv', [LogFotografiaController::class, 'exportCsv']);
-   Route::get('cotejounoauno', [LogCotejoIndividualController::class, 'cotejounoauno']);
-   Route::post('mostrarcedula', [LogCotejoIndividualController::class, 'capturarCedula'])->name('capturar.cedula');
+   Route::get('cotejounoauno/consultar', [LogCotejoIndividualController::class, 'cotejounoauno']);
+   Route::post('cotejounoauno/mostrarcedula', [LogCotejoIndividualController::class, 'capturarCedula'])->name('capturar.cedula');
    Route::post('generar-pdf', [LogCotejoIndividualController::class, 'generarPDF'])->name('generar.pdf');
    Route::get('/execute-jar', [LogFacialEnvivoUnoAUnoController::class, 'executeJar']);
    Route::get('connectliveness/{cedula}', [LogCotejoIndividualController::class, 'connectliveness'])->name('connectliveness');
    Route::get('/download-pdf/{filename}', [LogCotejoIndividualController::class, 'downloadpdf'])->name('download.pdf');
+   Route::get('rechazarcotejo/{cedula}', [LogCotejoIndividualController::class, 'rechazarcotejo'])->name('rechazarcotejo');
+
 
    Route::get('log/upload', function () {
     return view('log.upload');

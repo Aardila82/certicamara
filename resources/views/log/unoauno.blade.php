@@ -22,12 +22,11 @@
                       <th>NUT</th>
                       <th>NUIP</th>
                       <th>Resultado</th>
+
                       <th>Fecha Fin</th>
                       <th>Hash</th>
-                      <th>ID Masiva</th>
-                      <th>Codigo Usuario</th>
                       <th>Resultado Cotejo</th>
-
+                      <th>ATDP</th>
                   </tr>
               </thead>
               <tbody>
@@ -37,17 +36,22 @@
                       <td>{{ $post->nut }}</td>
                       <td>{{ $post->nuip }}</td>
                       <td>{{ $post->resultado }}</td>
+
                       <td>{{ $post->fechafin }}</td>
                       <td>{{ $post->hashalgo }}</td>
-                      <td>{{ $post->idmasiva }}</td>
-
+                      <td>{{ $post->resultado }}</td>
+                      <td> 
+                        @if(!empty($post->atdpruta))
+                            <a href="{{ route('download.pdf', $post->atdpruta) }}" class= "mb-3">Descargar PDF</a>
+                        @endif                        
+                      </td>
                   </tr>
                   @endforeach
               </tbody>
           </table>
         </div>
         <div class="col-md-12 text-center">
-          <a type="button" class="btn btn-secondary" href="../usuario/reporte">Atrás</a>
+          <a type="button" class="btn btn-secondary" href="../log/menu">Atrás</a>
         </div>
     </div>
 </div>

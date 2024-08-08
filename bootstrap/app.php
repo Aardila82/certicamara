@@ -3,6 +3,13 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+
+use App\Services\Roles;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
+
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,10 +25,18 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+            'rol' => \App\Http\Middleware\RoleMiddleware::class,
+
         ]);
 
 
     })
+
     ->withExceptions(function (Exceptions $exceptions) {
-        //
-    })->create();
+        //return redirect()->route('/dash');
+
+    })
+    
+    ->create();
+
+

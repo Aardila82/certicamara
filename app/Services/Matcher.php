@@ -20,7 +20,7 @@
             $this->usuario = Auth::user();
         }
 
-        public function connect($cedula, $idLogMasiva, $base64, $sha256 , $latitude , $longitude){
+        public function connect($cedula, $idLogMasiva, $base64, $sha256 , $latitude , $longitude, $atdpRuta){
 
             //echo $file->getFilename() . '<br>';
             //$directoryFotosPath = storage_path('app/FotosMasiva/' . $cedula);
@@ -55,16 +55,15 @@
                     //'hashalgo' => $sha256, // Ejemplo de cálculo hash
                     'hashalgo' => $sha256, // Ejemplo de cálculo hash
                     'idmasiva' => $idLogMasiva,
+                    'atdpruta' => $atdpRuta,
                     //'response' => json_encode($response),
                 ];
 
-            
                 $logData['usuarioNombre'] = $this->usuario->name;
                 $idUnoAUno = LogFacialEnvivoUnoAUno::create($logData);
 
-
                 $response["idmasiva"] = (int)$idLogMasiva;
-                $response["idunoauno"] =$idUnoAUno->id;
+                $response["idunoauno"] = $idUnoAUno->id;
                 $idResponse = ResponseMatcherMasiva::create($response);
                 Log::info('Valor del array res: ' . $idResponse);
 

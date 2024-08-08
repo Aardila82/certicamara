@@ -58,7 +58,7 @@
                 <div class="icon">
                     <i class="fa fa-solid fa-check" aria-hidden="true"></i>
                 </div>
-                <a href="usuario/reporte" class="card-box-footer">
+                <a href="log/menu" class="card-box-footer">
                     Ver Mas
                     <i class="fa fa-arrow-circle-right"></i>
                 </a>
@@ -76,7 +76,7 @@
                 <div class="icon">
                     <i class="fa fa-solid fa-eye" aria-hidden="true"></i>
                 </div>
-                <a href="cotejounoauno" class="card-box-footer">
+                <a href="cotejounoauno/consultar" class="card-box-footer">
                     Ver Mas
                     <i class="fa fa-arrow-circle-right"></i>
                 </a>

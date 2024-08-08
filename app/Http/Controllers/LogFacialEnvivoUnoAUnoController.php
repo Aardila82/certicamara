@@ -180,7 +180,7 @@ class LogFacialEnvivoUnoAUnoController extends Controller
     public function listaunoauno()
 {
     $posts = DB::table('log_facial_envivo_uno_a_uno')
-                ->select('id', 'nut', 'nuip', 'resultado', 'fechafin', 'idusuario', 'hashalgo', 'idmasiva', 'created_at', 'updated_at')
+                ->select('id', 'nut', 'nuip', 'resultado', 'fechafin', 'idusuario', 'hashalgo', 'idmasiva', 'created_at', 'updated_at', 'atdpruta')
                 ->whereNotNull('idmasiva')
                 ->where('idmasiva', '=', 0)
                 ->get();
@@ -192,7 +192,7 @@ public function exportCsv2()
 {
     $posts = DB::table('log_facial_envivo_uno_a_uno')
                 ->select('id', 'nut', 'nuip', 'resultado', 'fechafin', 'idusuario', 'hashalgo', 'idmasiva', 'created_at', 'updated_at')
-                ->where('idmasiva', '>', 0)
+                ->where('idmasiva', '=', 0)
                 ->get();
 
     $csvExporter = \League\Csv\Writer::createFromFileObject(new \SplTempFileObject());
@@ -204,8 +204,8 @@ public function exportCsv2()
 
     $csvContent = $csvExporter->getContent();
 
-    $csvFileName = 'posts.csv';
-    $zipFileName = 'posts.zip';
+    $csvFileName = 'logunoauno.csv';
+    $zipFileName = 'logunoauno.zip';
 
     $tempFile = tempnam(sys_get_temp_dir(), $csvFileName);
     file_put_contents($tempFile, $csvContent);

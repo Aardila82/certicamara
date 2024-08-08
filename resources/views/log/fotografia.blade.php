@@ -39,7 +39,7 @@
           </table>
         </div>
         <div class="col-md-12 text-center">
-          <a type="button" class="btn btn-secondary" href="../usuario/reporte">Atras</a>
+          <a type="button" class="btn btn-secondary" href="../log/menu">Atras</a>
         </div>
         <div class="col-4">
             <a href="{{ url('/log-fotografia/csv') }}" class="btn btn-primary text-right mb-3">Exportar a CSV</a>
