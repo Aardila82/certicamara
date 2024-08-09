@@ -258,8 +258,8 @@ class AlfaController extends Controller
                         $coordenadasResponse
                     )->onQueue('photos');
                 }  
-                $i++;
-                /*if($i > 1){
+                /*$i++;
+                if($i > 1){
                     die();
                 }*/
             }
@@ -392,7 +392,7 @@ class AlfaController extends Controller
 
 
 
-    public function loader(Int $idmasiva)
+    public function loader(int $idmasiva)
     {
         // Realizar la consulta para contar los registros
         $total = LogMasiva::select('totalregistros')->where('id', $idmasiva)->first();

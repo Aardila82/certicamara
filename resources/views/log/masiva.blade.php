@@ -30,18 +30,19 @@
                   @foreach ($logs as $log)
                   <tr>
                       <td>{{$log->id}}</td>
-                      <td>{{$log->fechainicio}}</td>
-                      <td>{{$log->fechafin}}</td>
+                      <td>{{$log->fechainicio_real}}</td>
+                      <td>{{$log->fechafin_real}}</td>
                       <td>{{$log->usuario_carga}}</td>
                       <td>{{$log->totalregistros}}</td>
                      <!-- <td>{{$log->errortotalregistros}}</td>-->
-                      <td>{{$log->diferencia_segundos}}</td>
+                      <td>{{$log->tiempo}}</td>
 
                       <td>{{$log->total_hit}}</td>
                       <td>{{$log->total_nohit}}</td>
                       <td><a href="../log/facial/{{$log->id}}">Ver</a></td>
                   </tr>
                   @endforeach
+                  
 
               </tbody>
           </table>

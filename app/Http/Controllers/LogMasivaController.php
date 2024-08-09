@@ -11,39 +11,41 @@ class LogMasivaController extends Controller
 {
     public function lista()
     {
-        /*$logs = DB::table('log_masivas')
+
+        $logs = DB::table('log_masivas')
+            ->join('view_log_facial_total_hits as vfs', 'log_masivas.id', '=', 'vfs.idmasiva')
             ->join('usuarios', 'log_masivas.usuariocarga_id', '=', 'usuarios.id')
-            ->select(
-                'log_masivas.*',
+
+            ->select('log_masivas.*', 
+                'vfs.total_hit', 'vfs.total_nohit',
                 DB::raw("CONCAT(usuarios.nombre1, ' ', usuarios.nombre2, ' ', usuarios.apellido1, ' ', usuarios.apellido2) as usuario_carga"),
-                DB::raw("ROUND(EXTRACT(EPOCH FROM (CAST(fechafin AS timestamp) - CAST(fechainicio AS timestamp)))::NUMERIC, 2) AS diferencia_segundos")
+                DB::raw("(SELECT AGE(
+                    (SELECT fechafin 
+                     FROM log_facial_envivo_uno_a_uno 
+                     WHERE idmasiva = log_masivas.id 
+                     ORDER BY fechafin DESC 
+                     LIMIT 1),
+                    (SELECT created_at 
+                     FROM log_facial_envivo_uno_a_uno 
+                     WHERE idmasiva = log_masivas.id 
+                     ORDER BY created_at ASC 
+                     LIMIT 1) ) AS tiempo)"),   
+              
+            DB::raw("(SELECT fechafin 
+                FROM log_facial_envivo_uno_a_uno 
+                WHERE idmasiva = log_masivas.id 
+                ORDER BY fechafin DESC 
+                LIMIT 1) AS fechafin_real"),                      
+
+
+            DB::raw("(SELECT created_at 
+                FROM log_facial_envivo_uno_a_uno 
+                WHERE idmasiva = log_masivas.id 
+                ORDER BY created_at ASC 
+                LIMIT 1) AS fechainicio_real")                               
+              
             )
-            ->get();*/
-            /*$logs = DB::table('log_masivas')
-            ->leftJoin('log_facial_envivo_uno_a_uno as lf', 'log_masivas.id', '=', 'lf.idmasiva')
-            ->join('usuarios', 'log_masivas.usuariocarga_id', '=', 'usuarios.id')
-
-            ->select('log_masivas.*',
-                //DB::raw("CONCAT(usuarios.nombre1, ' ', usuarios.nombre2, ' ', usuarios.apellido1, ' ', usuarios.apellido2) as usuario_carga"),
-
-                DB::raw('SUM(CASE WHEN lf.resultado = \'Hit\' THEN 1 ELSE 0 END) AS total_hit'),
-                DB::raw('SUM(CASE WHEN lf.resultado = \'No Hit\' THEN 1 ELSE 0 END) AS total_nohit')
-            )
-            ->groupBy('log_masivas.id')
-            ->orderBy('log_masivas.id', 'desc')
-            ->get();*/
-
-            $logs = DB::table('log_masivas')
-     
-                ->join('view_log_facial_total_hits as vfs', 'log_masivas.id', '=', 'vfs.idmasiva')
-                ->join('usuarios', 'log_masivas.usuariocarga_id', '=', 'usuarios.id')
-
-                ->select('log_masivas.*', 
-                    'vfs.total_hit', 'vfs.total_nohit',
-                    DB::raw("CONCAT(usuarios.nombre1, ' ', usuarios.nombre2, ' ', usuarios.apellido1, ' ', usuarios.apellido2) as usuario_carga"),
-                    DB::raw("ROUND(EXTRACT(EPOCH FROM (CAST(fechafin AS timestamp) - CAST(fechainicio AS timestamp)))::NUMERIC, 2) AS diferencia_segundos")
-                )
-                ->get();
+            ->get();
 
             //var_dump($logs);
         return view('log/masiva', ['logs' => $logs]);
@@ -51,6 +53,7 @@ class LogMasivaController extends Controller
 
     public function createZip()
     {
+        
         $zip = new \ZipArchive();
         $fileName = 'example.zip';
         $filePath = public_path('files'); // Ruta a los archivos

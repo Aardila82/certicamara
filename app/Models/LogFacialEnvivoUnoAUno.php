@@ -22,7 +22,9 @@ class LogFacialEnvivoUnoAUno extends Model
         'hashalgo',
         'idmasiva',
         'response',
-        'atdpruta'
+        'atdpruta',
+        'aprobacion_atdp',
+        'fechainicio',
     ];
 
     public function usuario()

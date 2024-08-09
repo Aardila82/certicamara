@@ -50,7 +50,7 @@ Route::middleware('auth')->middleware('rol:all,all')->group(function () {
    Route::get('log/menu',[UsuarioController::class,'reporte']);
 
    Route::get('log/facial/{id}',[LogFacialEnvivoUnoAUnoController::class,'lista']);
-   Route::get('log-facial/export/{id}', [LogFacialEnvivoUnoAUnoController::class, 'exportCsv']);
+   Route::get('log/facial-export/{id}', [LogFacialEnvivoUnoAUnoController::class, 'exportCsv']);
    Route::get('log/unoauno',[LogFacialEnvivoUnoAUnoController::class,'listaunoauno']);
    Route::get('log/fotografia',[LogFotografiaController::class,'lista']);
    Route::get('log/masiva',[LogMasivaController::class,'lista']);
@@ -87,7 +87,7 @@ Route::middleware('auth')->middleware('rol:all,all')->group(function () {
    });*/
 
    Route::get('/download-zip', [LogMasivaController::class, 'createZip'])->name('download.zip');
-   Route::get('loader/{idmasiva}', [AlfaController::class, 'loader']);
+   Route::get('/loader/{idmasiva}', [AlfaController::class, 'loader']);
 
 });
 

@@ -276,20 +276,21 @@ class LogCotejoIndividualController extends Controller
         $logData = [
             'nut' => $nut, // Ejemplo de asignación, ajusta según sea necesario
             'nuip' => $cedula, // Ejemplo de asignación, ajusta según sea necesario
-            'resultado' => 'RECHAZADO', // Ejemplo de valor estático, ajusta según sea necesario
+            'resultado' => '', // Ejemplo de valor estático, ajusta según sea necesario
             'fechafin' => Carbon::now(), // Usar la fecha actual
             'idusuario' => $this->usuario->id, // ID del usuario actual o cualquier otro valor
-            //'hashalgo' => $sha256, // Ejemplo de cálculo hash
             'hashalgo' => '', // Ejemplo de cálculo hash
             'idmasiva' => 0,
             'atdpruta' => '',
+            'aprobacion_atdp' => 0,
+
             //'response' => json_encode($response),
         ];
 
         $logData['usuarioNombre'] = $this->usuario->name;
         $idUnoAUno = LogFacialEnvivoUnoAUno::create($logData);
 
-        return redirect()->to('/cotejounoauno');
+        return redirect()->to('cotejounoauno/consultar');
     }
 
     

@@ -56,6 +56,7 @@
                     'hashalgo' => $sha256, // Ejemplo de cálculo hash
                     'idmasiva' => $idLogMasiva,
                     'atdpruta' => $atdpRuta,
+                    'aprobacion_atdp' => 1,
                     //'response' => json_encode($response),
                 ];
 

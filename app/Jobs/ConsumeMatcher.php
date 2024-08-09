@@ -57,6 +57,7 @@ class ConsumeMatcher implements ShouldQueue
     }
 
     public function handle(){
+
             //echo $file->getFilename() . '<br>';
             $cedula = explode(".", $this->fileName)[0];
             $directoryFotosPath = storage_path('app/FotosMasiva/' . $cedula);
@@ -65,6 +66,9 @@ class ConsumeMatcher implements ShouldQueue
             $foto = $directoryFotosPath . "/" . $this->fileName;
 
             try {
+                $dtini = Carbon::now();
+                $fechainicio = $dtini->format('Y-m-d H:i:s.u');
+                
                 $base64 = base64_encode(file_get_contents($foto));
                 $sha256 = hash('SHA256' , $base64);
                 $nextValue = DB::select('SELECT nextval(\'secuencia_facial\') as value');
@@ -90,13 +94,16 @@ class ConsumeMatcher implements ShouldQueue
 
                 $response = $this->callSoapService($request);
                 var_dump($response);
+                $dt = Carbon::now();
                 // Insertar los datos usando Eloquent
                 // Insertar en la tabla log_facial_envivo_uno_a_uno
                 $logData = [
                     'nut' => $nut, // Ejemplo de asignación, ajusta según sea necesario
                     'nuip' => $cedula, // Ejemplo de asignación, ajusta según sea necesario
                     'resultado' => $response["resultado_cotejo"], // Ejemplo de valor estático, ajusta según sea necesario
-                    'fechafin' => Carbon::now(), // Usar la fecha actual
+                    'fechainicio' => $fechainicio, // Usar la fecha actual
+                    'fechafin' => $dt->format('Y-m-d H:i:s.u'), // Usar la fecha actual
+
                     'idusuario' => $this->usuario->id, // ID del usuario actual o cualquier otro valor
                     //'hashalgo' => $sha256, // Ejemplo de cálculo hash
                     'hashalgo' => $sha256, // Ejemplo de cálculo hash

@@ -21,7 +21,7 @@
                       <th>ID</th>
                       <th>NUT</th>
                       <th>NUIP</th>
-                      <th>Resultado</th>
+                      <th>Aprobacion ATDP</th>
 
                       <th>Fecha Fin</th>
                       <th>Hash</th>
@@ -35,7 +35,15 @@
                       <td>{{ $post->id }}</td>
                       <td>{{ $post->nut }}</td>
                       <td>{{ $post->nuip }}</td>
-                      <td>{{ $post->resultado }}</td>
+                      <td>
+                            @if($post->aprobacion_atdp)
+                                aprobado
+                            @else
+                                <span class="text-danger"><strong>rechazado</strong></span>
+                            @endif
+                       </td>
+
+
 
                       <td>{{ $post->fechafin }}</td>
                       <td>{{ $post->hashalgo }}</td>
