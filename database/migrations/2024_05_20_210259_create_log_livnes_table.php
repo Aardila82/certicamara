@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('log_livnes', function (Blueprint $table) {
+        Schema::create('log_liveness', function (Blueprint $table) {
             $table->id();
             $table->integer('NUT');
             $table->integer('NUIP');
-            $table->integer('idLivness');
             $table->date('fecha');
             $table->string('clase');
             $table->boolean('estado');

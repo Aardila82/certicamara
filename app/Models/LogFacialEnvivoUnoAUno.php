@@ -19,7 +19,7 @@ class LogFacialEnvivoUnoAUno extends Model
         'resultado',
         'fechafin',
         'idusuario',
-        'hashalgo',
+        'hash256',
         'idmasiva',
         'response',
         'atdpruta',

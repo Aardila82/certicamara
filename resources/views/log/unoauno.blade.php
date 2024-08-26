@@ -7,12 +7,6 @@
 <div class="container-fluid mt-5">
     <h2 class="text-center mb-4">Log uno a uno</h2>
 
-    <div class="row mb-3">
-        <div class="col-md-12 text-end">
-            <a href="{{ route('posts.export') }}" class="btn btn-primary">Descargar ZIP</a>
-        </div>
-    </div>
-
     <div class="row">
         <div class="col-md-12">
           <table id="dataTable" class="table table-striped table-bordered shadow-lg" style="width: 100%">
@@ -21,12 +15,12 @@
                       <th>ID</th>
                       <th>NUT</th>
                       <th>NUIP</th>
-                      <th>Aprobacion ATDP</th>
+                      <th>Estado del ATDP</th>
 
                       <th>Fecha Fin</th>
                       <th>Hash</th>
                       <th>Resultado Cotejo</th>
-                      <th>ATDP</th>
+                      <th>Descargar ATDP</th>
                   </tr>
               </thead>
               <tbody>
@@ -43,14 +37,12 @@
                             @endif
                        </td>
 
-
-
                       <td>{{ $post->fechafin }}</td>
-                      <td>{{ $post->hashalgo }}</td>
-                      <td>{{ $post->resultado }}</td>
+                      <td>{{ $post->hash256 }}</td>
+                      <td>{{ strtoupper($post->resultado) }}</td>
                       <td> 
                         @if(!empty($post->atdpruta))
-                            <a href="{{ route('download.pdf', $post->atdpruta) }}" class= "mb-3">Descargar PDF</a>
+                            <a href="{{ route('download.pdf', $post->atdpruta) }}" class= "mb-3"><i class="fa fa-solid fa-download" aria-hidden="true"></i></a>
                         @endif                        
                       </td>
                   </tr>
@@ -62,6 +54,13 @@
           <a type="button" class="btn btn-secondary" href="../log/menu">Atrás</a>
         </div>
     </div>
+
+    <div class="row mb-3">
+        <div class="col-md-12 text-end">
+            <a href="{{ route('log/unoauno-export') }}" class="btn btn-primary">Descargar TXT</a>
+        </div>
+    </div>
+
 </div>
 
 <!-- Bootstrap Bundle with Popper -->

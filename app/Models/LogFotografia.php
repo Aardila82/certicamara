@@ -12,7 +12,7 @@ class LogFotografia extends Model
 
     protected $fillable= [
         'id',
-        'fnut',
+        'nut',
         'nuip',
         'peso_real',
         'hash',

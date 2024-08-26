@@ -6,6 +6,25 @@
 <div class="container-fluid mt-5" >
     <h2 class="text-center mb-4">Log Fotografia</h2>
 
+
+  <style>
+    .modal-body {
+        padding: 10px;
+        overflow-wrap: break-word; /* Permite que la cadena se ajuste en varias líneas */
+    }
+
+    .base64-text {
+        white-space: pre-wrap; /* Asegura que el texto se ajuste correctamente y no desborde */
+        max-height: 300px; /* Limita la altura del área de texto */
+        overflow-y: auto; /* Añade scroll vertical si el contenido es demasiado grande */
+        background-color: #f8f9fa; /* Fondo suave para diferenciar el texto */
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #dee2e6;
+    }
+
+  </style>    
+
     <div class="row">
 
         <div class="col-md-12">
@@ -16,6 +35,7 @@
                       <th>ID</th>
                       <th>NUT</th>
                       <th>NUIP</th>
+
                       <th>Peso Fotografia</th>
                       <th>Hash</th>
                       <th>Fotografia</th>
@@ -28,13 +48,41 @@
                       <td>{{$log->id}}</td>
                       <td>{{$log->fnut}}</td>
                       <td>{{$log->nuip}}</td>
+
                       <td>{{$log->peso_real}}</td>
                       <td>{{$log->hash}}</td>
-                      <td>{{$log->fotografia}}</td>
+                      <td>    
+                        <div style="background-color: #f8f9fa; padding: 15px; text-align: center;">
+                          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contenidoModal{{ $log->id }}">
+                            Ver Contenido
+                          </button>
+                        </div>
+                        
+                      </td>
+
+                      
                   </tr>
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="contenidoModal{{ $log->id }}" tabindex="-1" aria-labelledby="contenidoModalLabel{{ $log->id }}" aria-hidden="true">
+                      <div class="modal-dialog modal-lg">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h5 class="modal-title" id="contenidoModalLabel{{ $log->index }}">BASE64</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                <pre class="base64-text"> {{$log->fotografia}}</pre>
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                              </div>
+                          </div>
+                      </div>
+                  </div>                  
                   @endforeach
                   <!-- Agrega más filas según sea necesario -->
-              </tbody>php artisan serve
+              </tbody>
 
           </table>
         </div>
@@ -42,7 +90,7 @@
           <a type="button" class="btn btn-secondary" href="../log/menu">Atras</a>
         </div>
         <div class="col-4">
-            <a href="{{ url('/log-fotografia/csv') }}" class="btn btn-primary text-right mb-3">Exportar a CSV</a>
+            <a href="{{ url('/log-fotografia/csv') }}" class="btn btn-primary text-right mb-3">Exportar a TXT</a>
         </div>
     </div>
 </div>

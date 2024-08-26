@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Client;
+use App\Models\LogAlfa;
 
 
 use Exception;
@@ -37,8 +38,14 @@ class AlfaController extends Controller
      */
     public function importaralfa()
     {
+        $fecha_ini = Carbon::now();
+        $fecha_ini = substr($fecha_ini->format('Y-m-d H:i:s.u'), 0, -3);
+
+        $usuario = Auth::user();
+
         $timeIni = $this->microtime_float();
-        $path = storage_path('app/input/alfa.csv');
+        $fileName = "alfa.db";
+        $path = storage_path('app/input/' . $fileName);
 
         if (!file_exists($path) || !is_readable($path)) {
             return response()->json(['error' => 'El archivo CSV no existe o no se puede leer.'], 400);
@@ -138,8 +145,18 @@ class AlfaController extends Controller
         /*echo "<pre>".print_r($dataError , true)."</pre>";
         die();*/
         $timeFin = $this->microtime_float();
+        $fecha_fin = Carbon::now();
+        $fecha_fin = substr($fecha_fin->format('Y-m-d H:i:s.u'), 0, -3);
 
         $tiempoTotal = number_format(($timeFin - $timeIni) , 2, '.', '');
+        $logData = [
+            'nombre_archivo' =>  $fileName,
+            'usuario_inicio' =>  $usuario->id,
+            'fecha_inicio_transaccion' =>  $fecha_ini,
+            'fecha_final' =>  $fecha_fin,
+        ];
+
+        LogAlfa::create($logData);
         return view('alfa/guardadoFormulario', [
             "data" => $dataError,
             "timeFin" => $this->formatTime($timeFin),
@@ -182,7 +199,7 @@ class AlfaController extends Controller
                 'resultado' => 'exitoso', // Ejemplo de valor estático, ajusta según sea necesario
                 'fechafin' => Carbon::now(), // Usar la fecha actual
                 'idusuario' => $usuario->id, // ID del usuario actual o cualquier otro valor
-                'hashalgo' => '123hashito', // Ejemplo de cálculo hash
+                'hash256' => '123hashito', // Ejemplo de cálculo hash
                 'idmasiva' => $logMasiva->id,
             ];
 
@@ -224,7 +241,7 @@ class AlfaController extends Controller
             $logMasiva = LogMasiva::create($logMasivaData);
             $idLogMasiva = $logMasiva->id;
 
-            $fotosPath = "FotosMasiva";
+            $fotosPath = "cand";
             $directoryFotosPath = storage_path($fotosPath);
             if (!Storage::exists($directoryFotosPath)) {
                 Storage::makeDirectory($directoryFotosPath);

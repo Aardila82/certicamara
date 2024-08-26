@@ -10,14 +10,14 @@
           <table id="dataTable" class="table table-striped table-bordered shadow-lg" style="width: 100%">
               <thead class="bg-primary text-white">
                     <tr>
-                        <th>ID</th>
+                        <!--<th>ID</th>-->
                         <th>Cedula</th>
                         <th>Fecha Inicio</th>
                         <th>Fecha Fin</th>
-                        <th>Usuario Carga</th>
+                        <!--<th>Usuario Carga</th>-->
                         <th>Resultado Cotejo</th>
 
-                        <th>Código Resultado</th>
+                        <!--<th>Código Resultado</th>
                         <th>NUT (Response)</th>
                         <th>NUIP (Response)</th>
                         <th>ID Log</th>
@@ -36,7 +36,7 @@
 
                         <th>Código Vigencia</th>
                         <th>Descripción Vigencia</th>
-                        <th>Message Error</th>
+                        <th>Message Error</th>-->
 
                     </tr>
                 </thead>
@@ -44,12 +44,13 @@
               <tbody>
                   @foreach ($logs as $log)
                   <tr>
-                        <td>{{$log->id}}</td>
+                        <!--<td>{{$log->id}}</td>-->
                         <td>{{$log->nuip}}</td>
+                        <td>{{$log->resultado}}</td>
                         <td>{{$log->fechainicio}}</td>
                         <td>{{$log->fechafin}}</td>
-                        <td>{{ $log->apellido1 }} {{ $log->apellido2 }} {{ $log->nombre1 }} {{ $log->nombre2 }}</td>
-                        <td>{{$log->resultado}}</td>
+                        <!--<td>{{ $log->apellido1 }} {{ $log->apellido2 }} {{ $log->nombre1 }} {{ $log->nombre2 }}</td>
+                        
 
                         <td>{{$log->codigo_resultado}}</td>
                         <td>{{$log->response_nut}}</td>
@@ -70,8 +71,7 @@
 
                         <td>{{$log->codigo_vigencia}}</td>
                         <td>{{$log->descripcion_vigencia}}</td>
-                        <td>{{$log->message_error}}</td>
-
+                        <td>{{$log->message_error}}</td>-->
                     </tr>
                   @endforeach
                   <!-- Agrega más filas según sea necesario -->
@@ -83,7 +83,7 @@
         </div>
         <!-- Botón para descargar el CSV -->
     <form action="{{ url('log/facial-export') }}/{{$id}}" method="GET">
-        <button class="btn btn-primary" type="submit">Descargar CSV</button>
+        <button class="btn btn-primary" type="submit">Descargar TXT</button>
     </form>
     </div>
 </div>

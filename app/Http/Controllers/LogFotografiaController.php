@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\LogFotografia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use Carbon\Carbon;
+
 
 class LogFotografiaController extends Controller
 {
@@ -19,33 +21,83 @@ class LogFotografiaController extends Controller
      */
     public function exportCsv()
     {
-        $logs = LogFotografia::all();
-        $csvData = [];
-        $csvData[] = ['ID', 'FNUT', 'NUIP', 'Peso Real', 'Hash', 'Fotografia']; // Header row
+        /*$results = LogFotografia::all();
+        $filename = "fotoscotejo.txt";
 
-        foreach ($logs as $log) {
-            $csvData[] = [
-                $log->id,
-                $log->fnut,
-                $log->nuip,
-                $log->peso_real,
-                $log->hash,
-                $log->fotografia,
+        return response()->streamDownload(function() use ($results) {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, [
+                'NUT',
+                'NUIP criterio de busqueda',    
+                'Peso en Kb',
+
+                'Hash SHA256',
+                'Fotografia',
+            ]);
+            
+            foreach ($results as $row) {
+                $array = [
+                    $row->nut,
+                    $row->nuip,
+                    $row->peso_real,
+
+                    $row->hash,
+                    $row->fotografia,
+                ];
+                fwrite($handle, implode(';', $array) . "\n");
+            }
+    
+            fclose($handle);
+        }, $filename, [
+            'Content-Type' => 'text/plain',
+            'Content-Disposition' => "attachment; filename=\"$filename\""
+        ]);*/
+
+        $results = LogFotografia::all();
+        $filename = "fotoscotejo.txt";
+        
+        // Ruta donde se guardará el archivo en el servidor
+        $path = storage_path("app/logs/$filename");
+
+        $handle = fopen($path, 'w');
+        $header = [
+            'NUT',
+            'NUIP criterio de busqueda',
+            'Peso en Kb',
+            'Hash SHA256',
+            'Fotografia',
+        ];
+        fwrite($handle, implode(';', $header) . "\n");
+
+        foreach ($results as $row) {
+            $array = [
+                $row->nut,
+                $row->nuip,
+                $row->peso_real,
+                $row->hash,
+                $row->fotografia,
             ];
+            fwrite($handle, implode(';', $array) . "\n");
         }
 
-        $filename = "log_fotografia_" . date('Y-m-d_H-i-s') . ".csv";
-        $handle = fopen($filename, 'w+');
-        foreach ($csvData as $row) {
-            fputcsv($handle, $row);
-        }
+        // Cierra el archivo en el servidor
+        fclose($handle);
+    
+        // Ahora abre el archivo que acabas de guardar en el servidor para su descarga
+        $handle = fopen($path, 'r');
+        fpassthru($handle);
+
+        // Cierra el archivo de la descarga
         fclose($handle);
 
-        $headers = [
-            'Content-Type' => 'text/csv',
-        ];
+        return response()->streamDownload(function() use ($results, $path) {
+            // Abre el archivo en la ruta especificada para escribirlo
 
-        return Response::download($filename, $filename, $headers)->deleteFileAfterSend(true);
+        }, $filename, [
+            'Content-Type' => 'text/plain',
+            'Content-Disposition' => "attachment; filename=\"$filename\""
+        ]);
+        
     }
     public function index()
     {

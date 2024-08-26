@@ -102,98 +102,54 @@ class LogFacialEnvivoUnoAUnoController extends Controller
     public function exportCsv($id)
     {
 
-        /*$results = DB::table('log_facial_envivo_uno_a_uno')
-            ->join('usuarios', 'log_facial_envivo_uno_a_uno.idusuario', '=', 'usuarios.id')
-            ->join('response_matcher_masiva', 'response_matcher_masiva.idunoauno', '=', 'log_facial_envivo_uno_a_uno.id')
+        $results = DB::table('log_facial_envivo_uno_a_uno')
+        ->join('usuarios', 'log_facial_envivo_uno_a_uno.idusuario', '=', 'usuarios.id')
+        ->join('response_matcher_masiva', 'response_matcher_masiva.idunoauno', '=', 'log_facial_envivo_uno_a_uno.id')
 
-            ->select(
-                'log_facial_envivo_uno_a_uno.id',
-                'log_facial_envivo_uno_a_uno.nut',
-                'log_facial_envivo_uno_a_uno.nuip',
-                'log_facial_envivo_uno_a_uno.resultado',
-                'log_facial_envivo_uno_a_uno.fechafin',
-
-                'usuarios.nombre1',
-                'usuarios.nombre2',
-                'usuarios.apellido1',
-                'usuarios.apellido2',
-                'usuarios.numerodedocumento',
-
-                'response_matcher_masiva.codigo_resultado',
-                'response_matcher_masiva.nut as response_nut',
-                'response_matcher_masiva.nuip as response_nuip',
-                'response_matcher_masiva.id_log',
-                'response_matcher_masiva.id_oaid',
-
-                'response_matcher_masiva.id_cliente',
-                'response_matcher_masiva.resultado_cotejo',
-                'response_matcher_masiva.primer_nombre',
-                'response_matcher_masiva.segundo_nombre',
-                'response_matcher_masiva.codigo_particula',
-
-                'response_matcher_masiva.descripcion_particula',
-                'response_matcher_masiva.primer_apellido',
-                'response_matcher_masiva.segundo_apellido',
-                'response_matcher_masiva.lugar_expedicion',
-                'response_matcher_masiva.fecha_expedicion',
-
-                'response_matcher_masiva.codigo_vigencia',
-                'response_matcher_masiva.descripcion_vigencia',
-                'response_matcher_masiva.message_error',
-                'response_matcher_masiva.idunoauno',
-                'response_matcher_masiva.idmasiva'
-            )
-            ->where('log_facial_envivo_uno_a_uno.idmasiva', $id)
-            ->get();*/
-
-            $results = DB::table('log_facial_envivo_uno_a_uno')
-            ->join('usuarios', 'log_facial_envivo_uno_a_uno.idusuario', '=', 'usuarios.id')
-            ->join('response_matcher_masiva', 'response_matcher_masiva.idunoauno', '=', 'log_facial_envivo_uno_a_uno.id')
-
-            ->select(
-                'log_facial_envivo_uno_a_uno.id',
-                'log_facial_envivo_uno_a_uno.nut',
-                'log_facial_envivo_uno_a_uno.nuip',
-                'log_facial_envivo_uno_a_uno.resultado',
-                'log_facial_envivo_uno_a_uno.fechafin',
-                'log_facial_envivo_uno_a_uno.fechainicio',
+        ->select(
+            'log_facial_envivo_uno_a_uno.id',
+            'log_facial_envivo_uno_a_uno.nut',
+            'log_facial_envivo_uno_a_uno.nuip',
+            'log_facial_envivo_uno_a_uno.resultado',
+            'log_facial_envivo_uno_a_uno.fechafin',
+            'log_facial_envivo_uno_a_uno.fechainicio',
 
 
-                'usuarios.nombre1',
-                'usuarios.nombre2',
-                'usuarios.apellido1',
-                'usuarios.apellido2',
-                'usuarios.numerodedocumento',
+            'usuarios.nombre1',
+            'usuarios.nombre2',
+            'usuarios.apellido1',
+            'usuarios.apellido2',
+            'usuarios.numerodedocumento',
 
-                'response_matcher_masiva.codigo_resultado',
-                'response_matcher_masiva.nut as response_nut',
-                'response_matcher_masiva.nuip as response_nuip',
-                'response_matcher_masiva.id_log',
-                'response_matcher_masiva.id_oaid',
+            'response_matcher_masiva.codigo_resultado',
+            'response_matcher_masiva.nut as response_nut',
+            'response_matcher_masiva.nuip as response_nuip',
+            'response_matcher_masiva.id_log',
+            'response_matcher_masiva.id_oaid',
 
-                'response_matcher_masiva.id_cliente',
-                'response_matcher_masiva.resultado_cotejo',
-                'response_matcher_masiva.primer_nombre',
-                'response_matcher_masiva.segundo_nombre',
-                'response_matcher_masiva.codigo_particula',
+            'response_matcher_masiva.id_cliente',
+            'response_matcher_masiva.resultado_cotejo',
+            'response_matcher_masiva.primer_nombre',
+            'response_matcher_masiva.segundo_nombre',
+            'response_matcher_masiva.codigo_particula',
 
-                'response_matcher_masiva.descripcion_particula',
-                'response_matcher_masiva.primer_apellido',
-                'response_matcher_masiva.segundo_apellido',
-                'response_matcher_masiva.lugar_expedicion',
-                'response_matcher_masiva.fecha_expedicion',
+            'response_matcher_masiva.descripcion_particula',
+            'response_matcher_masiva.primer_apellido',
+            'response_matcher_masiva.segundo_apellido',
+            'response_matcher_masiva.lugar_expedicion',
+            'response_matcher_masiva.fecha_expedicion',
 
-                'response_matcher_masiva.codigo_vigencia',
-                'response_matcher_masiva.descripcion_vigencia',
-                'response_matcher_masiva.message_error',
-                'response_matcher_masiva.idunoauno',
-                'response_matcher_masiva.idmasiva'
-            )
-            ->where('log_facial_envivo_uno_a_uno.idmasiva', $id)
-            ->get();
+            'response_matcher_masiva.codigo_vigencia',
+            'response_matcher_masiva.descripcion_vigencia',
+            'response_matcher_masiva.message_error',
+            'response_matcher_masiva.idunoauno',
+            'response_matcher_masiva.idmasiva'
+        )
+        ->where('log_facial_envivo_uno_a_uno.idmasiva', $id)
+        ->get();
+        
             
-            
-        $filename = "logs_facial.txt";
+        $filename = "desempeno_facial.txt";
 
         return response()->streamDownload(function() use ($results) {
             $handle = fopen('php://output', 'w');
@@ -212,23 +168,19 @@ class LogFacialEnvivoUnoAUnoController extends Controller
                 $fechainicio = Carbon::parse($row->fechainicio);
                 $fechafin = Carbon::parse($row->fechafin);
                 $diferenciaEnMilisegundos = $fechainicio->diffInMilliseconds($fechafin);
-                $fechainicio = substr($fechainicio->format('Y-m-d H:i:s:u'), 0, -3);
-                $fechafin = substr($fechafin->format('Y-m-d H:i:s:u'), 0, -3);
+                $fechainicio = substr($fechainicio->format('Y-m-d H:i:s.u'), 0, -3);
+                $fechafin = substr($fechafin->format('Y-m-d H:i:s.u'), 0, -3);
                 $diferenciaRedondeada = round($diferenciaEnMilisegundos);
-
                 $array = [
                     $row->nuip,
-                    $row->resultado,
+                    strtoupper($row->resultado),
                     '50',
 
                     $fechainicio,
                     $fechafin,
                     $diferenciaRedondeada,
                 ];
-
-                //fputcsv($handle, $array);
                 fwrite($handle, implode(';', $array) . "\n");
-
             }
 
             fclose($handle);
@@ -243,7 +195,7 @@ class LogFacialEnvivoUnoAUnoController extends Controller
 {
     $posts = DB::table('log_facial_envivo_uno_a_uno')
                 ->select('id', 'nut', 'nuip', 'resultado', 'fechafin', 'idusuario', 
-                'hashalgo', 'idmasiva', 'created_at', 'updated_at', 'atdpruta', 'aprobacion_atdp')
+                'hash256', 'idmasiva', 'created_at', 'updated_at', 'atdpruta', 'aprobacion_atdp')
                 ->whereNotNull('idmasiva')
                 ->where('idmasiva', '=', 0)
                 ->get();
@@ -251,38 +203,58 @@ class LogFacialEnvivoUnoAUnoController extends Controller
     return view('log.unoauno', compact('posts'));
 }
 
+
+
 public function exportCsv2()
 {
-    $posts = DB::table('log_facial_envivo_uno_a_uno')
-                ->select('id', 'nut', 'nuip', 'resultado', 'fechafin', 'idusuario', 'hashalgo', 'idmasiva', 'created_at', 'updated_at')
+    $results = DB::table('log_facial_envivo_uno_a_uno')
+                ->select('id', 'nut', 'nuip', 'resultado', 'fechafin', 'fechainicio', 'idusuario', 'hash256', 'idmasiva', 'created_at', 'updated_at')
                 ->where('idmasiva', '=', 0)
                 ->get();
 
-    $csvExporter = \League\Csv\Writer::createFromFileObject(new \SplTempFileObject());
-    $csvExporter->insertOne(['ID', 'NUT', 'NUIP', 'Resultado', 'Fecha Fin', 'ID Usuario', 'Hash', 'ID Masiva', 'Creado', 'Actualizado']);
+    $filename = "consultaenvivo.txt";
 
-    foreach ($posts as $post) {
-        $csvExporter->insertOne(get_object_vars($post));
-    }
+    return response()->streamDownload(function() use ($results) {
+        $handle = fopen('php://output', 'w');
+        fputcsv($handle, [
+            'NUT',
+            'NUIP criterio de busqueda',
+            'Resultado del cotejo',
 
-    $csvContent = $csvExporter->getContent();
+            'Fecha Inicio de Cotejo',
+            'Fecha Fin de Cotejo',
+            'Usuario Origina Cotejo',
+            'Hash SHA-256',
+        ]);
+        
+        foreach ($results as $row) {
 
-    $csvFileName = 'logunoauno.csv';
-    $zipFileName = 'logunoauno.zip';
+            $fechainicio = Carbon::parse($row->fechainicio);
+            $fechafin = Carbon::parse($row->fechafin);
+            $diferenciaEnMilisegundos = $fechainicio->diffInMilliseconds($fechafin);
+            $fechainicio = substr($fechainicio->format('Y-m-d H:i:s:u'), 0, -3);
+            $fechafin = substr($fechafin->format('Y-m-d H:i:s:u'), 0, -3);
+            $diferenciaRedondeada = round($diferenciaEnMilisegundos);
+            $array = [
+                $row->nut,
+                $row->nuip,
+                strtoupper($row->resultado),
 
-    $tempFile = tempnam(sys_get_temp_dir(), $csvFileName);
-    file_put_contents($tempFile, $csvContent);
+                $fechainicio,
+                $fechafin,
+                $row->idusuario,
+                $row->hash256,
+            ];
+            fwrite($handle, implode(';', $array) . "\n");
+        }
 
-    $zip = new ZipArchive();
-    if ($zip->open($zipFileName, ZipArchive::CREATE) === TRUE) {
-        $zip->addFile($tempFile, $csvFileName);
-        $zip->close();
-    }
-
-    unlink($tempFile);
-
-    return response()->download($zipFileName)->deleteFileAfterSend(true);
+        fclose($handle);
+    }, $filename, [
+        'Content-Type' => 'text/plain',
+        'Content-Disposition' => "attachment; filename=\"$filename\""
+    ]);
 }
+
 
 public function executeJar()
 {

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('resultado');
             $table->dateTime('fechafin');
             $table->unsignedBigInteger('idusuario'); // Cambiar a unsignedBigInteger
-            $table->string('hashalgo');
+            $table->string('hash256');
             $table->integer('idmasiva');
             $table->timestamps();
         });

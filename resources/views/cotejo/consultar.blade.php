@@ -25,4 +25,13 @@
         </div>
     </div>
 </div>
+
+
+<input type="hidden" id="latitud" name="latitud">
+<input type="hidden" id="longitud" name="longitud">
+
+<script>
+    
+</script>
+
 @endsection

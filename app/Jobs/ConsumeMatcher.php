@@ -60,7 +60,7 @@ class ConsumeMatcher implements ShouldQueue
 
             //echo $file->getFilename() . '<br>';
             $cedula = explode(".", $this->fileName)[0];
-            $directoryFotosPath = storage_path('app/FotosMasiva/' . $cedula);
+            $directoryFotosPath = storage_path('app/cand/' . $cedula);
             echo $this->idLogMasiva;
             
             $foto = $directoryFotosPath . "/" . $this->fileName;
@@ -76,6 +76,14 @@ class ConsumeMatcher implements ShouldQueue
                 echo 'Next value: ' . $nut;
                 echo 'latitude: ' . $this->coordenadasResponse['latitude'];
                 echo 'longitude: ' . $this->coordenadasResponse['longitude'];
+
+
+                // Definir la ruta de almacenamiento
+                //$filePath = 'img11/' . $this->fileName;
+            
+                // Guardar la imagen en la carpeta storage/app/img11
+                //Storage::put($filePath, $base64);
+
 
                 // Crear la solicitud
                 $request =  [
@@ -105,8 +113,7 @@ class ConsumeMatcher implements ShouldQueue
                     'fechafin' => $dt->format('Y-m-d H:i:s.u'), // Usar la fecha actual
 
                     'idusuario' => $this->usuario->id, // ID del usuario actual o cualquier otro valor
-                    //'hashalgo' => $sha256, // Ejemplo de cálculo hash
-                    'hashalgo' => $sha256, // Ejemplo de cálculo hash
+                    'hash256' => $sha256, // Ejemplo de cálculo hash
                     'idmasiva' => $this->idLogMasiva,
                     //'response' => json_encode($response),
                 ];

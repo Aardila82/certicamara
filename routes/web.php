@@ -8,8 +8,8 @@ use App\Http\Controllers\LogMasivaController;
 use App\Http\Controllers\LogFotografiaController;
 use App\Http\Controllers\LogCotejoIndividualController;
 use App\Http\Controllers\LogFacialEnvivoUnoAUnoController;
-
-
+use App\Http\Controllers\LogLivnesController;
+use App\Http\Controllers\LogController;
 
 Route::get('login', [LoginController::class, 'index'])->name('login');
 Route::post('login',[LoginController::class,'login']);
@@ -54,6 +54,13 @@ Route::middleware('auth')->middleware('rol:all,all')->group(function () {
    Route::get('log/unoauno',[LogFacialEnvivoUnoAUnoController::class,'listaunoauno']);
    Route::get('log/fotografia',[LogFotografiaController::class,'lista']);
    Route::get('log/masiva',[LogMasivaController::class,'lista']);
+   Route::get('log/liveness',[LogLivnesController::class,'lista']);
+   Route::get('log/liveness-export', [LogLivnesController::class, 'exportTxt']);
+   Route::get('log/zip-export-all', [LogController::class, 'zipExportAll']);
+
+   
+
+
    Route::get('/loaderAjax/{idmasiva}', [AlfaController::class, 'loaderAjax']);
 
    Route::get('/importaralfa',[AlfaController::class,'importaralfa']);
@@ -62,7 +69,7 @@ Route::middleware('auth')->middleware('rol:all,all')->group(function () {
 
    Route::post('/loginApi',[LoginController::class,'loginApi']);
 
-   Route::get('/posts/export', [LogFacialEnvivoUnoAUnoController::class, 'exportCsv2'])->name('posts.export');
+   Route::get('log/unoauno-export', [LogFacialEnvivoUnoAUnoController::class, 'exportCsv2'])->name('log/unoauno-export');
 
    Route::post('log/logs', [LogCotejoIndividualController::class, 'store']);
    Route::get('log/logs', [LogCotejoIndividualController::class, 'index']);
@@ -75,6 +82,7 @@ Route::middleware('auth')->middleware('rol:all,all')->group(function () {
    Route::get('connectliveness/{cedula}', [LogCotejoIndividualController::class, 'connectliveness'])->name('connectliveness');
    Route::get('/download-pdf/{filename}', [LogCotejoIndividualController::class, 'downloadpdf'])->name('download.pdf');
    Route::get('rechazarcotejo/{cedula}', [LogCotejoIndividualController::class, 'rechazarcotejo'])->name('rechazarcotejo');
+   Route::get('connectliveness/qr/{cedula}', [LogCotejoIndividualController::class, 'qr'])->name('qr');
 
 
    Route::get('log/upload', function () {

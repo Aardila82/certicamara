@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('log_fotografia', function (Blueprint $table) {
             $table->id();
-            $table->integer('fnut');
+            $table->string('nut');
             $table->integer('nuip');
             $table->float('peso_real');
             $table->string('hash');
-            $table->string('fotografia');
+            $table->text('fotografia');
             $table->timestamps();
         });
     }

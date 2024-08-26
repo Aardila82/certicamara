@@ -62,6 +62,10 @@
                                 @enderror
                             </div>
 
+                            <input type="hidden" id="latitude" name="latitude">
+                            <input type="hidden" id="longitude" name="longitude">
+
+
                             <div class="d-flex justify-content-center pt-1 mb-4">
                                 <input type="submit" value="Ingresar" class="btn btn-danger btn-lg btn-block">
                             </div>
@@ -83,3 +87,28 @@
 </body>
 
 </html>
+
+
+<script>
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    
+                    // Asignar las coordenadas a los input hidden
+                    document.getElementById('latitude').value = latitude;
+                    document.getElementById('longitude').value = longitude;
+                    
+                    console.log('Latitud: ' + latitude);
+                    console.log('Longitud: ' + longitude);
+                },
+                function(error) {
+                    console.error('Error al obtener la ubicación:', error);
+                }
+            );
+        } else {
+            console.log('Geolocalización no está soportada por este navegador.');
+        }
+    </script>
+

@@ -110,6 +110,24 @@
             </div>
 
 
+            <div class="col-lg-3 col-sm-6">
+                <div class="card-box bg-orange">
+                    <div class="inner">
+                        <h3></h3>
+                        <p> <b>Log Liveness</b></p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                    </div>
+                    <a href="../log/liveness" class="card-box-footer">
+                        Ver Mas
+                        <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+            <a  class="btn btn-success" href="{{ url('log/zip-export-all') }}" class="btn btn-primary text-right mb-3">Exportar todos los logs en ZIP</a>
+
+
         </div>
 
     </div>

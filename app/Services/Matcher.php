@@ -21,9 +21,6 @@
         }
 
         public function connect($cedula, $idLogMasiva, $base64, $sha256 , $latitude , $longitude, $atdpRuta){
-
-            //echo $file->getFilename() . '<br>';
-            //$directoryFotosPath = storage_path('app/FotosMasiva/' . $cedula);
             
             try {
                 $nextValue = DB::select('SELECT nextval(\'secuencia_facial\') as value');
@@ -52,8 +49,7 @@
                     'resultado' => $response["resultado_cotejo"], // Ejemplo de valor estático, ajusta según sea necesario
                     'fechafin' => Carbon::now(), // Usar la fecha actual
                     'idusuario' => $this->usuario->id, // ID del usuario actual o cualquier otro valor
-                    //'hashalgo' => $sha256, // Ejemplo de cálculo hash
-                    'hashalgo' => $sha256, // Ejemplo de cálculo hash
+                    'hash256' => $sha256, // Ejemplo de cálculo hash
                     'idmasiva' => $idLogMasiva,
                     'atdpruta' => $atdpRuta,
                     'aprobacion_atdp' => 1,
